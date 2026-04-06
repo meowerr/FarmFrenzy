@@ -1,0 +1,12 @@
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+Debug/
+Release/
+x64/
+x86/
+*.obj
+*.pdb
+*.ilk
+*.exe
