@@ -33,6 +33,14 @@ CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string
 	}
 }
 
+WolfIcon::WolfIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
+	WolfList = new Wolf * [15];
+	for (int i = 0; i < 10; i++) {
+		WolfList[i] = nullptr;
+	}
+}
+
 void ChickIcon::onClick()
 {
 	//TO DO: add code for cleanup and game exit here

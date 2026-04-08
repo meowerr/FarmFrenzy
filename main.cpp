@@ -4,7 +4,7 @@
 int main()
 {
 	//Create an object of controller
-	Game game;
+	Game game; //create a game object
 
-	game.go();
+	game.go(); //call go() function
 }
