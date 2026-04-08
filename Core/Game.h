@@ -33,5 +33,7 @@ public:
 	void go() const;
 
 	window* getWind() const;		//returns a pointer to the graphics window
+
+	void drawfoodarea(int x, int y)const;
 };
 

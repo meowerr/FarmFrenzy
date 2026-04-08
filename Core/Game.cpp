@@ -147,6 +147,7 @@ void Game::go() const
 		printMessage("Ready...");
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
+		drawfoodarea(500, 300);
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
@@ -156,13 +157,19 @@ void Game::go() const
 		{
 			isExit = gameToolbar->handleClick(x, y);
 		}
-		else if (y >= config.toolBarHeight && y < 2*config.toolBarHeight)
+		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
 		//}
 
 	} while (!isExit);
+}
+void Game::drawfoodarea(int x, int y)const {
+	window* pWind = getWind();
+	pWind->SetPen(GREEN, 1); // draw green borders,1 pixel thick
+	pWind->SetBrush(GREEN); //fill in borders
+	pWind->DrawRectangle(x, y, x + 50, y + 50); //draw food area, 50x50 pixels
 }
 
 
