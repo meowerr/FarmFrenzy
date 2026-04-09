@@ -14,7 +14,7 @@ class Drawable
 protected: //means only this class and subclasses can access the info 
 	point RefPoint;		//Each game object must have a reference point
 	int width, height;
-	Game* pGame;        //pGame now knows where Game is in the memory
+	Game* pGame;        //pGame now knows where Game is in the memory (address)
 
 public:
 	Drawable(Game* r_pGame, point r_point, int r_width, int r_height); //constructor

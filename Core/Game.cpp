@@ -24,6 +24,7 @@ Game::Game()
 	//TODO: Add code to create and draw enemies in random places
 
 
+
 	//7- Create and clear the status bar
 	clearStatusBar();
 }
@@ -32,13 +33,13 @@ Game::~Game()
 {
 }
 
-clicktype Game::getMouseClick(int& x, int& y) const //uses library to know where we clicking
+clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
 {
-	return pWind->WaitMouseClick(x, y);	//Wait for mouse click
+	return pWind->WaitMouseClick(x, y);	//Waits for mouse click
 
 }
 
-string Game::getSrting() const
+string Game::getSrting() const 
 {
 	string Label;
 	char Key;
