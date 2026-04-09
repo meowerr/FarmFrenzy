@@ -6,4 +6,6 @@ Drawable::Drawable(Game* r_pGame, point r_point, int r_width, int r_height)
 	RefPoint = r_point;
 	width = r_width;
 	height = r_height;
+
 }
+

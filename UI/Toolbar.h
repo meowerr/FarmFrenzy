@@ -28,6 +28,33 @@ public:
 
 
 // TO DO: The rest of icons in the toolbar
+class PauseIcon : public ToolbarIcon
+{
+public:
+	PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class ResumeIcon : public ToolbarIcon
+{
+public:
+	ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class SaveIcon : public ToolbarIcon
+{
+public:
+	SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
+
+class LoadIcon1 : public ToolbarIcon
+{
+public:
+	LoadIcon1(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+};
 
 enum ICONS //The icons of the toolbar (you should add more icons)
 {
@@ -36,6 +63,10 @@ enum ICONS //The icons of the toolbar (you should add more icons)
 	ICON_RESTART,		
 
 	//TODO: Add more icons names here
+	ICON_PAUSE,
+	ICON_RESUME,
+	ICON_SAVE,
+	ICON_LOAD,
 
 	ICON_EXIT,		//Exit icon
 
@@ -56,4 +87,5 @@ public:
 	bool handleClick(int x, int y);	//handles clicks on toolbar icons, returns true if exit is clicked
 
 };
+
 
