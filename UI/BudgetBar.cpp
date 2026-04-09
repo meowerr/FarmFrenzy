@@ -160,6 +160,7 @@ Budgetbar::~Budgetbar()
 void Budgetbar::draw() const
 {
 	for (int i = 0; i < ANIMAL_COUNT; i++)
+		iconsList[i]->moveallAnimals();
 		iconsList[i]->draw();
 	window* pWind = pGame->getWind();
 	pWind->SetPen(BLACK, 3);

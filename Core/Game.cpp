@@ -35,7 +35,7 @@ Game::~Game()
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
 {
-	return pWind->WaitMouseClick(x, y);	//Waits for mouse click
+	return pWind->GetMouseClick(x, y);	//Waits for mouse click
 
 }
 
@@ -149,6 +149,7 @@ void Game::go() const
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		drawfoodarea(500, 300);
+		
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
@@ -163,6 +164,9 @@ void Game::go() const
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
 		//}
+		gameBudgetbar->
+		//Chick::moveStep();
+		//chickList[count]->draw();
 
 	} while (!isExit);
 }

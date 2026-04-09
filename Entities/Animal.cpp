@@ -8,8 +8,8 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 {
 	image_path = img_path;
 	curr_pos = r_point;
-	curr_vel.x = 1;
-	curr_vel.y = 1;
+	curr_vel.x = rand() % 5;
+	curr_vel.y = rand() % 5;
 
 }
 
@@ -31,7 +31,9 @@ void Chick::moveStep()
 	window* pWind = pGame->getWind();
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	*/
-	cout << "Icon Chick Clicked" << endl;
+	RefPoint.x += curr_vel.x;
+	RefPoint.y += curr_vel.y;
+	cout << "Icon Chick Moved" << endl;
 }
 
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
@@ -41,7 +43,7 @@ Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_pat
 void Cow::moveStep()
 {
 	//TO DO: add code for cleanup and game exit here
-	cout << "Icon Cow Clicked" << endl;
+	cout << "Icon Cow moved" << endl;
 
 }
 

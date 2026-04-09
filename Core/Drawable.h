@@ -18,6 +18,6 @@ protected: //means only this class and subclasses can access the info
 
 public:
 	Drawable(Game* r_pGame, point r_point, int r_width, int r_height); //constructor
-	virtual void draw() const = 0; //?
+	virtual void draw() const = 0; //each child of Drawable has to define a draw() function on its own
 };
 

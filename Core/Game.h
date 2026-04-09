@@ -11,11 +11,11 @@ private:
 	Budgetbar* gameBudgetbar;
 
 public:
-	int budget = 5000;
+	int budget = 4000;
 	Game();
 	~Game();
 
-	clicktype getMouseClick(int& x, int& y) const; //Get coordinate where user clicks and returns click type (left/right)
+	clicktype getMouseClick(int& x, int& y) const; //Get coordinate where user clicks and returns click type (left/right click)
 	string getSrting() const;	 //Returns a string entered by the user	 
 
 	

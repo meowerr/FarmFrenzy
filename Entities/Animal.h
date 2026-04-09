@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/Drawable.h"
 
-class Animal :public Drawable // Animal Is-A part of drawable
+class Animal :public Drawable // Animal Is-A of drawable
 {
 private:
 	string image_path;
@@ -9,8 +9,8 @@ public:
 	point curr_pos;
 	point curr_vel;
 	Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void draw() const override;
-	virtual void moveStep() = 0;   //The action that should be taken each time step
+	virtual void draw() const override; 
+	virtual void moveStep() = 0;   //The action that should be taken each time step, each child of animal should create its own movestep()
 };
 
 class Chick : public Animal 
