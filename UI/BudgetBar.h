@@ -41,14 +41,6 @@ public:
 	virtual void onClick();
 };
 
-class WolfIcon : public BudgetbarIcon
-{
-public:
-	Wolf** WolfList; //an array of Cow pointers
-	int count = 0;
-	WolfIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void onClick();
-};
 
 // TO DO: The rest of icons in the toolbar
 
@@ -56,7 +48,7 @@ enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
 {
 	//Note: Icons are ordered here as they appear in menu
 	//If you want to change the menu icons order, change the order here
-	ICON_CHICK,ICON_COW,ICON_WOLF,
+	ICON_CHICK,ICON_COW,
 
 	//TODO: Add more icons names here
 

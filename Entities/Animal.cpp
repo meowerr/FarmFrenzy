@@ -37,6 +37,7 @@ void Chick::moveStep()
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
 {}
 
+
 void Cow::moveStep()
 {
 	//TO DO: add code for cleanup and game exit here
@@ -48,9 +49,4 @@ Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_p
 {
 }
 
-void Wolf::moveStep()
-{
-	//TO DO: add code for cleanup and game exit here
-	cout << "Icon Wolf Spawned" << endl;
-
-}
+void Wolf::moveStep(){}
