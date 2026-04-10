@@ -165,14 +165,15 @@ void Game::go() const
 	//Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy - - - - - - - - - - -");
 	
+	pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
 
 	do
 	{
 		// ``````Shazly ``````
-		pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
+		
 		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
 		pWind->SetBrush(config.bkGrndColor); // set brush color
-		pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
+		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
 		gameToolbar->draw(); // Keep drawing the toolbar constantly
 		gameBudgetbar->draw(); // same thing
 		// ````````````````````
