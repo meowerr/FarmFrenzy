@@ -180,10 +180,10 @@ void Game::go() const
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		// ... existing code inside the do-while loop ...
 		updateStatusBar();
-
-		drawfoodarea(500, 300);
-		// ...
-		drawfoodarea(500, 300);
+		drawegg(300, 400);
+		drawmilk(200, 300);
+		drawegg(300, 400);
+		drawmilk(200, 300);
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
