@@ -83,6 +83,7 @@ public:
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
+	void moveAllAnimals(){ }
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
 
