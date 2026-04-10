@@ -149,7 +149,6 @@ void Game::go() const
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		drawfoodarea(500, 300);
-		
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
@@ -171,10 +170,15 @@ void Game::go() const
 	} while (!isExit);
 }
 void Game::drawfoodarea(int x, int y)const {
-	window* pWind = getWind();
-	pWind->SetPen(GREEN, 1); // draw green borders,1 pixel thick
-	pWind->SetBrush(GREEN); //fill in borders
-	pWind->DrawRectangle(x, y, x + 50, y + 50); //draw food area, 50x50 pixels
+	window* pWind = getWind(); //open window
+	pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
 }
 
-
+void Game::drawegg(int x, int y)const {
+	window* pWind = getWind(); //open window
+	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
+}
+void Game::drawmilk(int x, int y)const {
+	window* pWind = getWind(); //open window
+	pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
+}

@@ -34,6 +34,8 @@ public:
 
 	window* getWind() const;		//returns a pointer to the graphics window
 
-	void drawfoodarea(int x, int y)const;
+	void drawfoodarea(int x, int y)const; //define function to draw food area
+	void drawegg(int x, int y)const;  //define function to draw egg
+	void drawmilk(int x, int y)const;  //define function to draw milk
 };
 
