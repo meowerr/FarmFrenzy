@@ -20,7 +20,7 @@ void BudgetbarIcon::draw() const
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	chickList = new Chick * [15];
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 15; i++) {
 		chickList[i] = nullptr;
 	}
 }
@@ -28,7 +28,7 @@ ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	CowList = new Cow * [15];
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 15; i++) {
 		CowList[i] = nullptr;
 	}
 }
@@ -159,9 +159,10 @@ Budgetbar::~Budgetbar()
 
 void Budgetbar::draw() const
 {
-	for (int i = 0; i < ANIMAL_COUNT; i++)
-		iconsList[i]->moveallAnimals();
-		iconsList[i]->draw();
+	for (int i = 0; i < ANIMAL_COUNT; i++) {
+	iconsList[i]->moveAllAnimals();
+	iconsList[i]->draw();
+}
 	window* pWind = pGame->getWind();
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, 2*config.toolBarHeight, pWind->GetWidth(), 2*config.toolBarHeight);

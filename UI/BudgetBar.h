@@ -20,7 +20,7 @@ public:
 	string image_path;
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void draw() const override;
-	virtual void moveallAnimals() = 0;
+	virtual void moveAllAnimals() = 0;
 	virtual void onClick() = 0;   //The action that should be taken when this icon is clicked
 };
 
@@ -49,6 +49,14 @@ public:
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
+	void moveAllAnimals() {
+		for (int i = 0; i < 15; i++) {
+			if (CowList[i] != nullptr) {
+				CowList[i]->moveStep();
+				CowList[i]->draw();
+			}
+		}
+	}
 };
 
 

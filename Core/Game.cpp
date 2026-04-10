@@ -35,7 +35,7 @@ Game::~Game()
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
 {
-	return pWind->GetMouseClick(x, y);	//Waits for mouse click
+	return pWind->WaitMouseClick(x, y);	//Waits for mouse click
 
 }
 
@@ -146,6 +146,8 @@ void Game::go() const
 	do
 	{
 		printMessage("Ready...");
+		//getWind()->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+		//gameBudgetbar->draw();
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		drawfoodarea(500, 300);
@@ -162,10 +164,7 @@ void Game::go() const
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
-		//}
-		gameBudgetbar->
-		//Chick::moveStep();
-		//chickList[count]->draw();
+		
 
 	} while (!isExit);
 }
