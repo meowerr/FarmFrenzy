@@ -7,11 +7,16 @@ class Game
 {
 private:
 	window* pWind;	//Pointer to the CMU graphics window
-	Toolbar* gameToolbar;
+	Toolbar* gameToolbar; // this is how we call our toolbar from now on 
 	Budgetbar* gameBudgetbar;
 
 public:
 	int budget = 5000;
+	int timer = 0;
+	int goal = 0;
+	int level = 1;
+	int animalCount = 0;
+	void updateStatusBar() const;
 	Game();
 	~Game();
 

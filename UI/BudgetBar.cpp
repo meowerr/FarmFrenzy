@@ -148,7 +148,7 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
 	//p.x += config.iconWidth;
 	//iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
-
+	
 }
 
 Budgetbar::~Budgetbar()
@@ -161,7 +161,7 @@ Budgetbar::~Budgetbar()
 void Budgetbar::draw() const
 {
 	for (int i = 0; i < ANIMAL_COUNT; i++) {
-	iconsList[i]->moveAllAnimals();
+	iconsList[i]->moveAllAnimals(); // when we draw budget bar, which will be in the main game loop, it will move animals
 	iconsList[i]->draw();
 }
 	window* pWind = pGame->getWind();

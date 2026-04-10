@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../Config/GameConfig.h"
+#include "../CMUgraphicsLib/auxil.h"
 
 Game::Game()
 {
@@ -35,7 +36,7 @@ Game::~Game()
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
 {
-	return pWind->WaitMouseClick(x, y);	//Waits for mouse click
+	return pWind->GetMouseClick(x, y);	//Waits for mouse click
 
 }
 
@@ -163,12 +164,18 @@ void Game::go() const
 
 	//Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy - - - - - - - - - - -");
+	
 
 	do
 	{
-		printMessage("Ready...");
-		//getWind()->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
-		//gameBudgetbar->draw();
+		// ``````Shazly ``````
+		pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
+		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
+		pWind->SetBrush(config.bkGrndColor); // set brush color
+		pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
+		gameToolbar->draw(); // Keep drawing the toolbar constantly
+		gameBudgetbar->draw(); // same thing
+		// ````````````````````
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		// ... existing code inside the do-while loop ...
@@ -190,8 +197,7 @@ void Game::go() const
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
-		
-
+		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
 }
 void Game::drawfoodarea(int x, int y)const {
