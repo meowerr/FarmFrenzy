@@ -129,6 +129,27 @@ void Game::printMessage(string msg) const
 
 }
 
+
+void Game::updateStatusBar() const
+{
+	// Clear the old text
+	clearStatusBar();
+
+	// Combine the four variables into one formatted string
+	string statusText = "Timer: " + to_string(timer) +
+		"      Goal: " + to_string(goal) +
+		"      Level: " + to_string(level) +
+		"      Animals: " + to_string(animalCount);
+
+	// Set the font and draw the string
+	pWind->SetPen(WHITE, 50);
+	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
+
+	// Draw it using the exact same coordinates that printMessage uses
+	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), statusText);
+}
+
+
 window* Game::getWind() const
 {
 	return pWind;
@@ -148,6 +169,11 @@ void Game::go() const
 		printMessage("Ready...");
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
+		// ... existing code inside the do-while loop ...
+		updateStatusBar();
+
+		drawfoodarea(500, 300);
+		// ...
 		drawfoodarea(500, 300);
 		drawegg(300, 400);
 		drawmilk(200, 300);
