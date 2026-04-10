@@ -9,14 +9,21 @@ BudgetbarIcon::BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_he
 {
 	image_path = img_path;
 }
-
 void BudgetbarIcon::draw() const
 {
 	//draw image of this object
 	window* pWind = pGame->getWind();
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 }
-
+Grass::Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
+{
+	image_path = img_path;
+}
+void Grass::draw() const
+{
+	window* pWind = pGame->getWind();
+	pGame->drawfoodarea(RefPoint.x, RefPoint.y); //use function drawfoodarea
+}
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	chickList = new Chick * [15];
@@ -32,7 +39,22 @@ CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string
 		CowList[i] = nullptr;
 	}
 }
-
+WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
+	Grasslist = new Grass * [15];
+	for (int i = 0; i < 10; i++) {
+		Grasslist[i] = nullptr;
+	}
+}
+void WaterIcon::draw() const
+{
+	BudgetbarIcon::draw(); // Draw the button
+	for (int i = 0; i < count; i++) { //loop to draw grass
+		if (Grasslist[i] != nullptr) {
+			Grasslist[i]->draw();
+		}
+	}
+}
 
 void ChickIcon::onClick()
 {
@@ -126,6 +148,42 @@ void CowIcon::onClick()
 		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	}
 }
+void WaterIcon::onClick()
+{
+	//TO DO: add code for cleanup and game exit here
+	/*
+	//draw image of this object in the field
+	window* pWind = pGame->getWind();
+	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+	*/
+	cout << "Icon water Clicked" << endl;
+		point p;
+		// 1. Obtain a seed from a non-deterministic source (if available)
+		std::random_device rd1;
+
+		// 2. Seed the Mersenne Twister engine
+		// std::mt19937 is a high-quality pseudo-random number generator
+		std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+		p.x = dist1(gen1);
+		//std::cout << "P.X = " << p.x << endl;
+		// 1. Obtain a seed from a non-deterministic source (if available)
+		std::random_device rd2;
+
+		// 2. Seed the Mersenne Twister engine
+		// std::mt19937 is a high-quality pseudo-random number generator
+		std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+		p.y = dist2(gen2);
+		//std::cout << "P.Y = " << p.y << endl;
+		//p.x = 300;
+		//p.y = 300;
+		Grasslist[count] = new Grass(pGame, p, 50, 50, image_path);
+		Grasslist[count]->draw();
+		count++;
+		//window* pWind = pGame->getWind();
+		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+	}
 
 
 
@@ -135,6 +193,7 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	//To control the order of these images in the menu, reoder them in enum ICONS above	
 	iconsImages[ICON_CHICK] = "images/chick.jpg";
 	iconsImages[ICON_COW] = "images/cow.jpg";
+	iconsImages[ICON_WATER] = "images/water.jpg";
 
 	point p;
 	p.x = 0;
@@ -146,6 +205,9 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
 	p.x += config.iconWidth;
 	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
+	p.x += config.iconWidth;
+	iconsList[ICON_WATER] = new WaterIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_WATER]);
+	p.x += config.iconWidth;
 	//p.x += config.iconWidth;
 	//iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
 
@@ -153,7 +215,7 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 
 Budgetbar::~Budgetbar()
 {
-	for (int i = 0; i < ICON_COUNT; i++)
+	for (int i = 0; i < ANIMAL_COUNT; i++)
 		delete iconsList[i];
 	delete iconsList;
 }

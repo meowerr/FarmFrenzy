@@ -22,6 +22,15 @@ public:
 	virtual void draw() const override;
 	virtual void onClick() = 0;   //The action that should be taken when this icon is clicked
 };
+class Grass :public Drawable //had to define new class for grass since it isnt a budget bar icon
+{
+private:
+	string image_path;
+public:
+	Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void draw() const override; //only draw, no click
+	
+};
 
 class ChickIcon : public BudgetbarIcon
 {
@@ -40,6 +49,16 @@ public:
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 };
+class WaterIcon : public BudgetbarIcon
+{
+public:
+	Grass** Grasslist; //an array of Grass pointers from class we defined
+	int count = 0;
+	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void onClick();
+	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
+};
+
 
 
 // TO DO: The rest of icons in the toolbar
@@ -48,7 +67,7 @@ enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
 {
 	//Note: Icons are ordered here as they appear in menu
 	//If you want to change the menu icons order, change the order here
-	ICON_CHICK,ICON_COW,
+	ICON_CHICK,ICON_COW,ICON_WATER,
 
 	//TODO: Add more icons names here
 
