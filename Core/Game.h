@@ -2,7 +2,7 @@
 #include "../CMUgraphicsLib/CMUgraphics.h"
 #include "../UI/Toolbar.h"
 #include "../UI/BudgetBar.h"
-
+class Warehouse;
 class Game
 {
 private:
@@ -16,6 +16,7 @@ public:
 	int goal = 0;
 	int level = 1;
 	int animalCount = 0;
+	Warehouse* pWarehouse;
 	void updateStatusBar() const;
 	Game();
 	~Game();

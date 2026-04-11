@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
-
+#include "../Warehouse.h"
 Game::Game()
 {
 	//1 - Create the main window
@@ -24,7 +24,13 @@ Game::Game()
 	//6- Create the enemies
 	//TODO: Add code to create and draw enemies in random places
 
+	// Create the starting point for the warehouse
+	point warehousePos;
+	warehousePos.x = config.windWidth - 200;  // 200 pixels away from the right wall
+	warehousePos.y = config.windHeight - 220; // Above the status bar
 
+	// Instantiate it (Width = 150, Height = 150)
+	pWarehouse = new Warehouse(this, warehousePos, 150, 150);
 
 	//7- Create and clear the status bar
 	clearStatusBar();
@@ -185,6 +191,7 @@ void Game::go() const
 		drawmilk(200, 300);
 		drawegg(300, 400);
 		drawmilk(200, 300);
+		pWarehouse->draw();
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
