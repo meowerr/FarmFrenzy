@@ -5,16 +5,28 @@
 using namespace std;
 
 
+
 BudgetbarIcon::BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
 }
+
 void BudgetbarIcon::draw() const
 {
 	//draw image of this object
 	window* pWind = pGame->getWind();
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+
+	// Draw the Sell button at the bottom 15 pixels of the icon
+	pWind->SetPen(DARKRED, 1);
+	pWind->SetBrush(RED);
+	pWind->DrawRectangle(RefPoint.x, RefPoint.y + height - 15, RefPoint.x + width, RefPoint.y + height);
+
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 18, RefPoint.y + height - 15, "SELL");
 }
+
 Grass::Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
@@ -26,26 +38,30 @@ void Grass::draw() const
 }
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
-	chickList = new Chick * [15];
-	for (int i = 0; i < 15; i++) {
+	chickList = new Chick * [MAX_ITEMS];
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		chickList[i] = nullptr;
 	}
 }
 
 CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
-	CowList = new Cow * [15];
-	for (int i = 0; i < 15; i++) {
+	CowList = new Cow * [MAX_ITEMS];
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		CowList[i] = nullptr;
 	}
 }
+
+
 WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
-	Grasslist = new Grass * [15];
-	for (int i = 0; i < 10; i++) {
+	Grasslist = new Grass * [MAX_ITEMS];
+	for (int i = 0; i < MAX_ITEMS; i++) { // Changed 10 to 15 to prevent memory crashes
 		Grasslist[i] = nullptr;
 	}
 }
+
+
 void WaterIcon::draw() const
 {
 	BudgetbarIcon::draw(); // Draw the button
@@ -56,135 +72,124 @@ void WaterIcon::draw() const
 	}
 }
 
-void ChickIcon::onClick()
+void ChickIcon::onClick(int x, int y)
 {
-	//TO DO: add code for cleanup and game exit here
-	/*
-	//draw image of this object in the field
-	window* pWind = pGame->getWind();
-	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	*/
-	
-	//Chick* new_chick = new Chick(pGame, RefPoint, 30, 30, "images\\Chick.png");
-	cout << "Icon Chick Clicked" << endl;
-	if (pGame->budget >= 100) { //check if have enough money 
-		pGame->budget = pGame->budget - 100; //take away 100
-		pGame->clearBudget(); // erase budget from screen
-		string budget_string = "BUDGET = $" + to_string(pGame->budget); //make budget string again
-		pGame->printBudget(budget_string); //print budget on screen
+	// Check if the click was in the bottom 15 pixels (SELL area)
+	if (y >= RefPoint.y + height - 15) {
+		if (count > 0) {
+			count--;
+			delete chickList[count];         // Free the memory
+			chickList[count] = nullptr;      // Prevent dangling pointers
+			pGame->budget += 100;             // Refund $100
 
-		point p;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd1;
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
+			cout << "Icon Chick Sold" << endl;
+		}
+	}
+	else { // BUY area clicked
+		cout << "Icon Chick Clicked" << endl;
+		if (count < MAX_ITEMS && pGame->budget >= 100) {
+			pGame->budget -= 100;
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
 
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen1(rd1());
-		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
-		p.x = dist1(gen1);
-		//std::cout << "P.X = " << p.x << endl;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd2;
+			point p;
+			std::random_device rd1;
+			std::mt19937 gen1(rd1());
+			std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+			p.x = dist1(gen1);
 
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen2(rd2());
-		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
-		p.y = dist2(gen2);
-		//std::cout << "P.Y = " << p.y << endl;
-		//p.x = 300;
-		//p.y = 300;
-		chickList[count]= new Chick(pGame, p, 50, 50, image_path);
-		chickList[count]->draw();
-		count++;
-		//window* pWind = pGame->getWind();
-		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+			std::random_device rd2;
+			std::mt19937 gen2(rd2());
+			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+			p.y = dist2(gen2);
+
+			chickList[count] = new Chick(pGame, p, 50, 50, image_path);
+			chickList[count]->draw();
+			count++;
+		}
 	}
 }
 
 
-void CowIcon::onClick()
+void CowIcon::onClick(int x, int y)
 {
-	//TO DO: add code for cleanup and game exit here
-	/*
-	//draw image of this object in the field
-	window* pWind = pGame->getWind();
-	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	*/
+	if (y >= RefPoint.y + height - 15) { // Sell area
+		if (count > 0) {
+			count--;
+			delete CowList[count];
+			CowList[count] = nullptr;
+			pGame->budget += 100; // Refund $100
 
-	//Chick* new_chick = new Chick(pGame, RefPoint, 30, 30, "images\\Chick.png");
-	cout << "Icon Cow Clicked" << endl;
-	if (pGame->budget >= 100) { //check if have enough money 
-		pGame->budget = pGame->budget - 100; //take away 100
-		pGame->clearBudget(); // erase budget from screen
-		string budget_string = "BUDGET = $" + to_string(pGame->budget); //make budget string again
-		pGame->printBudget(budget_string); //print budget on screen
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
+			cout << "Icon Cow Sold" << endl;
+		}
+	}
+	else { // Buy area
+		cout << "Icon Cow Clicked" << endl;
+		if (count < MAX_ITEMS && pGame->budget >= 100) {
+			pGame->budget -= 100;
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
 
-		point p;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd1;
+			point p;
+			std::random_device rd1;
+			std::mt19937 gen1(rd1());
+			std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+			p.x = dist1(gen1);
 
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen1(rd1());
-		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
-		p.x = dist1(gen1);
-		//std::cout << "P.X = " << p.x << endl;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd2;
+			std::random_device rd2;
+			std::mt19937 gen2(rd2());
+			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+			p.y = dist2(gen2);
 
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen2(rd2());
-		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
-		p.y = dist2(gen2);
-		//std::cout << "P.Y = " << p.y << endl;
-		//p.x = 300;
-		//p.y = 300;
-		CowList[count] = new Cow(pGame, p, 50, 50, image_path);
-		CowList[count]->draw();
-		count++;
-		//window* pWind = pGame->getWind();
-		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+			CowList[count] = new Cow(pGame, p, 50, 50, image_path);
+			CowList[count]->draw();
+			count++;
+		}
 	}
 }
-void WaterIcon::onClick()
+
+void WaterIcon::onClick(int x, int y)
 {
-	//TO DO: add code for cleanup and game exit here
-	/*
-	//draw image of this object in the field
-	window* pWind = pGame->getWind();
-	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	*/
-	cout << "Icon water Clicked" << endl;
-		point p;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd1;
+	if (y >= RefPoint.y + height - 15) { // Sell area
+		if (count > 0) {
+			count--;
+			delete Grasslist[count];
+			Grasslist[count] = nullptr;
+			pGame->budget += 50; // Refund $50 for water
 
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen1(rd1());
-		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
-		p.x = dist1(gen1);
-		//std::cout << "P.X = " << p.x << endl;
-		// 1. Obtain a seed from a non-deterministic source (if available)
-		std::random_device rd2;
-
-		// 2. Seed the Mersenne Twister engine
-		// std::mt19937 is a high-quality pseudo-random number generator
-		std::mt19937 gen2(rd2());
-		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
-		p.y = dist2(gen2);
-		//std::cout << "P.Y = " << p.y << endl;
-		//p.x = 300;
-		//p.y = 300;
-		Grasslist[count] = new Grass(pGame, p, 50, 50, image_path);
-		Grasslist[count]->draw();
-		count++;
-		//window* pWind = pGame->getWind();
-		//pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
+			cout << "Icon Water Sold" << endl;
+		}
 	}
+	else { // Buy area
+		cout << "Icon water Clicked" << endl;
+		if (count < MAX_ITEMS && pGame->budget >= 50) { // Assume buying water costs $50
+			pGame->budget -= 50;
+			pGame->clearBudget();
+			pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
 
+			point p;
+			std::random_device rd1;
+			std::mt19937 gen1(rd1());
+			std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+			p.x = dist1(gen1);
+
+			std::random_device rd2;
+			std::mt19937 gen2(rd2());
+			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+			p.y = dist2(gen2);
+
+			Grasslist[count] = new Grass(pGame, p, 50, 50, image_path);
+			Grasslist[count]->draw();
+			count++;
+		}
+	}
+}
 
 
 Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)
@@ -233,20 +238,13 @@ void Budgetbar::draw() const
 
 bool Budgetbar::handleClick(int x, int y)
 {
-	if (x > ANIMAL_COUNT * config.iconWidth)	//click outside toolbar boundaries
+	if (x > ANIMAL_COUNT * config.iconWidth)
 		return false;
 
-
-	//Check whick icon was clicked
-	//==> This assumes that menu icons are lined up horizontally <==
-	//Divide x co-ord of the point clicked by the icon width (int division)
-	//if division result is 0 ==> first icon is clicked, if 1 ==> 2nd icon and so on
-
 	int clickedIconIndex = (x / config.iconWidth);
-	iconsList[clickedIconIndex]->onClick();	//execute onClick action of clicled icon
 
-	//if (clickedIconIndex == ICON_EXIT) return true;
+	// Pass the x and y coordinate to the clicked icon to calculate the region
+	iconsList[clickedIconIndex]->onClick(x, y);
 
 	return false;
-
 }

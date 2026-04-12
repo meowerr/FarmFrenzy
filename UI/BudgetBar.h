@@ -5,11 +5,15 @@
 #include <random>
 #include <limits>
 
-//Ranges for generating a random location for the animals
+
 const int range_min_x = 50;
 const int range_max_x = config.windWidth - 50;
 const int range_min_y = (config.toolBarHeight * 2) + 50;
-const int range_max_y = config.windHeight - config.statusBarHeight - 50;
+const int range_max_y = config.windHeight - config.statusBarHeight - 50;         ///////////////// MALEK
+
+const int MAX_ITEMS = 300;
+
+
 
 //Base class for all toolbar icons 
 class BudgetbarIcon :public Drawable
@@ -21,7 +25,8 @@ public:
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void draw() const override;
 	virtual void moveAllAnimals() = 0;
-	virtual void onClick() = 0;   //The action that should be taken when this icon is clicked
+	// Change to accept coordinates:
+	virtual void onClick(int x, int y) = 0;                                           ///////////// Malek
 };
 class Grass :public Drawable //had to define new class for grass since it isnt a budget bar icon
 {
@@ -36,13 +41,13 @@ public:
 class ChickIcon : public BudgetbarIcon
 {
 public:
-	Chick** chickList; //an array of Chick pointers
+	Chick** chickList;
 	int count = 0;
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void onClick();
+	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
 	void drawAllChickens() {
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				
 				chickList[i]->draw();
@@ -51,7 +56,7 @@ public:
 	}
 
 	void moveAllAnimals() {
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				chickList[i]->moveStep();
 				chickList[i]->draw();
@@ -63,12 +68,12 @@ public:
 class CowIcon : public BudgetbarIcon
 {
 public:
-	Cow** CowList; //an array of Cow pointers
+	Cow** CowList;
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void onClick();
+	virtual void onClick(int x, int y) override;                                      ///////////// Malek
 	void moveAllAnimals() {
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (CowList[i] != nullptr) {
 				CowList[i]->moveStep();
 				CowList[i]->draw();
@@ -79,10 +84,10 @@ public:
 class WaterIcon : public BudgetbarIcon
 {
 public:
-	Grass** Grasslist; //an array of Grass pointers from class we defined
+	Grass** Grasslist;
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void onClick();
+	virtual void onClick(int x, int y) override;                                      ///////////// Malek
 	void moveAllAnimals(){ }
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
