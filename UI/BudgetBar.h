@@ -41,14 +41,7 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick();
 
-	void drawAllChickens() {
-		for (int i = 0; i < 15; i++) {
-			if (chickList[i] != nullptr) {
-				
-				chickList[i]->draw();
-			}
-		}
-	}
+
 
 	void moveAllAnimals() {
 		for (int i = 0; i < 15; i++) {

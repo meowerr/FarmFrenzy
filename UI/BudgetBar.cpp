@@ -103,6 +103,8 @@ void ChickIcon::onClick()
 }
 
 
+
+
 void CowIcon::onClick()
 {
 	//TO DO: add code for cleanup and game exit here

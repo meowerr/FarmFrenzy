@@ -182,6 +182,9 @@ void Game::go() const
 		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
 		gameToolbar->draw(); // Keep drawing the toolbar constantly
 		gameBudgetbar->draw(); // same thing
+
+
+
 		// ````````````````````
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
