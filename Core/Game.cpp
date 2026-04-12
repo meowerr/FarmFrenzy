@@ -162,7 +162,7 @@ window* Game::getWind() const
 	return pWind;
 }
 
-void Game::go() const
+void Game::go()
 {
 	//This function reads the position where the user clicks to determine the desired operation
 	int x, y;
@@ -175,6 +175,33 @@ void Game::go() const
 
 	do
 	{
+
+		//////////////////////////////////////// MALEK
+
+		if (timer > 0)
+		{
+			if (ElapsedTime(1000)) {
+				timer--;
+			}
+		}
+		else
+		{
+			printMessage("Time's up! GAME OVER. Click anywhere to exit...");
+
+			pWind->UpdateBuffer();
+
+			pWind->FlushMouseQueue();
+			int dummyX, dummyY;
+			pWind->WaitMouseClick(dummyX, dummyY);
+
+			isExit = true;
+			continue; 
+		}
+
+
+
+
+
 		// ``````Shazly ``````
 		
 		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
@@ -205,6 +232,11 @@ void Game::go() const
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
+
+
+
+		Pause(15);
+
 		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
 }

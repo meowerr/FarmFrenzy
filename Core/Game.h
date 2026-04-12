@@ -12,7 +12,7 @@ private:
 
 public:
 	int budget = 5000;
-	int timer = 0;
+	int timer = 120;
 	int goal = 0;
 	int level = 1;
 	int animalCount = 0;
@@ -36,7 +36,7 @@ public:
 
 	void printMessage(string msg) const;	//Print a message on Status bar
 
-	void go() const;
+	void go();
 
 	window* getWind() const;		//returns a pointer to the graphics window
 
