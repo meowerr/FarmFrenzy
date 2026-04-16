@@ -2,7 +2,9 @@
 #include "../CMUgraphicsLib/CMUgraphics.h"
 #include "../UI/Toolbar.h"
 #include "../UI/BudgetBar.h"
+#include "../Entities/Animal.h"
 class Warehouse;
+class Wolf;
 class Game
 {
 private:
@@ -14,7 +16,7 @@ public:
 	int budget = 5000;
 	int timer = 120;
 	int goal = 0;
-	int level = 1;
+	int level = 2;
 	int animalCount = 0;
 	Warehouse* pWarehouse;
 	void updateStatusBar() const;
@@ -27,7 +29,7 @@ public:
 	
 	window* CreateWind(int, int, int, int) const; //creates the game window
 	void createToolbar();
-	
+	void randomWolf(); ////////////////Shazly
 	void createBudgetbar();
 	void clearBudget() const;
 	void printBudget(string msg) const;
@@ -43,5 +45,9 @@ public:
 	void drawfoodarea(int x, int y)const; //define function to draw food area
 	void drawegg(int x, int y)const;  //define function to draw egg
 	void drawmilk(int x, int y)const;  //define function to draw milk
+
+	Wolf* wolfList[MAX_ITEMS];
+	int wolfCount = 0;
+	
 };
 

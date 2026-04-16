@@ -46,15 +46,6 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
-	void drawAllChickens() {
-		for (int i = 0; i < MAX_ITEMS; i++) {
-			if (chickList[i] != nullptr) {
-				
-				chickList[i]->draw();
-			}
-		}
-	}
-
 	void moveAllAnimals() {
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
@@ -64,6 +55,7 @@ public:
 		}
 	}
 };
+
 
 class CowIcon : public BudgetbarIcon
 {

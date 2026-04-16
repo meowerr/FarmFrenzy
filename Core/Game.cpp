@@ -1,7 +1,11 @@
 #include "Game.h"
+#include "../UI/BudgetBar.h"
 #include "../Config/GameConfig.h"
 #include "../CMUgraphicsLib/auxil.h"
 #include "../Warehouse.h"
+#include "../Entities/Animal.h"
+#include "../Wolf.h"
+using namespace std;
 Game::Game()
 {
 	//1 - Create the main window
@@ -12,6 +16,9 @@ Game::Game()
 	createBudgetbar();
 	//3 - create and draw the backgroundPlayingArea
 	
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		wolfList[i] = nullptr;
+	}
 	
 	//4- Create the Plane
 	//TODO: Add code to create and draw the Plane
@@ -157,6 +164,30 @@ void Game::updateStatusBar() const
 }
 
 
+void Game::randomWolf() {
+	if (rand() % 100 + 1 == 1){ //rolls a number between 1 and 100 and is true if gets 1
+	if (level > 1) {
+	//	cout << "Wolf spawned";
+		point p;
+		std::random_device rd1;
+		std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+		p.x = dist1(gen1);
+
+		std::random_device rd2;
+		std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+		p.y = dist2(gen2);
+
+		wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+		wolfList[wolfCount]->draw();
+		wolfCount++;
+	}
+}
+}
+
+
+
 window* Game::getWind() const
 {
 	return pWind;
@@ -189,7 +220,6 @@ void Game::go()
 			printMessage("Time's up! GAME OVER. Click anywhere to exit...");
 
 			pWind->UpdateBuffer();
-
 			pWind->FlushMouseQueue();
 			int dummyX, dummyY;
 			pWind->WaitMouseClick(dummyX, dummyY);
@@ -209,6 +239,15 @@ void Game::go()
 		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
 		gameToolbar->draw(); // Keep drawing the toolbar constantly
 		gameBudgetbar->draw(); // same thing
+
+
+		Game::randomWolf();
+			for (int i = 0; i < MAX_ITEMS; i++) {
+			if (wolfList[i] != nullptr) {
+				wolfList[i]->moveStep();
+				wolfList[i]->draw();
+			}
+		}
 
 
 

@@ -148,6 +148,9 @@
     <ClCompile Include="Warehouse.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMUgraphicsLib\auxil.h">
@@ -232,6 +235,9 @@
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="Warehouse.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>

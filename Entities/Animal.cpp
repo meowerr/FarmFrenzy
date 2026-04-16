@@ -1,6 +1,8 @@
 #include "Animal.h"
+#include "../UI/BudgetBar.h"
 #include "../Config/GameConfig.h"
 #include "../Core/Game.h"
+#include "../Wolf.h"
 #include <iostream>
 using namespace std;
 
@@ -9,7 +11,7 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	image_path = img_path;
 	curr_pos = r_point;
 	curr_vel.x = rand() % 3; // random number from 0 to 2. Random starting velocity
-	curr_vel.y = rand() % 3;
+	curr_vel.y = rand() % 3; 
 
 }
 
@@ -55,9 +57,6 @@ void Cow::moveStep()
 
 }
 
-Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
-{
 
-}
 
-void Wolf::moveStep(){}
+
