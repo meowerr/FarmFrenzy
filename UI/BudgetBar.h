@@ -24,7 +24,7 @@ public:
 	string image_path;
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void draw() const override;
-	virtual void moveAllAnimals() = 0;
+	virtual void moveAllAnimals(Grass** grasslist) = 0; //pass through every grass in field
 	// Change to accept coordinates:
 	virtual void onClick(int x, int y) = 0;                                           ///////////// Malek
 };
@@ -33,9 +33,14 @@ class Grass :public Drawable //had to define new class for grass since it isnt a
 private:
 	string image_path;
 public:
-	Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	int foodcounter=1000;// add food counter to grass class and intialize to 1000
+	Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path,int foodcounter);// add food counter to constructor
 	virtual void draw() const override; //only draw, no click
-	
+	void decreasefoodcounter() { // add function to decrease food counter
+		if (foodcounter != 0) {
+			foodcounter--;
+		}
+	}
 };
 
 class ChickIcon : public BudgetbarIcon
@@ -46,16 +51,27 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
-	void moveAllAnimals() {
+	void moveAllAnimals(Grass**grasslist) {
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				chickList[i]->moveStep();
+				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
+					if (grasslist[j]!= nullptr) {
+						if (chickList[i]->iscolliding(grasslist[j])) {
+							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
+							if (grasslist[j]->foodcounter == 0) { //if food counter reach 0, delete grass and set pointer to null
+								delete grasslist[j];
+								grasslist[j] = nullptr;
+							}
+						}
+					}
+				}
 				chickList[i]->draw();
 			}
 		}
 	}
 };
-
+ 
 
 class CowIcon : public BudgetbarIcon
 {
@@ -64,10 +80,21 @@ public:
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals() {
+	void moveAllAnimals(Grass** grasslist) { 
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (CowList[i] != nullptr) {
 				CowList[i]->moveStep();
+				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
+					if (grasslist[j] != nullptr) {
+						if (CowList[i]->iscolliding(grasslist[j])) {
+							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
+							if (grasslist[j]->foodcounter == 0) { //if food counter reach 0, delete grass and set pointer to null
+								delete grasslist[j];
+								grasslist[j] = nullptr;
+							}
+						}
+					}
+				}
 				CowList[i]->draw();
 			}
 		}
@@ -80,7 +107,7 @@ public:
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals(){ }
+	void moveAllAnimals(Grass** grasslist){ }
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
 
