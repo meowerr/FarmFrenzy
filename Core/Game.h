@@ -9,7 +9,7 @@ class Game
 {
 private:
 	window* pWind;	//Pointer to the CMU graphics window
-	Toolbar* gameToolbar; // this is how we call our toolbar from now on 
+	Toolbar* gameToolbar ; // this is how we call our toolbar from now on 
 	Budgetbar* gameBudgetbar;
 
 public:
@@ -43,11 +43,15 @@ public:
 	window* getWind() const;		//returns a pointer to the graphics window
 
 	void drawfoodarea(int x, int y)const; //define function to draw food area
-	void drawegg(int x, int y)const;  //define function to draw egg
-	void drawmilk(int x, int y)const;  //define function to draw milk
+	void drawegg(int x, int y);  //define function to draw egg
+	void drawmilk(int x, int y);  //define function to draw milk
 
 	Wolf* wolfList[MAX_ITEMS];
 	int wolfCount = 0;
-	
+	point eggs[100]; // Array to store egg positions
+	int eggCount = 0;
+	point milks[100];
+	int milkcount = 0;
+
 };
 

@@ -16,7 +16,9 @@ public:
 	//virtual void random();
 	virtual void moveStep() = 0;  // The action that should be taken each time step, each child of animal should create its own movestep()
 	bool iscolliding(Grass* targetgrass);  //function to check if colliding with grass
-		
+	int animalcounter; // animal counter to count seconds
+	int timermax ; //max timer for each animal, when counter reaches timermax, spawn egg or milk
+	int lastseentime; // time taken from timer
 };
 
 class Chick : public Animal 
@@ -26,12 +28,12 @@ public:
 	virtual void moveStep();
 };
 
+
 class Cow : public Animal
 {
 public:
 	Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void moveStep();
-
 };
 
 

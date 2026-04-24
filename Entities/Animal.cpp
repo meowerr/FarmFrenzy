@@ -15,7 +15,8 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	RefPoint = r_point;
 	curr_vel.x = rand() % 3; // random number from 0 to 2. Random starting velocity
 	curr_vel.y = rand() % 3; 
-
+	lastseentime = pGame->timer; // time taken from timer
+	animalcounter = 0; // animal counter to count seconds
 }
 
 void Animal::draw() const
@@ -27,9 +28,12 @@ void Animal::draw() const
 }
 
 Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
-{}
+{
+	
+	 timermax=10; //max timer for each animal, when counter reaches timermax, spawn egg 
 
-void Chick::moveStep()
+}
+void Chick::moveStep() //put counter logic here because it loops
 {
 	//TO DO: add code for cleanup and game exit here
 	/*
@@ -37,17 +41,25 @@ void Chick::moveStep()
 	window* pWind = pGame->getWind();
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	*/
-
 	RefPoint.x += curr_vel.x;
 	RefPoint.y += curr_vel.y;
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1*curr_vel.x; }
 	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y ) { curr_vel.y = -1*curr_vel.y; }
-
+	if (pGame->timer != lastseentime){ //if time changed, increase animal counter
+		animalcounter++;
+	    lastseentime= pGame->timer; //update timer
+		}
+	if (animalcounter >= timermax) { //if animal counter reaches timer max, spawn egg
+		pGame->drawegg(RefPoint.x, RefPoint.y); //draw egg at chick position
+		animalcounter = 0;
+	}
 	//cout << "Icon Chick Moved" << endl;
 }
 
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
-{}
+{
+	timermax = 15; //max timer for each animal, when counter reaches timermax, milk
+}
 
 
 void Cow::moveStep() 
@@ -58,6 +70,14 @@ void Cow::moveStep()
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1 * curr_vel.x; }
 	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y) { curr_vel.y = -1 * curr_vel.y; }
 	//cout << "Icon Cow moved" << endl; removed this so no lag in cmd
+	if (pGame->timer != lastseentime) { //if time changed, increase animal counter
+		animalcounter++;
+		lastseentime = pGame->timer; //update timer
+	}
+	if (animalcounter >= timermax) { //if animal counter reaches timer max, spawn milk
+		pGame->drawmilk(RefPoint.x, RefPoint.y); //draw milk at cow position
+		animalcounter = 0;
+	}
 
 }
 bool Animal:: iscolliding(Grass* targetgrass){ //function to check if colliding with grass

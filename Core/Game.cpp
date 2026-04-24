@@ -256,10 +256,6 @@ void Game::go()
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		// ... existing code inside the do-while loop ...
 		updateStatusBar();
-		drawegg(300, 400);
-		drawmilk(200, 300);
-		drawegg(300, 400);
-		drawmilk(200, 300);
 		pWarehouse->draw();
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
@@ -278,6 +274,14 @@ void Game::go()
 
 
 		Pause(15);
+		//////////////////////////saqib/////////// redraw all milk and egg
+		for (int i = 0; i < eggCount; i++) {
+			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
+		}
+		for (int i = 0; i < milkcount; i++) {
+			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
+		}
+
 
 		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
@@ -287,11 +291,22 @@ void Game::drawfoodarea(int x, int y)const {
 	pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
 }
 
-void Game::drawegg(int x, int y)const {
+void Game::drawegg(int x, int y){
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
+	if (eggCount<100){ //store egg positions
+		eggs[eggCount].x = x;
+		eggs[eggCount].y = y;
+		eggCount++;
+
+	}
 }
-void Game::drawmilk(int x, int y)const {
+void Game::drawmilk(int x, int y) {
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
+	if (milkcount < 100) { //store milk positions
+		milks[milkcount].x = x;
+		milks[milkcount].y = y;
+		milkcount++;
+	}
 }
