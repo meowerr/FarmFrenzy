@@ -40,7 +40,9 @@ void Grass::draw() const
 {
 	window* pWind = pGame->getWind();
 	pGame->drawfoodarea(RefPoint.x, RefPoint.y); //use function drawfoodarea
-
+	pWind->SetPen(BLACK, 50); //display food count above food area
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 10, RefPoint.y + 15, to_string(foodcounter));
 }
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
