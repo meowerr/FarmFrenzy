@@ -1,5 +1,7 @@
 #pragma once
 #include "Drawable.h"
+#include "../UI/BudgetBar.h"
+#include "../Entities/Animal.h"
 class GameObject : public Drawable //GameObject Is-A Drawable, can take from its protected content
 {
 protected:
@@ -10,7 +12,7 @@ public:
 	GameObject(Game* r_pGame, point ref, int r_width, int r_height, color fc, color bc);
 	virtual void draw() const = 0; //for a game object to draw itself on the screen
 	void setRefPoint(point p);
-	bool CollisionDetection(const GameObject& gObj);
+	//bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2);
 
 	//-- The following functions should be supported by the shape class
 	//-- It should be overridden by each inherited shape

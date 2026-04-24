@@ -25,6 +25,9 @@ public:
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void draw() const override;
 	virtual void moveAllAnimals() = 0;
+	point getRef() { return RefPoint; }
+	int getWidth() { return width; }
+	int getHeight() { return height; }
 	// Change to accept coordinates:
 	virtual void onClick(int x, int y) = 0;                                           ///////////// Malek
 };
@@ -46,7 +49,8 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
-	void moveAllAnimals() {
+
+	void moveAllAnimals() { //movement and animation
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				chickList[i]->moveStep();
@@ -80,7 +84,7 @@ public:
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals(){ }
+	void moveAllAnimals(){}
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
 

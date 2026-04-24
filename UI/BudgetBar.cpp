@@ -236,6 +236,7 @@ void Budgetbar::draw() const
 	iconsList[i]->moveAllAnimals(); // when we draw budget bar, which will be in the main game loop, it will move animals
 	iconsList[i]->draw();
 }
+
 	window* pWind = pGame->getWind();
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, 2*config.toolBarHeight, pWind->GetWidth(), 2*config.toolBarHeight);

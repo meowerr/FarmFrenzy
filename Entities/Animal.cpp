@@ -25,7 +25,7 @@ void Animal::draw() const
 Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
 {}
 
-void Chick::moveStep()
+void Chick::moveStep() //is being called continuously in budgetbar
 {
 	//TO DO: add code for cleanup and game exit here
 	/*
@@ -34,12 +34,12 @@ void Chick::moveStep()
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	*/
 
-	RefPoint.x += curr_vel.x;
-	RefPoint.y += curr_vel.y;
+	RefPoint.x += curr_vel.x; // inc. its x point contin. "velocity of x direction"
+	RefPoint.y += curr_vel.y; //inc. its y point contin. "velocity of y direction"
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1*curr_vel.x; }
 	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y ) { curr_vel.y = -1*curr_vel.y; }
 
-	//cout << "Icon Chick Moved" << endl;
+	//cout << "Icon Chick Moved" << endl; //commented this to avoid lagging in terminal
 }
 
 Cow::Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)

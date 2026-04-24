@@ -10,7 +10,7 @@ public:
 	point curr_vel;
 	//Animal();
 	Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void draw() const override;
+	virtual void draw() const override; 
 	//virtual void random();
 	virtual void moveStep() = 0;  // The action that should be taken each time step, each child of animal should create its own movestep()
 };

@@ -12,7 +12,7 @@ struct point //always public
 class Drawable
 {
 protected: //means only this class and subclasses can access the info 
-	point RefPoint;		//Each game object must have a reference point
+	point RefPoint;		//Each game object must have a reference point x/y
 	int width, height;
 	Game* pGame;        //pGame now knows where Game is in the memory (address)
 

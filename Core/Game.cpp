@@ -5,7 +5,9 @@
 #include "../Warehouse.h"
 #include "../Entities/Animal.h"
 #include "../Wolf.h"
+#include <iostream>
 using namespace std;
+
 Game::Game()
 {
 	//1 - Create the main window
@@ -49,8 +51,7 @@ Game::~Game()
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
 {
-	return pWind->GetMouseClick(x, y);	//Waits for mouse click
-
+	return pWind->GetMouseClick(x, y);	//Gets for mouse click and not Wait because this would pause game loop
 }
 
 string Game::getSrting() const 
@@ -164,10 +165,21 @@ void Game::updateStatusBar() const
 }
 
 
+bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2) {
+	int a1x = a1.getRef().x, a1y = a1.getRef().y;
+	int a2x = a2.getRef().x, a2y = a2.getRef().y;
+
+
+	if ((a1x + a1.getWidth() >= a2x) && (a1x <= a2x + a2.getWidth()) && (a1y <= a2y + a2.getHeight()) && (a1y + a1.getHeight() >= a2y)) { return true; cout << "Collision!"; }
+
+
+	else { return false; }
+}
+
 void Game::randomWolf() {
-	if (rand() % 100 + 1 == 1){ //rolls a number between 1 and 100 and is true if gets 1
+	if ((0 + rand() % (5000 - 0 + 1)) == 1){ //rolls a number between 1 and 5000 and is true if gets 1
 	if (level > 1) {
-	//	cout << "Wolf spawned";
+		cout << "Wolf spawned";
 		point p;
 		std::random_device rd1;
 		std::mt19937 gen1(rd1());
@@ -180,7 +192,7 @@ void Game::randomWolf() {
 		p.y = dist2(gen2);
 
 		wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
-		wolfList[wolfCount]->draw();
+		wolfList[wolfCount]->draw(); //first the wolf is drawn
 		wolfCount++;
 	}
 }
@@ -206,7 +218,7 @@ void Game::go()
 
 	do
 	{
-
+		
 		//////////////////////////////////////// MALEK
 
 		if (timer > 0)
@@ -227,45 +239,51 @@ void Game::go()
 			isExit = true;
 			continue; 
 		}
+		////////////////////////////////////////
 
 
+		
 
 
 
 		// ``````Shazly ``````
-		
-		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
-		pWind->SetBrush(config.bkGrndColor); // set brush color
-		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
-		gameToolbar->draw(); // Keep drawing the toolbar constantly
-		gameBudgetbar->draw(); // same thing
 
-
-		Game::randomWolf();
-			for (int i = 0; i < MAX_ITEMS; i++) {
-			if (wolfList[i] != nullptr) {
-				wolfList[i]->moveStep();
-				wolfList[i]->draw();
-			}
-		}
-
-
-
+		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness - pen for framess
+		pWind->SetBrush(config.bkGrndColor); // set brush color - brushes for filling in the frams
+		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over - this has to be drawn first so it doesnt overlap 
 		// ````````````````````
-		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
-		printBudget(budget_string); //How it will be displayed using the printBudget func.
-		// ... existing code inside the do-while loop ...
-		updateStatusBar();
 		drawegg(300, 400);
 		drawmilk(200, 300);
 		drawegg(300, 400);
 		drawmilk(200, 300);
 		pWarehouse->draw();
-		//printBudget("BUDGET = $1000"); 
-		getMouseClick(x, y);	//Get the coordinates of the user click
-		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
-		//{
-			//[1] If user clicks on the Toolbar
+
+
+		gameToolbar->draw(); // Keep drawing the toolbar constantly
+		gameBudgetbar->draw(); // same thing
+
+
+		// ``````Shazly ``````
+		Game::randomWolf(); // check level - spawns at random coordinates
+
+			for (int i = 0; i < MAX_ITEMS; i++) { //keep moving and drawing the wolf thus animating it.
+			if (wolfList[i] != nullptr) {
+				wolfList[i]->moveStep();
+				wolfList[i]->draw();
+			}
+		}
+		// ````````````````````
+			string budget_string = "BUDGET = $" + to_string(budget); // make a string then turn the integer budget into string
+			printBudget(budget_string); //How it will be displayed using the printBudget func.
+			// ... existing code inside the do-while loop ...
+			updateStatusBar();
+
+			//printBudget("BUDGET = $1000"); 
+			getMouseClick(x, y);	//Get the coordinates of the user click
+			//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
+			//{
+				//[1] If user clicks on the Toolbar
+		
 		if (y >= 0 && y < config.toolBarHeight)
 		{
 			isExit = gameToolbar->handleClick(x, y);
@@ -275,9 +293,7 @@ void Game::go()
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
 
-
-
-		Pause(15);
+		//Pause(15);
 
 		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);

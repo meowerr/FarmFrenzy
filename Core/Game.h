@@ -34,7 +34,7 @@ public:
 	void clearBudget() const;
 	void printBudget(string msg) const;
 	void clearStatusBar() const;	//Clears the status bar
-
+	bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2);
 
 	void printMessage(string msg) const;	//Print a message on Status bar
 
