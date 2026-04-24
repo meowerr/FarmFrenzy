@@ -8,6 +8,7 @@ class Animal :public Drawable // Animal Is-A of drawable
 private:
 	string image_path;
 public:
+	virtual ~Animal() {}
 	point curr_pos;
 	point curr_vel;
 	//Animal();

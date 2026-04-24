@@ -205,7 +205,8 @@ window* Game::getWind() const
 void Game::go()
 {
 	//This function reads the position where the user clicks to determine the desired operation
-	int x, y;
+	int x = 0;
+	int y = 0;
 	bool isExit = false;
 
 	//Change the title

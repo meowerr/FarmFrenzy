@@ -62,7 +62,7 @@ public:
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				chickList[i]->moveStep();
-				for (int j = 0;j < MAX_ITEMS;j++) { //loop through grasslist to check if colliding with any grass
+				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
 					if (grasslist[j]!= nullptr) {
 						if (chickList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
@@ -97,7 +97,7 @@ public:
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (CowList[i] != nullptr) {
 				CowList[i]->moveStep();
-				for (int j = 0;j < MAX_ITEMS;j++) { //loop through grasslist to check if colliding with any grass
+				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
 					if (grasslist[j] != nullptr) {
 						if (CowList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter

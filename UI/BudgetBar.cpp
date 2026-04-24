@@ -65,7 +65,7 @@ CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string
 WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	Grasslist = new Grass * [MAX_ITEMS];
-	for (int i = 0; i < MAX_ITEMS; i++) { // Changed 10 to 15 to prevent memory crashes
+	for (int i = 0; i < 15; i++) { // Changed 10 to 15 to prevent memory crashes
 		Grasslist[i] = nullptr;
 	}
 }
