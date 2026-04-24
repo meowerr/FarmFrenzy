@@ -45,6 +45,15 @@ Game::Game()
 
 Game::~Game()
 {
+	delete pWind;
+	delete gameToolbar;
+	delete gameBudgetbar;
+	delete pWarehouse;
+	for (int i = 0; i < wolfCount; i++) {
+		if (wolfList[i] != nullptr) {
+			delete wolfList[i];
+		}
+	}
 }
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking

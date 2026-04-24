@@ -49,13 +49,20 @@ public:
 	Chick** chickList;
 	int count = 0;
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	~ChickIcon() {
+		for (int i = 0; i < count; i++) {
+			if (chickList[i] != nullptr) delete chickList[i];
+		}
+		delete[] chickList; 
+	}
+
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
 	void moveAllAnimals(Grass**grasslist) {
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (chickList[i] != nullptr) {
 				chickList[i]->moveStep();
-				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
+				for (int j = 0;j < MAX_ITEMS;j++) { //loop through grasslist to check if colliding with any grass
 					if (grasslist[j]!= nullptr) {
 						if (chickList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
@@ -79,12 +86,18 @@ public:
 	Cow** CowList;
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	~CowIcon() {
+		for (int i = 0; i < count; i++) {
+			if (CowList[i] != nullptr) delete CowList[i];
+		}
+		delete[] CowList;
+	}
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
 	void moveAllAnimals(Grass** grasslist) { 
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (CowList[i] != nullptr) {
 				CowList[i]->moveStep();
-				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
+				for (int j = 0;j < MAX_ITEMS;j++) { //loop through grasslist to check if colliding with any grass
 					if (grasslist[j] != nullptr) {
 						if (CowList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
@@ -106,6 +119,12 @@ public:
 	Grass** Grasslist;
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	~WaterIcon() {
+		for (int i = 0; i < count; i++) {
+			if (Grasslist[i] != nullptr) delete Grasslist[i];
+		}
+		delete[] Grasslist;
+	}
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
 	void moveAllAnimals(Grass** grasslist){ }
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
@@ -143,4 +162,3 @@ public:
 	bool handleClick(int x, int y);	//handles clicks on toolbar icons, returns true if exit is clicked
 
 };
-

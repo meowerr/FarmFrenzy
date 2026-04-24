@@ -235,7 +235,7 @@ Budgetbar::~Budgetbar()
 {
 	for (int i = 0; i < ANIMAL_COUNT; i++)
 		delete iconsList[i];
-	delete iconsList;
+	delete[] iconsList;
 }
 
 void Budgetbar::draw() const
