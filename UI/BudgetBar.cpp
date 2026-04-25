@@ -27,14 +27,20 @@ void BudgetbarIcon::draw() const
 	pWind->DrawString(RefPoint.x + 18, RefPoint.y + height - 15, "SELL");
 }
 
-Grass::Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
+Grass::Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path,int r_foodcounter) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
+	foodcounter = r_foodcounter;
+	width = r_width;
+	height = r_height;
+	RefPoint = r_point;
+
 }
 void Grass::draw() const
 {
 	window* pWind = pGame->getWind();
 	pGame->drawfoodarea(RefPoint.x, RefPoint.y); //use function drawfoodarea
+
 }
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
@@ -189,7 +195,7 @@ void WaterIcon::onClick(int x, int y)
 			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 			p.y = dist2(gen2);
 
-			Grasslist[count] = new Grass(pGame, p, 50, 50, image_path);
+			Grasslist[count] = new Grass(pGame, p, 50, 50, image_path,10);
 			Grasslist[count]->draw();
 			count++;
 		}
@@ -232,8 +238,10 @@ Budgetbar::~Budgetbar()
 
 void Budgetbar::draw() const
 {
+	WaterIcon* pWaterIcon = (WaterIcon*)iconsList[ICON_WATER];
+	Grass** grasslist = pWaterIcon->Grasslist;
 	for (int i = 0; i < ANIMAL_COUNT; i++) {
-	iconsList[i]->moveAllAnimals(); // when we draw budget bar, which will be in the main game loop, it will move animals
+	iconsList[i]->moveAllAnimals(grasslist); // when we draw budget bar, which will be in the main game loop, it will move animals
 	iconsList[i]->draw();
 }
 

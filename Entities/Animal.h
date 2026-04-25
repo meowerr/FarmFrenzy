@@ -1,6 +1,8 @@
 #pragma once
 #include "../Core/Drawable.h"
 
+class Grass; 
+
 class Animal :public Drawable // Animal Is-A of drawable
 {
 private:
@@ -13,6 +15,8 @@ public:
 	virtual void draw() const override; 
 	//virtual void random();
 	virtual void moveStep() = 0;  // The action that should be taken each time step, each child of animal should create its own movestep()
+	bool iscolliding(Grass* targetgrass);  //function to check if colliding with grass
+		
 };
 
 class Chick : public Animal 
@@ -50,4 +54,4 @@ public:
 //		}
 //	}
 //
-//};
+//}

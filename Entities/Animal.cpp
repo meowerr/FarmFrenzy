@@ -10,6 +10,9 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 {
 	image_path = img_path;
 	curr_pos = r_point;
+	width = r_width;
+	height = r_height;
+	RefPoint = r_point;
 	curr_vel.x = rand() % 3; // random number from 0 to 2. Random starting velocity
 	curr_vel.y = rand() % 3; 
 
@@ -20,6 +23,7 @@ void Animal::draw() const
 	//draw image of this object
 	window* pWind = pGame->getWind();
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
+
 }
 
 Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
@@ -56,7 +60,21 @@ void Cow::moveStep()
 	//cout << "Icon Cow moved" << endl; removed this so no lag in cmd
 
 }
-
+bool Animal:: iscolliding(Grass* targetgrass){ //function to check if colliding with grass
+	int animalleft = RefPoint.x; //left edge of animal is the refpoint.x
+int animalup = RefPoint.y; //up edge of animal is the refpoint.y
+int animalright = RefPoint.x + width; //to get right edge of animal, we add width to refpoint.x
+int animaldown = RefPoint.y + height; //to get down edge of animal, we add height to refpoint.y
+int grassleft = targetgrass->getrefpoint().x; //use getter functions to get refpoint.x of grass, which is left edge
+int grassup = targetgrass->getrefpoint().y; //use getter functions to get refpoint.y of grass, which is up edge
+int grassright = targetgrass->getrefpoint().x + targetgrass->getwidth(); //to get right edge, we use getter functions to get width and refpoint.x and add them
+int grassdown = targetgrass->getrefpoint().y + targetgrass->getheight(); //to get down edge, we use getter functions to get height and refpoint.y and add them
+if (animalright > grassleft && animalleft<grassright && animaldown>grassup && animalup < grassdown) { //animal mus be under grassup, to the right of grassleft, to the left of grassright, and above grassdown
+	
+	return true;
+}
+return false;
+	}
 
 
 
