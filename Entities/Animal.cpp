@@ -39,8 +39,6 @@ Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img
 	 timermax=10; //max timer for each animal, when counter reaches timermax, spawn egg 
 
 }
-void Chick::moveStep() //put counter logic here because it loops
-{}
 
 void Chick::moveStep() //is being called continuously in budgetbar
 {
