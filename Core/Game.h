@@ -39,7 +39,7 @@ public:
 	bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2);
 
 	void printMessage(string msg) const;	//Print a message on Status bar
-
+	void restart();
 	void go();
 
 	window* getWind() const;		//returns a pointer to the graphics window

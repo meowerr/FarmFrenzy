@@ -93,6 +93,38 @@ string Game::getSrting() const
 	}
 }
 
+void Game::restart() {
+
+	printMessage("Game Restarting...");
+	pWind->UpdateBuffer();
+	Pause(1200);
+
+	budget = 5000;
+	timer = 120;
+	goal = 0;
+	level = 1;
+	animalCount = 0;
+	wolfCount = 0;
+	eggCount = 0;
+	milkcount = 0;
+	pWarehouse->resetegg();
+	pWarehouse->resetmilk();
+
+
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		if (wolfList[i] != nullptr) {
+			delete[] wolfList[i];
+			wolfList[i] = nullptr;
+
+		}
+
+		delete gameBudgetbar; // as cows,chicks,and grass are drawn under budget bar
+		createBudgetbar();
+	}
+}
+
+
+
 window* Game::CreateWind(int w, int h, int x, int y) const
 {
 	window* pW = new window(w, h, x, y);
@@ -162,7 +194,7 @@ void Game::printMessage(string msg) const
 
 void Game::updateStatusBar() const
 {
-	// Clear the old text
+	//Clear the old text
 	clearStatusBar();
 
 	// Combine the four variables into one formatted string
@@ -171,11 +203,11 @@ void Game::updateStatusBar() const
 		"      Level: " + to_string(level) +
 		"      Animals: " + to_string(animalCount);
 
-	// Set the font and draw the string
+	//Set the font and draw the string
 	pWind->SetPen(WHITE, 50);
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
 
-	// Draw it using the exact same coordinates that printMessage uses
+	//Draw it using the exact same coordinates that printMessage uses
 	pWind->DrawString(10, config.windHeight - (int)(0.85 * config.statusBarHeight), statusText);
 }
 
@@ -236,7 +268,7 @@ void Game::go()
 	{
 
 		//////////////////////////////////////// MALEK
-		if (!isPaused)
+		if (!isPaused)//<--Omar
 		{
 			if (timer > 0)
 			{
@@ -261,7 +293,7 @@ void Game::go()
 
 
 
-		// 1. Draw the Background FIRST
+		// 1. Draw the Background 
 		pWind->SetPen(config.bkGrndColor, 1);
 		pWind->SetBrush(config.bkGrndColor);
 		pWind->DrawRectangle(0, config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
@@ -279,7 +311,7 @@ void Game::go()
 		
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (wolfList[i] != nullptr) {
-				if (!isPaused) {
+				if (!isPaused) {   //<--Omar
 					wolfList[i]->moveStep();
 				}
 				wolfList[i]->draw();

@@ -18,4 +18,7 @@ public:
     int milkprice = 20;
     void addegg() { storedeggs++; } //function to add eggs and milk in warehouse
     void addmilk() { storedmilk++; }
+
+    void resetegg() { storedeggs = 0; }//shazly
+    void resetmilk() { storedmilk = 0; }
 };

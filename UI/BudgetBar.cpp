@@ -272,7 +272,7 @@ void ChickIcon::moveAllAnimals(Grass** grasslist)
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		if (chickList[i] != nullptr) {
 
-			if (!pGame->isPaused)
+			if (!pGame->isPaused) //<--Omar
 			{
 				chickList[i]->moveStep();
 
@@ -289,7 +289,7 @@ void ChickIcon::moveAllAnimals(Grass** grasslist)
 				}
 			}
 
-			chickList[i]->draw();
+			chickList[i]->draw(); //outside pause condition to not disappear
 		}
 	}
 }
@@ -316,7 +316,7 @@ void CowIcon::moveAllAnimals(Grass** grasslist)
 				}
 			}
 
-			CowList[i]->draw();
+			CowList[i]->draw();  //outside pause condition to not disappear
 		}
 	}
 }
