@@ -47,6 +47,15 @@ Game::Game()
 
 Game::~Game()
 {
+	delete pWind;
+	delete gameToolbar;
+	delete gameBudgetbar;
+	delete pWarehouse;
+	for (int i = 0; i < wolfCount; i++) {
+		if (wolfList[i] != nullptr) {
+			delete wolfList[i];
+		}
+	}
 }
 
 clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Game, gets where we clicking
@@ -208,7 +217,8 @@ window* Game::getWind() const
 void Game::go()
 {
 	//This function reads the position where the user clicks to determine the desired operation
-	int x, y;
+	int x = 0;
+	int y = 0;
 	bool isExit = false;
 
 	//Change the title
@@ -237,7 +247,7 @@ void Game::go()
 			pWind->WaitMouseClick(dummyX, dummyY);
 
 			isExit = true;
-			continue; 
+			continue;
 		}
 		////////////////////////////////////////
 
@@ -247,6 +257,10 @@ void Game::go()
 
 
 		// ``````Shazly ``````
+
+		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
+		pWind->SetBrush(config.bkGrndColor); // set brush color
+		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
 
 		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness - pen for framess
 		pWind->SetBrush(config.bkGrndColor); // set brush color - brushes for filling in the frams
@@ -263,27 +277,28 @@ void Game::go()
 		gameBudgetbar->draw(); // same thing
 
 
-		// ``````Shazly ``````
-		Game::randomWolf(); // check level - spawns at random coordinates
-
-			for (int i = 0; i < MAX_ITEMS; i++) { //keep moving and drawing the wolf thus animating it.
+		Game::randomWolf();
+			for (int i = 0; i < MAX_ITEMS; i++) {
 			if (wolfList[i] != nullptr) {
 				wolfList[i]->moveStep();
 				wolfList[i]->draw();
 			}
 		}
 		// ````````````````````
-			string budget_string = "BUDGET = $" + to_string(budget); // make a string then turn the integer budget into string
-			printBudget(budget_string); //How it will be displayed using the printBudget func.
-			// ... existing code inside the do-while loop ...
-			updateStatusBar();
-
-			//printBudget("BUDGET = $1000"); 
-			getMouseClick(x, y);	//Get the coordinates of the user click
-			//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
-			//{
-				//[1] If user clicks on the Toolbar
-		
+		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
+		printBudget(budget_string); //How it will be displayed using the printBudget func.
+		// ... existing code inside the do-while loop ...
+		updateStatusBar();
+		drawegg(300, 400);
+		drawmilk(200, 300);
+		drawegg(300, 400);
+		drawmilk(200, 300);
+		pWarehouse->draw();
+		//printBudget("BUDGET = $1000"); 
+		getMouseClick(x, y);	//Get the coordinates of the user click
+		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
+		//{
+			//[1] If user clicks on the Toolbar
 		if (y >= 0 && y < config.toolBarHeight)
 		{
 			isExit = gameToolbar->handleClick(x, y);
@@ -292,8 +307,29 @@ void Game::go()
 		{
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
+		else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
+			for (int i = 0; i < eggCount;i++) {
+				if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) { //check if mouse click is in bounds of egg
+					eggs[i] = eggs[eggCount - 1]; //replace removed egg with last egg in array so not to leave gap in array
+					eggCount--; //decrease egg count
+					pWarehouse->addegg(); //add egg to warehouse
+					break;
+				}
+			}
+			for (int i = 0; i < milkcount;i++) {
+				if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) { //check if mouse click is in bounds of milk
+					milks[i] = milks[milkcount - 1]; //replace removed milk with last milk in array so not to leave gap in array
+					milkcount--; //decrease milk count
+					pWarehouse->addmilk(); //add milk to warehouse
+					break;
+				}
+			}
+		}
 
-		//Pause(15);
+
+
+		Pause(15);
+
 
 		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
@@ -303,11 +339,22 @@ void Game::drawfoodarea(int x, int y)const {
 	pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
 }
 
-void Game::drawegg(int x, int y)const {
+void Game::drawegg(int x, int y){
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
+	if (eggCount<100){ //store egg positions
+		eggs[eggCount].x = x;
+		eggs[eggCount].y = y;
+		eggCount++;
+
+	}
 }
-void Game::drawmilk(int x, int y)const {
+void Game::drawmilk(int x, int y) {
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
+	if (milkcount < 100) { //store milk positions
+		milks[milkcount].x = x;
+		milks[milkcount].y = y;
+		milkcount++;
+	}
 }
