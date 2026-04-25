@@ -36,7 +36,9 @@ PauseIcon::PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 }
 void PauseIcon::onClick()
 {
-	// TO DO: add code for pausing the game here
+	//omar
+	pGame->isPaused = true;
+	
 }
 
 // --- Resume Icon ---
@@ -45,7 +47,8 @@ ResumeIcon::ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, 
 }
 void ResumeIcon::onClick()
 {
-	// TO DO: add code for resuming the game here
+	//omar
+	pGame->isPaused = false;
 }
 
 // --- Save Icon ---

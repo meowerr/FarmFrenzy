@@ -13,6 +13,8 @@ private:
 	Budgetbar* gameBudgetbar;
 
 public:
+	//omar 
+	bool isPaused = false;
 	int budget = 5000;
 	int timer = 120;
 	int goal = 0;
@@ -48,6 +50,10 @@ public:
 
 	Wolf* wolfList[MAX_ITEMS];
 	int wolfCount = 0;
+	//omar
+	Chick* chickList[MAX_ITEMS];
+	Cow* cowList[MAX_ITEMS];
 	
+
 };
 

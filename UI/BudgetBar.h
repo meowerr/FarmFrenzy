@@ -51,25 +51,7 @@ public:
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
 
-	void moveAllAnimals(Grass**grasslist) {
-		for (int i = 0; i < MAX_ITEMS; i++) {
-			if (chickList[i] != nullptr) {
-				chickList[i]->moveStep();
-				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
-					if (grasslist[j]!= nullptr) {
-						if (chickList[i]->iscolliding(grasslist[j])) {
-							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
-							if (grasslist[j]->foodcounter == 0) { //if food counter reach 0, delete grass and set pointer to null
-								delete grasslist[j];
-								grasslist[j] = nullptr;
-							}
-						}
-					}
-				}
-				chickList[i]->draw();
-			}
-		}
-	}
+	void moveAllAnimals(Grass** grasslist) override;
 };
  
 
@@ -80,25 +62,7 @@ public:
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals(Grass** grasslist) { 
-		for (int i = 0; i < MAX_ITEMS; i++) {
-			if (CowList[i] != nullptr) {
-				CowList[i]->moveStep();
-				for (int j = 0;j < 15;j++) { //loop through grasslist to check if colliding with any grass
-					if (grasslist[j] != nullptr) {
-						if (CowList[i]->iscolliding(grasslist[j])) {
-							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
-							if (grasslist[j]->foodcounter == 0) { //if food counter reach 0, delete grass and set pointer to null
-								delete grasslist[j];
-								grasslist[j] = nullptr;
-							}
-						}
-					}
-				}
-				CowList[i]->draw();
-			}
-		}
-	}
+	void moveAllAnimals(Grass** grasslist) override;
 };
 class WaterIcon : public BudgetbarIcon
 {

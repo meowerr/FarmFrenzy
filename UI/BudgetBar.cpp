@@ -261,3 +261,59 @@ bool Budgetbar::handleClick(int x, int y)
 
 	return false;
 }
+
+//malek
+
+void ChickIcon::moveAllAnimals(Grass** grasslist)
+{
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		if (chickList[i] != nullptr) {
+
+			if (!pGame->isPaused)
+			{
+				chickList[i]->moveStep();
+
+				for (int j = 0; j < 15; j++) {
+					if (grasslist[j] != nullptr) {
+						if (chickList[i]->iscolliding(grasslist[j])) {
+							grasslist[j]->decreasefoodcounter();
+							if (grasslist[j]->foodcounter == 0) {
+								delete grasslist[j];
+								grasslist[j] = nullptr;
+							}
+						}
+					}
+				}
+			}
+
+			chickList[i]->draw();
+		}
+	}
+}
+
+void CowIcon::moveAllAnimals(Grass** grasslist)
+{
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		if (CowList[i] != nullptr) {
+
+			if (!pGame->isPaused)
+			{
+				CowList[i]->moveStep();
+
+				for (int j = 0; j < 15; j++) {
+					if (grasslist[j] != nullptr) {
+						if (CowList[i]->iscolliding(grasslist[j])) {
+							grasslist[j]->decreasefoodcounter();
+							if (grasslist[j]->foodcounter == 0) {
+								delete grasslist[j];
+								grasslist[j] = nullptr;
+							}
+						}
+					}
+				}
+			}
+
+			CowList[i]->draw();
+		}
+	}
+}

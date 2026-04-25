@@ -18,6 +18,12 @@ Game::Game()
 	
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		wolfList[i] = nullptr;
+		//omar
+		for (int i = 0; i < MAX_ITEMS; i++) {
+			wolfList[i] = nullptr;
+			chickList[i] = nullptr; 
+			cowList[i] = nullptr;   
+		}
 	}
 	
 	//4- Create the Plane
@@ -201,97 +207,94 @@ void Game::go()
 
 	//Change the title
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy - - - - - - - - - - -");
-	
+
 	pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
 
 	do
 	{
-
-		//////////////////////////////////////// MALEK
-
-		if (timer > 0)
+		/////////////////////////////////////// MALEK
+		if (!isPaused) //<--omar
 		{
-			if (ElapsedTime(1000)) {
-				timer--;
+			if (timer > 0)
+			{
+				if (ElapsedTime(1000)) { timer--; }
+
+				Game::randomWolf(); // Spawns animals safely inside the gate
+
+				// MATH ONLY - NO DRAWING IN HERE!
+				for (int i = 0; i < MAX_ITEMS; i++)
+				{
+					if (wolfList[i] != nullptr) { wolfList[i]->moveStep(); }
+					if (chickList[i] != nullptr) { chickList[i]->moveStep(); }
+					if (cowList[i] != nullptr) { cowList[i]->moveStep(); }
+				}
 			}
-		}
-		else
-		{
-			printMessage("Time's up! GAME OVER. Click anywhere to exit...");
+			else
+			{
+				printMessage("Time's up! GAME OVER. Click anywhere to exit...");
+				pWind->UpdateBuffer();
+				pWind->FlushMouseQueue();
+				int dummyX, dummyY;
+				pWind->WaitMouseClick(dummyX, dummyY);
+				isExit = true;
+				continue;
+			}
+		} 
 
-			pWind->UpdateBuffer();
-			pWind->FlushMouseQueue();
-			int dummyX, dummyY;
-			pWind->WaitMouseClick(dummyX, dummyY);
-
-			isExit = true;
-			continue; 
-		}
-
-
-
-
-
-		// ``````Shazly ``````
 		
-		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
-		pWind->SetBrush(config.bkGrndColor); // set brush color
-		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
-		gameToolbar->draw(); // Keep drawing the toolbar constantly
-		gameBudgetbar->draw(); // same thing
+		//RENDERING 
+		
 
+		// 1. Draw the Background FIRST
+		pWind->SetPen(config.bkGrndColor, 1);
+		pWind->SetBrush(config.bkGrndColor);
+		pWind->DrawRectangle(0, config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
 
-		Game::randomWolf();
-			for (int i = 0; i < MAX_ITEMS; i++) {
-			if (wolfList[i] != nullptr) {
-				wolfList[i]->moveStep();
-				wolfList[i]->draw();
-			}
+		// 2. Draw the UI
+		updateStatusBar();
+		gameToolbar->draw();
+		gameBudgetbar->draw();
+		pWarehouse->draw();
+
+		// 3. Draw the Animals
+		for (int i = 0; i < MAX_ITEMS; i++)
+		{
+			if (wolfList[i] != nullptr) { wolfList[i]->draw(); }
+			if (chickList[i] != nullptr) { chickList[i]->draw(); }
+			if (cowList[i] != nullptr) { cowList[i]->draw(); }
 		}
 
+		
+		// INPUT & SCREEN REFRESH
+		
 
+		int x, y;
+		getMouseClick(x, y);
 
-		// ````````````````````
-		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
-		printBudget(budget_string); //How it will be displayed using the printBudget func.
-		// ... existing code inside the do-while loop ...
-		updateStatusBar();
-		drawegg(300, 400);
-		drawmilk(200, 300);
-		drawegg(300, 400);
-		drawmilk(200, 300);
-		pWarehouse->draw();
-		//printBudget("BUDGET = $1000"); 
-		getMouseClick(x, y);	//Get the coordinates of the user click
-		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
-		//{
-			//[1] If user clicks on the Toolbar
-		if (y >= 0 && y < config.toolBarHeight)
-		{
+		if (y >= 0 && y < config.toolBarHeight) {
 			isExit = gameToolbar->handleClick(x, y);
 		}
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight)
-		{
+		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
 
-
-
+		// SLOW DOWN AND PUSH TO MONITOR ONCE
 		Pause(15);
+		pWind->UpdateBuffer();
 
-		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
 }
-void Game::drawfoodarea(int x, int y)const {
-	window* pWind = getWind(); //open window
-	pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
-}
 
-void Game::drawegg(int x, int y)const {
-	window* pWind = getWind(); //open window
-	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
-}
-void Game::drawmilk(int x, int y)const {
-	window* pWind = getWind(); //open window
-	pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
-}
+	void Game::drawfoodarea(int x, int y)const {
+		window* pWind = getWind(); //open window
+		pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
+	}
+
+	void Game::drawegg(int x, int y)const {
+		window* pWind = getWind(); //open window
+		pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
+	}
+	void Game::drawmilk(int x, int y)const {
+		window* pWind = getWind(); //open window
+		pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
+	}
