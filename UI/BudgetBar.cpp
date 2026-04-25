@@ -40,7 +40,9 @@ void Grass::draw() const
 {
 	window* pWind = pGame->getWind();
 	pGame->drawfoodarea(RefPoint.x, RefPoint.y); //use function drawfoodarea
-
+	pWind->SetPen(BLACK, 50); //display food count above food area
+	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 10, RefPoint.y + 15, to_string(foodcounter));
 }
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
@@ -63,7 +65,7 @@ CowIcon::CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string
 WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	Grasslist = new Grass * [MAX_ITEMS];
-	for (int i = 0; i < MAX_ITEMS; i++) { // Changed 10 to 15 to prevent memory crashes
+	for (int i = 0; i < 15; i++) { // Changed 10 to 15 to prevent memory crashes
 		Grasslist[i] = nullptr;
 	}
 }
@@ -207,9 +209,9 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 {
 	//First prepare List of images for each icon
 	//To control the order of these images in the menu, reoder them in enum ICONS above	
-	iconsImages[ICON_CHICK] = "images/chick.jpg";
-	iconsImages[ICON_COW] = "images/cow.jpg";
-	iconsImages[ICON_WATER] = "images/water.jpg";
+	iconsImages[ICON_CHICK] = "images\\chick.jpg";
+	iconsImages[ICON_COW] = "images\\cow.jpg";
+	iconsImages[ICON_WATER] = "images\\water.jpg";
 
 	point p;
 	p.x = 0;
@@ -233,7 +235,7 @@ Budgetbar::~Budgetbar()
 {
 	for (int i = 0; i < ANIMAL_COUNT; i++)
 		delete iconsList[i];
-	delete iconsList;
+	delete[] iconsList;
 }
 
 void Budgetbar::draw() const
@@ -244,6 +246,7 @@ void Budgetbar::draw() const
 	iconsList[i]->moveAllAnimals(grasslist); // when we draw budget bar, which will be in the main game loop, it will move animals
 	iconsList[i]->draw();
 }
+
 	window* pWind = pGame->getWind();
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, 2*config.toolBarHeight, pWind->GetWidth(), 2*config.toolBarHeight);
