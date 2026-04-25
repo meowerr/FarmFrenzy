@@ -54,6 +54,14 @@ void Chick::moveStep() //is being called continuously in budgetbar
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1*curr_vel.x; }
 	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y ) { curr_vel.y = -1*curr_vel.y; }
 
+	if (pGame->timer != lastseentime) { //if time changed, increase animal counter
+		animalcounter++;
+		lastseentime = pGame->timer; //update timer
+	}
+	if (animalcounter >= timermax) { //if animal counter reaches timer max, spawn milk
+		pGame->drawegg(RefPoint.x, RefPoint.y); //draw milk at cow position
+		animalcounter = 0;
+	}
 	//cout << "Icon Chick Moved" << endl;
 }
 

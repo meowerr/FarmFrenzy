@@ -63,29 +63,8 @@ public:
 	}
 
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
-
 	void moveAllAnimals(Grass** grasslist) override;
 
-
-	void moveAllAnimals(Grass** grasslist) {
-		for (int i = 0; i < MAX_ITEMS; i++) {
-			if (chickList[i] != nullptr) {
-				chickList[i]->moveStep();
-				for (int j = 0; j < 15; j++) { //loop through grasslist to check if colliding with any grass
-					if (grasslist[j] != nullptr) {
-						if (chickList[i]->iscolliding(grasslist[j])) {
-							grasslist[j]->decreasefoodcounter(); // if colliding, decrease food counter
-							if (grasslist[j]->foodcounter == 0) { //if food counter reach 0, delete grass and set pointer to null
-								delete grasslist[j];
-								grasslist[j] = nullptr;
-							}
-						}
-					}
-				}
-				chickList[i]->draw();
-			}
-		}
-	}
 };
 
 

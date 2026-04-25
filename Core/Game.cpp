@@ -236,24 +236,26 @@ void Game::go()
 	{
 
 		//////////////////////////////////////// MALEK
-
-		if (timer > 0)
+		if (!isPaused)
 		{
-			if (ElapsedTime(1000)) {
-				timer--;
+			if (timer > 0)
+			{
+				if (ElapsedTime(1000)) {
+					timer--;
+				}
 			}
-		}
-		else
-		{
-			printMessage("Time's up! GAME OVER. Click anywhere to exit...");
+			else
+			{
+				printMessage("Time's up! GAME OVER. Click anywhere to exit...");
 
-			pWind->UpdateBuffer();
-			pWind->FlushMouseQueue();
-			int dummyX, dummyY;
-			pWind->WaitMouseClick(dummyX, dummyY);
+				pWind->UpdateBuffer();
+				pWind->FlushMouseQueue();
+				int dummyX, dummyY;
+				pWind->WaitMouseClick(dummyX, dummyY);
 
-			isExit = true;
-			continue; 
+				isExit = true;
+				continue;
+			}
 		}
 
 
@@ -274,12 +276,16 @@ void Game::go()
 
 
 		Game::randomWolf();
-			for (int i = 0; i < MAX_ITEMS; i++) {
+		
+		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (wolfList[i] != nullptr) {
-				wolfList[i]->moveStep();
+				if (!isPaused) {
+					wolfList[i]->moveStep();
+				}
 				wolfList[i]->draw();
 			}
 		}
+		
 
 
 
@@ -288,10 +294,6 @@ void Game::go()
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		// ... existing code inside the do-while loop ...
 		updateStatusBar();
-		drawegg(300, 400);
-		drawmilk(200, 300);
-		drawegg(300, 400);
-		drawmilk(200, 300);
 		pWarehouse->draw();
 		//printBudget("BUDGET = $1000"); 
 		getMouseClick(x, y);	//Get the coordinates of the user click
@@ -326,25 +328,22 @@ void Game::go()
 
 		// SLOW DOWN AND PUSH TO MONITOR ONCE
 		Pause(15);
-		pWind->UpdateBuffer();
+		for (int i = 0; i < eggCount; i++) {
+			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
+		}
+		for (int i = 0; i < milkcount; i++) {
+			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
+		}
 
 		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
 	} while (!isExit);
 }
 
-	void Game::drawfoodarea(int x, int y)const {
+void Game::drawfoodarea(int x, int y)const {
 		window* pWind = getWind(); //open window
 		pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
 	}
 
-	void Game::drawegg(int x, int y)const {
-		window* pWind = getWind(); //open window
-		pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
-	}
-	void Game::drawmilk(int x, int y)const {
-		window* pWind = getWind(); //open window
-		pWind->DrawImage("images\\milk.jpg", x, y, 50, 50); //draw milk.jpg from images folder, 50x50
-	}
 void Game::drawegg(int x, int y){
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50

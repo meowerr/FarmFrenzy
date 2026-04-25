@@ -30,7 +30,7 @@ void ExitIcon::onClick()
 {
 	//TO DO: add code for cleanup and game exit here
 }
-// --- Pause Icon ---
+//Pause Icon
 PauseIcon::PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : ToolbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 }
@@ -41,7 +41,7 @@ void PauseIcon::onClick()
 	
 }
 
-// --- Resume Icon ---
+// Resume Icon
 ResumeIcon::ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : ToolbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 }
@@ -51,7 +51,7 @@ void ResumeIcon::onClick()
 	pGame->isPaused = false;
 }
 
-// --- Save Icon ---
+// Save Icon
 SaveIcon::SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : ToolbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 }
@@ -60,7 +60,7 @@ void SaveIcon::onClick()
 	// TO DO: add code for saving the game here
 }
 
-// --- Load Icon ---
+// Load Icon
 LoadIcon1::LoadIcon1(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : ToolbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 }
