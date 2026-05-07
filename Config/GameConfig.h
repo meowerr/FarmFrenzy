@@ -17,8 +17,9 @@ struct  //contains all game configurations (MAY be loaded from a configuration f
 	int playingAreaHeight = windHeight - toolBarHeight - statusBarHeight;
 
 	color	penColor = BLUE,			//color used to draw lines/write messages
-		bkGrndColor = POWDERBLUE,		//Background color
-		statusBarColor = BLACK;	//background color of the status
+		bkGrndColor = color(26, 145, 17),    // #1a9111 (Playground Green)
+		toolBarColor = color(138, 11, 60),   // #8a0b3c (Bars Dark Red)
+		statusBarColor = BLACK;
 	int penWidth = 3;			//width of the pen that draws shapes
 
 	int	iconWidth = 70;			//Width of each icon in toolbar 
