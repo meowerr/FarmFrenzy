@@ -224,9 +224,10 @@ bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2) {
 }
 
 void Game::randomWolf() {
-	if ((0 + rand() % (5000 - 0 + 1)) == 1){ //rolls a number between 1 and 5000 and is true if gets 1
-	if (level > 1) {
+	if (wolfCount < level){ //rolls a number between 1 and 5000 and is true if gets 1
 		cout << "Wolf spawned";
+		for (int i = 0; i < level; i++) {
+
 		point p;
 		std::random_device rd1;
 		std::mt19937 gen1(rd1());
@@ -238,11 +239,14 @@ void Game::randomWolf() {
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
-		wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
-		wolfList[wolfCount]->draw(); //first the wolf is drawn
-		wolfCount++;
+		
+			wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+			wolfList[wolfCount]->draw(); //first the wolf is drawn
+			wolfCount++;
+		}
+			
 	}
-}
+
 }
 
 
@@ -320,7 +324,7 @@ void Game::go()
 			}
 		}
 		
-
+		
 
 
 		// ````````````````````
