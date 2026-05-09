@@ -151,6 +151,9 @@
     <ClCompile Include="Wolf.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Grass.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMUgraphicsLib\auxil.h">
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="Wolf.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

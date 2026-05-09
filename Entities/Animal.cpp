@@ -4,6 +4,7 @@
 #include "../Core/Game.h"
 #include "../Wolf.h"
 #include <iostream>
+#include "../Grass.h"
 using namespace std;
 
 Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)

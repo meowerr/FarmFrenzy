@@ -2,6 +2,7 @@
 #include "../Config/GameConfig.h"
 #include "../Core/Game.h"
 #include <iostream>
+#include "../Grass.h"
 using namespace std;
 
 
@@ -27,23 +28,6 @@ void BudgetbarIcon::draw() const
 	pWind->DrawString(RefPoint.x + 18, RefPoint.y + height - 15, "SELL");
 }
 
-Grass::Grass(Game* r_pGame, point r_point, int r_width, int r_height, string img_path,int r_foodcounter) : Drawable(r_pGame, r_point, r_width, r_height)
-{
-	image_path = img_path;
-	foodcounter = r_foodcounter;
-	width = r_width;
-	height = r_height;
-	RefPoint = r_point;
-
-}
-void Grass::draw() const
-{
-	window* pWind = pGame->getWind();
-	pGame->drawfoodarea(RefPoint.x, RefPoint.y); //use function drawfoodarea
-	pWind->SetPen(BLACK, 50); //display food count above food area
-	pWind->SetFont(16, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(RefPoint.x + 10, RefPoint.y + 15, to_string(foodcounter));
-}
 ChickIcon::ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
 {
 	chickList = new Chick * [MAX_ITEMS];
@@ -280,6 +264,7 @@ void ChickIcon::moveAllAnimals(Grass** grasslist)
 					if (grasslist[j] != nullptr) {
 						if (chickList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter();
+							chickList[i]->animalcounter++; // increase animal counter when eating grass
 							if (grasslist[j]->foodcounter == 0) {
 								delete grasslist[j];
 								grasslist[j] = nullptr;
@@ -307,6 +292,7 @@ void CowIcon::moveAllAnimals(Grass** grasslist)
 					if (grasslist[j] != nullptr) {
 						if (CowList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter();
+							CowList[i]->animalcounter++;
 							if (grasslist[j]->foodcounter == 0) {
 								delete grasslist[j];
 								grasslist[j] = nullptr;
