@@ -44,7 +44,7 @@ Game::Game()
 	warehousePos.x = config.windWidth - 200;  // 200 pixels away from the right wall
 	warehousePos.y = config.windHeight - 220; // Above the status bar
 
-	// Instantiate it (Width = 150, Height = 150)
+	//Instantiate it (Width = 150, Height = 150)
 	pWarehouse = new Warehouse(this, warehousePos, 150, 150);
 
 	//7- Create and clear the status bar
@@ -173,6 +173,7 @@ void Game::printBudget(string msg) const
 
 }
 
+//omar
 void Game::clearStatusBar() const
 {
 	//Clear Status bar by drawing a filled rectangle
@@ -197,7 +198,7 @@ void Game::updateStatusBar() const
 	//Clear the old text
 	clearStatusBar();
 
-	// Combine the four variables into one formatted string
+	
 	string statusText = "Timer: " + to_string(timer) +
 		"      Goal: " + to_string(goal) +
 		"      Level: " + to_string(level) +
@@ -358,7 +359,7 @@ void Game::go()
 			}
 		}
 
-		// SLOW DOWN AND PUSH TO MONITOR ONCE
+		
 		Pause(15);
 		for (int i = 0; i < eggCount; i++) {
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
