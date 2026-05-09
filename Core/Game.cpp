@@ -40,12 +40,12 @@ Game::Game()
 	//TODO: Add code to create and draw enemies in random places
 
 	// Create the starting point for the warehouse
-	point warehousePos;
-	warehousePos.x = config.windWidth - 200;  // 200 pixels away from the right wall
-	warehousePos.y = config.windHeight - 220; // Above the status bar
+	point warehousePos;                                                    /// Made the ware house Icon a bit smaller to be fit ( MALEK )
+	warehousePos.x = config.windWidth - 130;  // Adjusted X
+	warehousePos.y = config.windHeight - 130; // Adjusted Y
 
-	//Instantiate it (Width = 150, Height = 150)
-	pWarehouse = new Warehouse(this, warehousePos, 150, 150);
+	// Instantiate it (Width = 100, Height = 100)
+	pWarehouse = new Warehouse(this, warehousePos, 100, 100);
 
 	//7- Create and clear the status bar
 	clearStatusBar();
@@ -157,20 +157,20 @@ void Game::createBudgetbar()
 
 void Game::clearBudget() const
 {
-	//Clear Status bar by drawing a filled rectangle
-	pWind->SetPen(config.bkGrndColor, 1);
-	pWind->SetBrush(config.bkGrndColor);
-	pWind->DrawRectangle(config.windWidth - 500, config.toolBarHeight, config.windWidth, 2*config.toolBarHeight);
+	// Clear Budget bar area using the new Dark Red color
+	pWind->SetPen(config.toolBarColor, 1);
+	pWind->SetBrush(config.toolBarColor);
+	pWind->DrawRectangle(config.windWidth - 500, config.toolBarHeight, config.windWidth, 2 * config.toolBarHeight);
 }
+
 
 void Game::printBudget(string msg) const
 {
-	clearBudget();	//First clear the status bar
+	clearBudget();
 
-	pWind->SetPen(config.penColor, 50);
+	pWind->SetPen(WHITE, 50); // Changed to WHITE so it pops on the Dark Red background
 	pWind->SetFont(24, BOLD, BY_NAME, "Arial");
-	pWind->DrawString(config.windWidth-200, config.toolBarHeight + 10, msg);
-
+	pWind->DrawString(config.windWidth - 200, config.toolBarHeight + 10, msg);
 }
 
 //omar
@@ -225,9 +225,10 @@ bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2) {
 }
 
 void Game::randomWolf() {
-	if ((0 + rand() % (5000 - 0 + 1)) == 1){ //rolls a number between 1 and 5000 and is true if gets 1
-	if (level > 1) {
+	if (wolfCount < level){ //rolls a number between 1 and 5000 and is true if gets 1
 		cout << "Wolf spawned";
+		for (int i = 0; i < level; i++) {
+
 		point p;
 		std::random_device rd1;
 		std::mt19937 gen1(rd1());
@@ -239,11 +240,14 @@ void Game::randomWolf() {
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
-		wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
-		wolfList[wolfCount]->draw(); //first the wolf is drawn
-		wolfCount++;
+		
+			wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+			wolfList[wolfCount]->draw(); //first the wolf is drawn
+			wolfCount++;
+		}
+			
 	}
-}
+
 }
 
 
@@ -294,18 +298,20 @@ void Game::go()
 
 
 
-		// 1. Draw the Background 
+		// 1. Draw the Playground Background
 		pWind->SetPen(config.bkGrndColor, 1);
 		pWind->SetBrush(config.bkGrndColor);
-		pWind->DrawRectangle(0, config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+		pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
 
-		// ``````Shazly ``````
-		
-		pWind->SetPen(config.bkGrndColor, 1); // set pen color and thickness
-		pWind->SetBrush(config.bkGrndColor); // set brush color
-		pWind->DrawRectangle(0, 0, config.windWidth, config.windHeight - config.statusBarHeight); // keep drawing the blue area over and over
-		gameToolbar->draw(); // Keep drawing the toolbar constantly
-		gameBudgetbar->draw(); // same thing
+		////////////////////  ``````` Shazly `````````
+
+		// 2. Draw the Toolbar & BudgetBar Background
+		pWind->SetPen(config.toolBarColor, 1);
+		pWind->SetBrush(config.toolBarColor);
+		pWind->DrawRectangle(0, 0, config.windWidth, 2 * config.toolBarHeight);
+
+		gameToolbar->draw();
+		gameBudgetbar->draw();
 
 
 		Game::randomWolf();
@@ -319,7 +325,7 @@ void Game::go()
 			}
 		}
 		
-
+		
 
 
 		// ````````````````````
@@ -340,26 +346,148 @@ void Game::go()
 		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
 			isExit = gameBudgetbar->handleClick(x, y);
 		}
+		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
+			isExit = gameBudgetbar->handleClick(x, y);
+		}
 		else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
-			for (int i = 0; i < eggCount;i++) {
-				if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) { //check if mouse click is in bounds of egg
-					eggs[i] = eggs[eggCount - 1]; //replace removed egg with last egg in array so not to leave gap in array
-					eggCount--; //decrease egg count
-					pWarehouse->addegg(); //add egg to warehouse
-					break;
+
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse Logic]
+			int wX = pWarehouse->getrefpoint().x;
+			int wY = pWarehouse->getrefpoint().y;
+			int wW = pWarehouse->getwidth();
+			int wH = pWarehouse->getheight();
+
+			if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
+
+				/////////////////////////////////////////////////////////////////////// Create a new pop-up window
+				window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
+				popup->ChangeTitle("Warehouse Inventory");
+				popup->SetBuffering(true); // Enables smooth drawing for updating text
+
+				bool closePopup = false;
+				while (!closePopup) {
+					
+					popup->SetBrush(WHITE);
+					popup->SetPen(BLACK, 3);
+					popup->DrawRectangle(0, 0, 420, 320);
+
+					// text and calculations
+					string eggtext = "Eggs: " + to_string(pWarehouse->storedeggs) + "  ($" + to_string(pWarehouse->eggprice) + " each)";
+					string milkText = "Milk: " + to_string(pWarehouse->storedmilk) + "  ($" + to_string(pWarehouse->milkprice) + " each)";
+					int totalcount = pWarehouse->storedeggs + pWarehouse->storedmilk;
+					int totalValue = (pWarehouse->storedeggs * pWarehouse->eggprice) + (pWarehouse->storedmilk * pWarehouse->milkprice);
+
+					string totalText = "Total Items: " + to_string(totalcount);
+					string valueText = "Total Value: $" + to_string(totalValue);
+
+					///////////////////////////////////////////////////////////////// Draw products text
+					popup->SetPen(BLUE, 50);
+					popup->SetFont(22, BOLD, BY_NAME, "Arial");
+					popup->DrawString(20, 20, "--- WAREHOUSE INVENTORY ---");	
+
+					popup->SetPen(BLACK, 50);
+					popup->SetFont(18, BOLD, BY_NAME, "Arial");
+					popup->DrawString(20, 80, eggtext);
+					popup->DrawString(20, 120, milkText);
+					popup->DrawString(20, 160, totalText);
+
+					popup->SetPen(DARKGREEN, 50);
+					popup->DrawString(20, 200, valueText);
+
+					/////////////////////////////////////////////////////////// Drawing sell buttons --------------- [ MALEK ]
+
+					// Sell Egg
+					popup->SetBrush(RED);
+					popup->SetPen(DARKRED, 2);
+					popup->DrawRectangle(280, 75, 380, 105);
+					popup->SetPen(WHITE, 50);
+					popup->SetFont(16, BOLD, BY_NAME, "Arial");
+					popup->DrawString(295, 82, "SELL 1");
+
+					// Sell Milk
+					popup->SetBrush(RED);
+					popup->SetPen(DARKRED, 2);
+					popup->DrawRectangle(280, 115, 380, 145);
+					popup->SetPen(WHITE, 50);
+					popup->DrawString(295, 122, "SELL 1");
+
+					// Sell ALL Items
+					popup->SetBrush(DARKGREEN);
+					popup->SetPen(BLACK, 2);
+					popup->DrawRectangle(280, 155, 380, 185);
+					popup->SetPen(WHITE, 50);
+					popup->DrawString(290, 162, "SELL ALL");
+
+					// Close Window
+					popup->SetBrush(GRAY);
+					popup->SetPen(BLACK, 2);
+					popup->DrawRectangle(110, 250, 310, 290);
+					popup->SetPen(WHITE, 50);
+					popup->SetFont(20, BOLD, BY_NAME, "Arial");
+					popup->DrawString(170, 258, "CLOSE");
+
+					
+					popup->UpdateBuffer();
+
+					
+					int pX, pY;
+					popup->WaitMouseClick(pX, pY);
+
+					// Handle the Clicks
+					if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
+						// Egg Clicked
+						if (pWarehouse->storedeggs > 0) {
+							pWarehouse->storedeggs--;
+							budget += pWarehouse->eggprice; // Add money to game budget
+						}
+					}
+					else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
+						// Milk Clicked
+						if (pWarehouse->storedmilk > 0) {
+							pWarehouse->storedmilk--;
+							budget += pWarehouse->milkprice; // Add money to game budget
+						}
+					}
+					else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
+						// "SELL ALL" Clicked
+						budget += totalValue;       // Add total worth to budget
+						pWarehouse->resetegg();     // Empty eggs
+						pWarehouse->resetmilk();    // Empty milk
+					}
+					else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
+						// "CLOSE" Clicked
+						closePopup = true;          // Will break the while loop
+					}
 				}
+
+				
+				delete popup;
 			}
-			for (int i = 0; i < milkcount;i++) {
-				if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) { //check if mouse click is in bounds of milk
-					milks[i] = milks[milkcount - 1]; //replace removed milk with last milk in array so not to leave gap in array
-					milkcount--; //decrease milk count
-					pWarehouse->addmilk(); //add milk to warehouse
-					break;
+
+			else {
+				for (int i = 0; i < eggCount;i++) {
+					if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
+						eggs[i] = eggs[eggCount - 1];
+						eggCount--;
+						pWarehouse->addegg();
+						break;
+					}
+				}
+				for (int i = 0; i < milkcount;i++) {
+					if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) {
+						milks[i] = milks[milkcount - 1];
+						milkcount--;
+						pWarehouse->addmilk();
+						break;
+					}
 				}
 			}
 		}
 
 		
+		Pause(15);
+
+		// SLOW DOWN AND PUSH TO MONITOR ONCE
 		Pause(15);
 		for (int i = 0; i < eggCount; i++) {
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);

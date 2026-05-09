@@ -18,7 +18,7 @@ public:
 	int budget = 5000;
 	int timer = 120;
 	int goal = 0;
-	int level = 2;
+	int level = 4;
 	int animalCount = 0;
 	Warehouse* pWarehouse;
 	void updateStatusBar() const;
