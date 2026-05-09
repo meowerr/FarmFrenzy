@@ -173,6 +173,7 @@ void Game::printBudget(string msg) const
 	pWind->DrawString(config.windWidth - 200, config.toolBarHeight + 10, msg);
 }
 
+//omar
 void Game::clearStatusBar() const
 {
 	//Clear Status bar by drawing a filled rectangle
@@ -197,7 +198,7 @@ void Game::updateStatusBar() const
 	//Clear the old text
 	clearStatusBar();
 
-	// Combine the four variables into one formatted string
+	
 	string statusText = "Timer: " + to_string(timer) +
 		"      Goal: " + to_string(goal) +
 		"      Level: " + to_string(level) +
@@ -224,9 +225,10 @@ bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2) {
 }
 
 void Game::randomWolf() {
-	if ((0 + rand() % (5000 - 0 + 1)) == 1){ //rolls a number between 1 and 5000 and is true if gets 1
-	if (level > 1) {
+	if (wolfCount < level){ //rolls a number between 1 and 5000 and is true if gets 1
 		cout << "Wolf spawned";
+		for (int i = 0; i < level; i++) {
+
 		point p;
 		std::random_device rd1;
 		std::mt19937 gen1(rd1());
@@ -238,11 +240,14 @@ void Game::randomWolf() {
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
-		wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
-		wolfList[wolfCount]->draw(); //first the wolf is drawn
-		wolfCount++;
+		
+			wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+			wolfList[wolfCount]->draw(); //first the wolf is drawn
+			wolfCount++;
+		}
+			
 	}
-}
+
 }
 
 
@@ -294,9 +299,15 @@ void Game::go()
 
 		//////////////////////////////////////////////////////////////// Updated the colors of the playground and toolbar ( Malek )
 		// 1. Draw the Playground Background
-		pWind->SetPen(config.bkGrndColor, 1);
+		//omar boundaries
+		pWind->SetPen(SANDYBROWN, 6);
 		pWind->SetBrush(config.bkGrndColor);
-		pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+		int X1 = 0;
+		int Y1 = (config.toolBarHeight * 2) ;
+		int X2 = config.windWidth - 13;
+		int Y2 = config.windHeight - config.statusBarHeight;
+
+		pWind->DrawRectangle(X1, Y1, X2, Y2);
 
 		////////////////////  ``````` Shazly `````````
 
@@ -320,7 +331,7 @@ void Game::go()
 			}
 		}
 		
-
+		
 
 
 		// ````````````````````
@@ -479,7 +490,7 @@ void Game::go()
 			}
 		}
 
-		// SLOW DOWN AND PUSH TO MONITOR ONCE
+		
 		Pause(15);
 
 		// SLOW DOWN AND PUSH TO MONITOR ONCE
