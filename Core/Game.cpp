@@ -299,9 +299,15 @@ void Game::go()
 
 
 		// 1. Draw the Playground Background
-		pWind->SetPen(config.bkGrndColor, 1);
+		//omar boundaries
+		pWind->SetPen(SANDYBROWN, 6);
 		pWind->SetBrush(config.bkGrndColor);
-		pWind->DrawRectangle(0, 2 * config.toolBarHeight, config.windWidth, config.windHeight - config.statusBarHeight);
+		int X1 = 0;
+		int Y1 = (config.toolBarHeight * 2) ;
+		int X2 = config.windWidth - 13;
+		int Y2 = config.windHeight - config.statusBarHeight;
+
+		pWind->DrawRectangle(X1, Y1, X2, Y2);
 
 		////////////////////  ``````` Shazly `````````
 
