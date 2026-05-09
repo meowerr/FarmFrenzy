@@ -297,7 +297,7 @@ void Game::go()
 
 
 
-
+		//////////////////////////////////////////////////////////////// Updated the colors of the playground and toolbar ( Malek )
 		// 1. Draw the Playground Background
 		//omar boundaries
 		pWind->SetPen(SANDYBROWN, 6);
@@ -357,7 +357,7 @@ void Game::go()
 		}
 		else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
 
-			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse Logic]
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse pop-up window Logic]
 			int wX = pWarehouse->getrefpoint().x;
 			int wY = pWarehouse->getrefpoint().y;
 			int wW = pWarehouse->getwidth();
@@ -439,7 +439,7 @@ void Game::go()
 					int pX, pY;
 					popup->WaitMouseClick(pX, pY);
 
-					// Handle the Clicks
+					///////////////////////////////////////////////////////////  Handle the Clicks
 					if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
 						// Egg Clicked
 						if (pWarehouse->storedeggs > 0) {
