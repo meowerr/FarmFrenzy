@@ -44,15 +44,45 @@ WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 	}
 }
 
-
+//omar
 void WaterIcon::draw() const
 {
-	BudgetbarIcon::draw(); // Draw the button
-	for (int i = 0; i < count; i++) { //loop to draw grass
+	BudgetbarIcon::draw(); //draw jpg
+
+	window* pWind = pGame->getWind();
+
+	pWind->SetPen(RED, 1);
+	pWind->SetBrush(RED);
+	pWind->DrawRectangle(RefPoint.x, RefPoint.y + height - 15, RefPoint.x + width, RefPoint.y + height);
+
+	// The Text
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 5, RefPoint.y + height - 18, "Buy: 50");
+
+
+	for (int i = 0; i < count; i++) {
 		if (Grasslist[i] != nullptr) {
 			Grasslist[i]->draw();
 		}
 	}
+}
+
+void ChickIcon::draw() const
+{
+	BudgetbarIcon::draw(); 
+
+	window* pWind = pGame->getWind();
+
+	//Erase
+	pWind->SetPen(RED, 1);
+	pWind->SetBrush(RED);
+	pWind->DrawRectangle(RefPoint.x, RefPoint.y + height - 15, RefPoint.x + width, RefPoint.y + height);
+
+	//Text
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 5, RefPoint.y + height - 18, "Buy: 100");
 }
 
 void ChickIcon::onClick(int x, int y)
@@ -80,7 +110,22 @@ void ChickIcon::onClick(int x, int y)
 	}
 }
 
+void CowIcon::draw() const
+{
+	BudgetbarIcon::draw(); // Draw jpg
 
+	window* pWind = pGame->getWind();
+
+	// Erase
+	pWind->SetPen(RED, 1);
+	pWind->SetBrush(RED);
+	pWind->DrawRectangle(RefPoint.x, RefPoint.y + height - 15, RefPoint.x + width, RefPoint.y + height);
+
+	// Text
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 5, RefPoint.y + height - 18, "Buy: 100");
+}
 
 void CowIcon::onClick(int x, int y)
 {

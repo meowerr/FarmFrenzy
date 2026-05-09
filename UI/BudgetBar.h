@@ -38,6 +38,7 @@ public:
 class ChickIcon : public BudgetbarIcon
 {
 public:
+	void draw() const;
 	Chick** chickList;
 	int count = 0;
 	ChickIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
@@ -57,6 +58,7 @@ public:
 class CowIcon : public BudgetbarIcon
 {
 public:
+	void draw() const;
 	Cow** CowList;
 	int count = 0;
 	CowIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
