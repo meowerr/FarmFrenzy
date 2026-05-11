@@ -107,8 +107,9 @@ public:
 
 	class Budgetbar : public Drawable
 	{
-	private:
+	public:
 		BudgetbarIcon** iconsList; //an array of toolbarIcon pointers
+	private:  // to protect the images
 		string iconsImages[ANIMAL_COUNT];
 
 	public:

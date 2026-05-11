@@ -57,7 +57,7 @@ SaveIcon::SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, stri
 }
 void SaveIcon::onClick()
 {
-	// TO DO: add code for saving the game here
+	pGame->saveGame();  //////// call the saving function               [MALEK]
 }
 
 // Load Icon
@@ -66,7 +66,7 @@ LoadIcon1::LoadIcon1(Game* r_pGame, point r_point, int r_width, int r_height, st
 }
 void LoadIcon1::onClick()
 {
-	// TO DO: add code for loading the game here
+	pGame->loadGame();   //////// call the loading function               [MALEK]
 
 }
 Toolbar::Toolbar(Game* r_pGame, point r_point, int r_width, int r_height) : Drawable(r_pGame, r_point, r_width, r_height)

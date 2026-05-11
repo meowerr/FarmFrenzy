@@ -42,6 +42,11 @@ public:
 	void restart();
 	void go();
 
+	/////////////////////   Saving and Loading Progress Declaration ----- [MALEK]
+
+	void saveGame();  
+	void loadGame();  
+
 	window* getWind() const;		//returns a pointer to the graphics window
 
 	void drawfoodarea(int x, int y)const; //define function to draw food area

@@ -6,6 +6,9 @@
 #include "../Entities/Animal.h"
 #include "../Wolf.h"
 #include <iostream>
+#include <fstream>
+#include "../Grass.h"
+#include <random>
 using namespace std;
 
 Game::Game()
@@ -335,6 +338,24 @@ void Game::go()
 
 
 		// ````````````````````
+
+		// --- LEVELING SYSTEM ---                                                          <-- [Leveling Logic + Timer based on level]  ///// MALEK
+		// We use "&& level < X" so that if they spend money, they don't lose their level!
+		if (budget >= 20000 && level < 4) {
+			level = 4;
+			timer = 30;  // Reset timer for Level 4
+		}
+		else if (budget >= 15000 && level < 3) {
+			level = 3;
+			timer = 60;  // Reset timer for Level 3
+		}
+		else if (budget >= 10000 && level < 2) {
+			level = 2;
+			timer = 90;  // Reset timer for Level 2
+		}
+		// -----------------------
+
+
 		string budget_string = "MONEY = $" + to_string(budget); // make a string then turn the integer budget into string
 		printBudget(budget_string); //How it will be displayed using the printBudget func.
 		// ... existing code inside the do-while loop ...
@@ -529,4 +550,109 @@ void Game::drawmilk(int x, int y) {
 		milks[milkcount].y = y;
 		milkcount++;
 	}
+}
+
+
+
+///////////////////////////////////////////////////////////////// SAVE and LOAD game progress logic ----------------- [MALEK]
+
+
+
+
+void Game::saveGame() {
+	ofstream OutFile("savegame.txt");
+	if (!OutFile.is_open()) return;
+
+	// Grab pointers to the icons so we can access their counts
+	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
+	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
+	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
+
+	// 1. Save game stats & warehouse
+	OutFile << budget << " " << timer << " " << level << "\n";
+	OutFile << pWarehouse->storedeggs << " " << pWarehouse->storedmilk << "\n";
+
+	// 2. Save the COUNTS of animals and grass
+	OutFile << wolfCount << " " << pChick->count << " " << pCow->count << " " << pWater->count << "\n";
+
+	// 3. Save the COUNTS of dropped items
+	OutFile << eggCount << " " << milkcount << "\n";
+
+	OutFile.close();
+	printMessage("Game Saved Successfully!");
+}
+
+void Game::loadGame() {
+	ifstream InFile("savegame.txt");
+	if (!InFile.is_open()) {
+		printMessage("No save file found!");
+		return;
+	}
+
+	// Grab pointers to the icons
+	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
+	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
+	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
+
+	// 1. CLEAN UP THE CURRENT BOARD
+	for (int i = 0; i < wolfCount; i++) if (wolfList[i]) { delete wolfList[i]; wolfList[i] = nullptr; }
+	for (int i = 0; i < pChick->count; i++) if (pChick->chickList[i]) { delete pChick->chickList[i]; pChick->chickList[i] = nullptr; }
+	for (int i = 0; i < pCow->count; i++) if (pCow->CowList[i]) { delete pCow->CowList[i]; pCow->CowList[i] = nullptr; }
+	for (int i = 0; i < pWater->count; i++) if (pWater->Grasslist[i]) { delete pWater->Grasslist[i]; pWater->Grasslist[i] = nullptr; }
+
+	// 2. READ THE SAVED DATA
+	InFile >> budget >> timer >> level;
+	InFile >> pWarehouse->storedeggs >> pWarehouse->storedmilk;
+
+	int savedWolf, savedChick, savedCow, savedGrass;
+	InFile >> savedWolf >> savedChick >> savedCow >> savedGrass;
+	InFile >> eggCount >> milkcount;
+	InFile.close();
+
+	// Set up random number generators for the playground boundaries
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> distX(range_min_x, range_max_x);
+	std::uniform_int_distribution<int> distY(range_min_y, range_max_y);
+
+	// 3. SPAWN THE EXACT NUMBER OF ENTITIES AT RANDOM LOCATIONS
+	wolfCount = savedWolf;
+	for (int i = 0; i < wolfCount; i++) {
+		point p = { distX(gen), distY(gen) };
+		wolfList[i] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+	}
+
+	pChick->count = savedChick;
+	for (int i = 0; i < pChick->count; i++) {
+		point p = { distX(gen), distY(gen) };
+		pChick->chickList[i] = new Chick(this, p, 50, 50, pChick->image_path);
+	}
+
+	pCow->count = savedCow;
+	for (int i = 0; i < pCow->count; i++) {
+		point p = { distX(gen), distY(gen) };
+		pCow->CowList[i] = new Cow(this, p, 50, 50, pCow->image_path);
+	}
+
+	pWater->count = savedGrass;
+	for (int i = 0; i < pWater->count; i++) {
+		point p = { distX(gen), distY(gen) };
+		pWater->Grasslist[i] = new Grass(this, p, 50, 50, pWater->image_path, 10);
+	}
+
+	for (int i = 0; i < eggCount; i++) {
+		eggs[i].x = distX(gen);
+		eggs[i].y = distY(gen);
+	}
+
+	for (int i = 0; i < milkcount; i++) {
+		milks[i].x = distX(gen);
+		milks[i].y = distY(gen);
+	}
+
+	// 4. UPDATE VISUALS
+	clearBudget();
+	printBudget("MONEY = $" + to_string(budget));
+	updateStatusBar();
+	printMessage("Game Loaded Successfully!");
 }
