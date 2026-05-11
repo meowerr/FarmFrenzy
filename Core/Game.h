@@ -12,7 +12,16 @@ private:
 	Toolbar* gameToolbar ; // this is how we call our toolbar from now on 
 	Budgetbar* gameBudgetbar;
 
+
+
 public:
+
+	// --- NEW FEATURE VARIABLES ---                        //// MALEK
+	string playerName;
+	int maxScore = 5000; // Initialize to initial budget
+	void promptForNickname();
+
+
 	//omar 
 	bool isPaused = false;
 	int budget = 5000;

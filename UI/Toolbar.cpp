@@ -74,12 +74,12 @@ Toolbar::Toolbar(Game* r_pGame, point r_point, int r_width, int r_height) : Draw
 	//First prepare List of images for each icon
 	//To control the order of these images in the menu, reoder them in enum ICONS above	
 // 1. Prepare the list of images
-	iconsImages[ICON_RESTART] = "images\\RESTART.jpg";
-	iconsImages[ICON_PAUSE] = "images\\PAUSE.jpg";
-	iconsImages[ICON_RESUME] = "images\\RESUME.jpg";
-	iconsImages[ICON_SAVE] = "images\\SAVE.jpg";
-	iconsImages[ICON_LOAD] = "images\\LOAD.jpg";
-	iconsImages[ICON_EXIT] = "images\\EXIT.jpg";
+	iconsImages[ICON_RESTART] = "images\\newrestarting.jpg";
+	iconsImages[ICON_PAUSE] = "images\\newpause.jpg";
+	iconsImages[ICON_RESUME] = "images\\newcontinue.jpg";
+	iconsImages[ICON_SAVE] = "images\\newsave.jpg";
+	iconsImages[ICON_LOAD] = "images\\newloading.jpg";
+	iconsImages[ICON_EXIT] = "images\\newexit.jpg";
 
 	iconsList = new ToolbarIcon * [ICON_COUNT];
 
@@ -118,7 +118,18 @@ void Toolbar::draw() const
 {
 	for (int i = 0; i < ICON_COUNT; i++)
 		iconsList[i]->draw();
+
 	window* pWind = pGame->getWind();
+
+	// --- NEW: Draw the Farm Frenzy banner in the top right ---
+	int bannerWidth = 250; // You can tweak this number to make it wider/thinner
+	int bannerHeight = config.toolBarHeight;
+	int bannerX = config.windWidth - bannerWidth;
+	int bannerY = 0;
+
+	pWind->DrawImage("images\\farmfrenzy2banner.jpg", bannerX, bannerY, bannerWidth, bannerHeight);
+	// ---------------------------------------------------------
+
 	pWind->SetPen(BLACK, 3);
 	pWind->DrawLine(0, config.toolBarHeight, pWind->GetWidth(), config.toolBarHeight);
 }
