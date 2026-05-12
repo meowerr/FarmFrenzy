@@ -9,19 +9,10 @@ class Game
 {
 private:
 	window* pWind;	//Pointer to the CMU graphics window
-	Toolbar* gameToolbar ; // this is how we call our toolbar from now on 
+	Toolbar* gameToolbar; // this is how we call our toolbar from now on 
 	Budgetbar* gameBudgetbar;
 
-
-
 public:
-
-	// --- NEW FEATURE VARIABLES ---                        //// MALEK
-	string playerName;
-	int maxScore = 5000; // Initialize to initial budget
-	void promptForNickname();
-
-
 	//omar 
 	bool isPaused = false;
 	int budget = 5000;
@@ -37,7 +28,7 @@ public:
 	clicktype getMouseClick(int& x, int& y) const; //Get coordinate where user clicks and returns click type (left/right click)
 	string getSrting() const;	 //Returns a string entered by the user	 
 
-	
+
 	window* CreateWind(int, int, int, int) const; //creates the game window
 	void createToolbar();
 	void randomWolf(); ////////////////Shazly
@@ -53,8 +44,8 @@ public:
 
 	/////////////////////   Saving and Loading Progress Declaration ----- [MALEK]
 
-	void saveGame();  
-	void loadGame();  
+	void saveGame();
+	void loadGame();
 
 	window* getWind() const;		//returns a pointer to the graphics window
 
@@ -67,7 +58,7 @@ public:
 	//omar
 	Chick* chickList[MAX_ITEMS];
 	Cow* cowList[MAX_ITEMS];
-	
+
 
 	point eggs[100]; // Array to store egg positions
 	int eggCount = 0;

@@ -563,20 +563,43 @@ void Game::saveGame() {
 	ofstream OutFile("savegame.txt");
 	if (!OutFile.is_open()) return;
 
-	// Grab pointers to the icons so we can access their counts
-	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
-	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
-	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
-
-	// 1. Save game stats & warehouse
+	// 1. Save basic game stats and Warehouse
 	OutFile << budget << " " << timer << " " << level << "\n";
 	OutFile << pWarehouse->storedeggs << " " << pWarehouse->storedmilk << "\n";
 
-	// 2. Save the COUNTS of animals and grass
-	OutFile << wolfCount << " " << pChick->count << " " << pCow->count << " " << pWater->count << "\n";
+	// 2. Save Wolves
+	OutFile << wolfCount << "\n";
+	for (int i = 0; i < wolfCount; i++) {
+		OutFile << wolfList[i]->curr_pos.x << " " << wolfList[i]->curr_pos.y << "\n";
+	}
 
-	// 3. Save the COUNTS of dropped items
-	OutFile << eggCount << " " << milkcount << "\n";
+	// 3. Save Chicks
+	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
+	OutFile << pChick->count << "\n";
+	for (int i = 0; i < pChick->count; i++) {
+		OutFile << pChick->chickList[i]->curr_pos.x << " " << pChick->chickList[i]->curr_pos.y << "\n";
+	}
+
+	// 4. Save Cows
+	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
+	OutFile << pCow->count << "\n";
+	for (int i = 0; i < pCow->count; i++) {
+		OutFile << pCow->CowList[i]->curr_pos.x << " " << pCow->CowList[i]->curr_pos.y << "\n";
+	}
+
+	// 5. Save Grass
+	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
+	OutFile << pWater->count << "\n";
+	for (int i = 0; i < pWater->count; i++) {
+		OutFile << pWater->Grasslist[i]->getrefpoint().x << " " << pWater->Grasslist[i]->getrefpoint().y << " " << pWater->Grasslist[i]->foodcounter << "\n";
+	}
+
+	// 6. Save items on the ground
+	OutFile << eggCount << "\n";
+	for (int i = 0; i < eggCount; i++) OutFile << eggs[i].x << " " << eggs[i].y << "\n";
+
+	OutFile << milkcount << "\n";
+	for (int i = 0; i < milkcount; i++) OutFile << milks[i].x << " " << milks[i].y << "\n";
 
 	OutFile.close();
 	printMessage("Game Saved Successfully!");
@@ -589,70 +612,56 @@ void Game::loadGame() {
 		return;
 	}
 
-	// Grab pointers to the icons
+	// 1. CLEAR CURRENT GAME STATE BEFORE LOADING
+	for (int i = 0; i < wolfCount; i++) if (wolfList[i]) delete wolfList[i];
+
 	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
+	for (int i = 0; i < pChick->count; i++) if (pChick->chickList[i]) delete pChick->chickList[i];
+
 	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
+	for (int i = 0; i < pCow->count; i++) if (pCow->CowList[i]) delete pCow->CowList[i];
+
 	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
+	for (int i = 0; i < pWater->count; i++) if (pWater->Grasslist[i]) delete pWater->Grasslist[i];
 
-	// 1. CLEAN UP THE CURRENT BOARD
-	for (int i = 0; i < wolfCount; i++) if (wolfList[i]) { delete wolfList[i]; wolfList[i] = nullptr; }
-	for (int i = 0; i < pChick->count; i++) if (pChick->chickList[i]) { delete pChick->chickList[i]; pChick->chickList[i] = nullptr; }
-	for (int i = 0; i < pCow->count; i++) if (pCow->CowList[i]) { delete pCow->CowList[i]; pCow->CowList[i] = nullptr; }
-	for (int i = 0; i < pWater->count; i++) if (pWater->Grasslist[i]) { delete pWater->Grasslist[i]; pWater->Grasslist[i] = nullptr; }
-
-	// 2. READ THE SAVED DATA
+	// 2. LOAD DATA BACK IN
 	InFile >> budget >> timer >> level;
 	InFile >> pWarehouse->storedeggs >> pWarehouse->storedmilk;
 
-	int savedWolf, savedChick, savedCow, savedGrass;
-	InFile >> savedWolf >> savedChick >> savedCow >> savedGrass;
-	InFile >> eggCount >> milkcount;
-	InFile.close();
-
-	// Set up random number generators for the playground boundaries
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> distX(range_min_x, range_max_x);
-	std::uniform_int_distribution<int> distY(range_min_y, range_max_y);
-
-	// 3. SPAWN THE EXACT NUMBER OF ENTITIES AT RANDOM LOCATIONS
-	wolfCount = savedWolf;
+	InFile >> wolfCount;
 	for (int i = 0; i < wolfCount; i++) {
-		point p = { distX(gen), distY(gen) };
+		point p; InFile >> p.x >> p.y;
 		wolfList[i] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
 	}
 
-	pChick->count = savedChick;
+	InFile >> pChick->count;
 	for (int i = 0; i < pChick->count; i++) {
-		point p = { distX(gen), distY(gen) };
+		point p; InFile >> p.x >> p.y;
 		pChick->chickList[i] = new Chick(this, p, 50, 50, pChick->image_path);
 	}
 
-	pCow->count = savedCow;
+	InFile >> pCow->count;
 	for (int i = 0; i < pCow->count; i++) {
-		point p = { distX(gen), distY(gen) };
+		point p; InFile >> p.x >> p.y;
 		pCow->CowList[i] = new Cow(this, p, 50, 50, pCow->image_path);
 	}
 
-	pWater->count = savedGrass;
+	InFile >> pWater->count;
 	for (int i = 0; i < pWater->count; i++) {
-		point p = { distX(gen), distY(gen) };
-		pWater->Grasslist[i] = new Grass(this, p, 50, 50, pWater->image_path, 10);
+		point p; int fc; InFile >> p.x >> p.y >> fc;
+		pWater->Grasslist[i] = new Grass(this, p, 50, 50, pWater->image_path, fc);
 	}
 
-	for (int i = 0; i < eggCount; i++) {
-		eggs[i].x = distX(gen);
-		eggs[i].y = distY(gen);
-	}
+	InFile >> eggCount;
+	for (int i = 0; i < eggCount; i++) InFile >> eggs[i].x >> eggs[i].y;
 
-	for (int i = 0; i < milkcount; i++) {
-		milks[i].x = distX(gen);
-		milks[i].y = distY(gen);
-	}
+	InFile >> milkcount;
+	for (int i = 0; i < milkcount; i++) InFile >> milks[i].x >> milks[i].y;
 
-	// 4. UPDATE VISUALS
+	InFile.close();
+
+	// 3. Update the visual budget text
 	clearBudget();
 	printBudget("MONEY = $" + to_string(budget));
-	updateStatusBar();
 	printMessage("Game Loaded Successfully!");
 }
