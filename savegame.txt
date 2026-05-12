@@ -1,15 +1,31 @@
-4400 107 1
-0 0
-1
-374 189
-4
-334 411
-995 289
-303 357
-653 381
-2
-762 269
-452 368
-0
-0
-0
+===_Game_Status_===
+Budget: 4750
+Timer: 114
+Level: 1
+
+===_Warehouse_Data_===
+Stored_Eggs: 0
+Stored_Milk: 0
+
+===_Wolves_Data_===
+Wolves_Count: 1
+Wolf_1_Pos: 797 268
+
+===_Chicks_Data_===
+Chicks_Count: 1
+Chick_1_Pos: 657 257
+
+===_Cows_Data_===
+Cows_Count: 1
+Cow_1_Pos: 234 364
+
+===_Grass_Data_===
+Grass_Count: 1
+Grass_1_Pos_&_Food: 754 452 10
+
+===_Ground_Eggs_Data_===
+Eggs_Count: 0
+
+===_Ground_Milk_Data_===
+Milk_Count: 0
+
