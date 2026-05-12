@@ -272,6 +272,11 @@ void Game::go()
 
 	pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
 
+
+	Wolf* draggedWolf = nullptr; ///////////////// detecting if the wolf currently being held by user     ----- malek
+
+
+
 	do
 	{
 
@@ -362,155 +367,210 @@ void Game::go()
 		updateStatusBar();
 		pWarehouse->draw();
 		//printBudget("BUDGET = $1000"); 
+
+
+		//////////////////////////////////////////////////////////////////////////// DRAG AND DROP WOLF LOGIC    ------ malek
+
+		int mx, my;
+		buttonstate leftState = pWind->GetButtonState(LEFT_BUTTON, mx, my);
+
+		if (leftState == BUTTON_DOWN) {
+			// If we aren't holding a wolf yet, check if we grabbed one
+			if (draggedWolf == nullptr) {
+				// Check from the newest wolf to the oldest
+				for (int i = wolfCount - 1; i >= 0; i--) {
+					if (wolfList[i] != nullptr) {
+						int wx = wolfList[i]->getrefpoint().x;
+						int wy = wolfList[i]->getrefpoint().y;
+						int ww = wolfList[i]->getwidth();
+						int wh = wolfList[i]->getheight();
+
+						if (mx >= wx && mx <= wx + ww && my >= wy && my <= wy + wh) {
+							draggedWolf = wolfList[i];
+							draggedWolf->isDragged = true;
+							break; // Grabbed one! Stop checking.
+						}
+					}
+				}
+			}
+
+			// If we are actively holding a wolf, move it to the mouse!
+			if (draggedWolf != nullptr) {
+				int nx = mx - draggedWolf->getwidth() / 2;
+				int ny = my - draggedWolf->getheight() / 2;
+
+				// Keep the wolf strictly inside the grass/playing area!
+				if (nx < range_min_x) nx = range_min_x;
+				if (nx > range_max_x) nx = range_max_x;
+				if (ny < range_min_y) ny = range_min_y;
+				if (ny > range_max_y) ny = range_max_y;
+
+				draggedWolf->setLocation(nx, ny);
+			}
+		}
+		else { // BUTTON_UP (Mouse Released)
+			if (draggedWolf != nullptr) {
+				draggedWolf->isDragged = false; // Resume random movement
+				draggedWolf = nullptr;
+				pWind->FlushMouseQueue(); // Clear the drop click so we don't accidentally click UI buttons!
+				x = -1; y = -1; // Reset coords just in case
+			}
+		}
+		// ---------------------------------
+
+
+
 		getMouseClick(x, y);	//Get the coordinates of the user click
+
+
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
 		//{
 			//[1] If user clicks on the Toolbar
-		if (y >= 0 && y < config.toolBarHeight)
+
+		if (draggedWolf == nullptr) /////////////////////////////////// Only process clicks if NOT holding a wolf  ----- malek
 		{
-			isExit = gameToolbar->handleClick(x, y);
-		}
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
-		else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
+			if (y >= 0 && y < config.toolBarHeight)
+			{
+				isExit = gameToolbar->handleClick(x, y);
+			}
+			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
+				isExit = gameBudgetbar->handleClick(x, y);
+			}
+			else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
 
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse pop-up window Logic]
-			int wX = pWarehouse->getrefpoint().x;
-			int wY = pWarehouse->getrefpoint().y;
-			int wW = pWarehouse->getwidth();
-			int wH = pWarehouse->getheight();
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse pop-up window Logic]
+				int wX = pWarehouse->getrefpoint().x;
+				int wY = pWarehouse->getrefpoint().y;
+				int wW = pWarehouse->getwidth();
+				int wH = pWarehouse->getheight();
 
-			if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
+				if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
 
-				/////////////////////////////////////////////////////////////////////// Create a new pop-up window
-				window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
-				popup->ChangeTitle("Warehouse Inventory");
-				popup->SetBuffering(true); // Enables smooth drawing for updating text
+					/////////////////////////////////////////////////////////////////////// Create a new pop-up window
+					window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
+					popup->ChangeTitle("Warehouse Inventory");
+					popup->SetBuffering(true); // Enables smooth drawing for updating text
 
-				bool closePopup = false;
-				while (!closePopup) {
+					bool closePopup = false;
+					while (!closePopup) {
 
-					popup->SetBrush(WHITE);
-					popup->SetPen(BLACK, 3);
-					popup->DrawRectangle(0, 0, 420, 320);
+						popup->SetBrush(WHITE);
+						popup->SetPen(BLACK, 3);
+						popup->DrawRectangle(0, 0, 420, 320);
 
-					// text and calculations
-					string eggtext = "Eggs: " + to_string(pWarehouse->storedeggs) + "  ($" + to_string(pWarehouse->eggprice) + " each)";
-					string milkText = "Milk: " + to_string(pWarehouse->storedmilk) + "  ($" + to_string(pWarehouse->milkprice) + " each)";
-					int totalcount = pWarehouse->storedeggs + pWarehouse->storedmilk;
-					int totalValue = (pWarehouse->storedeggs * pWarehouse->eggprice) + (pWarehouse->storedmilk * pWarehouse->milkprice);
+						// text and calculations
+						string eggtext = "Eggs: " + to_string(pWarehouse->storedeggs) + "  ($" + to_string(pWarehouse->eggprice) + " each)";
+						string milkText = "Milk: " + to_string(pWarehouse->storedmilk) + "  ($" + to_string(pWarehouse->milkprice) + " each)";
+						int totalcount = pWarehouse->storedeggs + pWarehouse->storedmilk;
+						int totalValue = (pWarehouse->storedeggs * pWarehouse->eggprice) + (pWarehouse->storedmilk * pWarehouse->milkprice);
 
-					string totalText = "Total Items: " + to_string(totalcount);
-					string valueText = "Total Value: $" + to_string(totalValue);
+						string totalText = "Total Items: " + to_string(totalcount);
+						string valueText = "Total Value: $" + to_string(totalValue);
 
-					///////////////////////////////////////////////////////////////// Draw products text
-					popup->SetPen(BLUE, 50);
-					popup->SetFont(22, BOLD, BY_NAME, "Arial");
-					popup->DrawString(20, 20, "--- WAREHOUSE INVENTORY ---");
+						///////////////////////////////////////////////////////////////// Draw products text
+						popup->SetPen(BLUE, 50);
+						popup->SetFont(22, BOLD, BY_NAME, "Arial");
+						popup->DrawString(20, 20, "--- WAREHOUSE INVENTORY ---");
 
-					popup->SetPen(BLACK, 50);
-					popup->SetFont(18, BOLD, BY_NAME, "Arial");
-					popup->DrawString(20, 80, eggtext);
-					popup->DrawString(20, 120, milkText);
-					popup->DrawString(20, 160, totalText);
+						popup->SetPen(BLACK, 50);
+						popup->SetFont(18, BOLD, BY_NAME, "Arial");
+						popup->DrawString(20, 80, eggtext);
+						popup->DrawString(20, 120, milkText);
+						popup->DrawString(20, 160, totalText);
 
-					popup->SetPen(DARKGREEN, 50);
-					popup->DrawString(20, 200, valueText);
+						popup->SetPen(DARKGREEN, 50);
+						popup->DrawString(20, 200, valueText);
 
-					/////////////////////////////////////////////////////////// Drawing sell buttons --------------- [ MALEK ]
+						/////////////////////////////////////////////////////////// Drawing sell buttons --------------- [ MALEK ]
 
-					// Sell Egg
-					popup->SetBrush(RED);
-					popup->SetPen(DARKRED, 2);
-					popup->DrawRectangle(280, 75, 380, 105);
-					popup->SetPen(WHITE, 50);
-					popup->SetFont(16, BOLD, BY_NAME, "Arial");
-					popup->DrawString(295, 82, "SELL 1");
+						// Sell Egg
+						popup->SetBrush(RED);
+						popup->SetPen(DARKRED, 2);
+						popup->DrawRectangle(280, 75, 380, 105);
+						popup->SetPen(WHITE, 50);
+						popup->SetFont(16, BOLD, BY_NAME, "Arial");
+						popup->DrawString(295, 82, "SELL 1");
 
-					// Sell Milk
-					popup->SetBrush(RED);
-					popup->SetPen(DARKRED, 2);
-					popup->DrawRectangle(280, 115, 380, 145);
-					popup->SetPen(WHITE, 50);
-					popup->DrawString(295, 122, "SELL 1");
+						// Sell Milk
+						popup->SetBrush(RED);
+						popup->SetPen(DARKRED, 2);
+						popup->DrawRectangle(280, 115, 380, 145);
+						popup->SetPen(WHITE, 50);
+						popup->DrawString(295, 122, "SELL 1");
 
-					// Sell ALL Items
-					popup->SetBrush(DARKGREEN);
-					popup->SetPen(BLACK, 2);
-					popup->DrawRectangle(280, 155, 380, 185);
-					popup->SetPen(WHITE, 50);
-					popup->DrawString(290, 162, "SELL ALL");
+						// Sell ALL Items
+						popup->SetBrush(DARKGREEN);
+						popup->SetPen(BLACK, 2);
+						popup->DrawRectangle(280, 155, 380, 185);
+						popup->SetPen(WHITE, 50);
+						popup->DrawString(290, 162, "SELL ALL");
 
-					// Close Window
-					popup->SetBrush(GRAY);
-					popup->SetPen(BLACK, 2);
-					popup->DrawRectangle(110, 250, 310, 290);
-					popup->SetPen(WHITE, 50);
-					popup->SetFont(20, BOLD, BY_NAME, "Arial");
-					popup->DrawString(170, 258, "CLOSE");
-
-
-					popup->UpdateBuffer();
+						// Close Window
+						popup->SetBrush(GRAY);
+						popup->SetPen(BLACK, 2);
+						popup->DrawRectangle(110, 250, 310, 290);
+						popup->SetPen(WHITE, 50);
+						popup->SetFont(20, BOLD, BY_NAME, "Arial");
+						popup->DrawString(170, 258, "CLOSE");
 
 
-					int pX, pY;
-					popup->WaitMouseClick(pX, pY);
+						popup->UpdateBuffer();
 
-					///////////////////////////////////////////////////////////  Handle the Clicks
-					if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
-						// Egg Clicked
-						if (pWarehouse->storedeggs > 0) {
-							pWarehouse->storedeggs--;
-							budget += pWarehouse->eggprice; // Add money to game budget
+
+						int pX, pY;
+						popup->WaitMouseClick(pX, pY);
+
+						///////////////////////////////////////////////////////////  Handle the Clicks
+						if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
+							// Egg Clicked
+							if (pWarehouse->storedeggs > 0) {
+								pWarehouse->storedeggs--;
+								budget += pWarehouse->eggprice; // Add money to game budget
+							}
+						}
+						else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
+							// Milk Clicked
+							if (pWarehouse->storedmilk > 0) {
+								pWarehouse->storedmilk--;
+								budget += pWarehouse->milkprice; // Add money to game budget
+							}
+						}
+						else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
+							// "SELL ALL" Clicked
+							budget += totalValue;       // Add total worth to budget
+							pWarehouse->resetegg();     // Empty eggs
+							pWarehouse->resetmilk();    // Empty milk
+						}
+						else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
+							// "CLOSE" Clicked
+							closePopup = true;          // Will break the while loop
 						}
 					}
-					else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
-						// Milk Clicked
-						if (pWarehouse->storedmilk > 0) {
-							pWarehouse->storedmilk--;
-							budget += pWarehouse->milkprice; // Add money to game budget
+
+
+					delete popup;
+				}
+
+				else {
+					for (int i = 0; i < eggCount;i++) {
+						if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
+							eggs[i] = eggs[eggCount - 1];
+							eggCount--;
+							pWarehouse->addegg();
+							break;
 						}
 					}
-					else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
-						// "SELL ALL" Clicked
-						budget += totalValue;       // Add total worth to budget
-						pWarehouse->resetegg();     // Empty eggs
-						pWarehouse->resetmilk();    // Empty milk
-					}
-					else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
-						// "CLOSE" Clicked
-						closePopup = true;          // Will break the while loop
-					}
-				}
-
-
-				delete popup;
-			}
-
-			else {
-				for (int i = 0; i < eggCount;i++) {
-					if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
-						eggs[i] = eggs[eggCount - 1];
-						eggCount--;
-						pWarehouse->addegg();
-						break;
-					}
-				}
-				for (int i = 0; i < milkcount;i++) {
-					if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) {
-						milks[i] = milks[milkcount - 1];
-						milkcount--;
-						pWarehouse->addmilk();
-						break;
+					for (int i = 0; i < milkcount;i++) {
+						if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) {
+							milks[i] = milks[milkcount - 1];
+							milkcount--;
+							pWarehouse->addmilk();
+							break;
+						}
 					}
 				}
 			}
 		}
-
 
 		Pause(15);
 
