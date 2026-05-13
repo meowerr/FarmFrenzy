@@ -3,6 +3,8 @@
 #include "../UI/Toolbar.h"
 #include "../UI/BudgetBar.h"
 #include "../Entities/Animal.h"
+#include "SFML/Audio.hpp"
+
 class Warehouse;
 class Wolf;
 class Game
@@ -18,8 +20,9 @@ public:
 	int budget = 5000;
 	int timer = 120;
 	int goal = 0;
-	int level = 1;
+	int level = 2;
 	int animalCount = 0;
+	sf::Music bgmusic;
 	Warehouse* pWarehouse;
 	void updateStatusBar() const;
 	Game();
@@ -33,10 +36,11 @@ public:
 	void createToolbar();
 	void randomWolf(); ////////////////Shazly
 	void createBudgetbar();
+	//bool handleClick(int x, int y);
 	void clearBudget() const;
 	void printBudget(string msg) const;
 	void clearStatusBar() const;	//Clears the status bar
-	bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2);
+	//bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2);
 
 	void printMessage(string msg) const;	//Print a message on Status bar
 	void restart();

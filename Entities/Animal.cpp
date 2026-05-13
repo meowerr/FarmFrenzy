@@ -14,8 +14,8 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	width = r_width;
 	height = r_height;
 	RefPoint = r_point;
-	curr_vel.x = rand() % 3; // random number from 0 to 2. Random starting velocity
-	curr_vel.y = rand() % 3; 
+	curr_vel.x = (rand() % 3)+1; // random number from 0 to 2. Random starting velocity
+	curr_vel.y = (rand() % 3)+1; 
 	lastseentime = pGame->timer; // time taken from timer
 	animalcounter = 0; // animal counter to count seconds
 }
@@ -105,6 +105,22 @@ if (animalright > grassleft && animalleft<grassright && animaldown>grassup && an
 }
 return false;
 	}
+
+bool Animal::wolfcolliding(Wolf* wolf) { //function to check if colliding with grass
+	int animalleft = RefPoint.x; //left edge of animal is the refpoint.x
+	int animalup = RefPoint.y; //up edge of animal is the refpoint.y
+	int animalright = RefPoint.x + width; //to get right edge of animal, we add width to refpoint.x
+	int animaldown = RefPoint.y + height; //to get down edge of animal, we add height to refpoint.y
+	int wolfleft = wolf->getrefpoint().x; //use getter functions to get refpoint.x of grass, which is left edge
+	int wolfup = wolf->getrefpoint().y; //use getter functions to get refpoint.y of grass, which is up edge
+	int wolfright = wolf->getrefpoint().x + wolf->getwidth(); //to get right edge, we use getter functions to get width and refpoint.x and add them
+	int wolfdown = wolf->getrefpoint().y + wolf->getheight(); //to get down edge, we use getter functions to get height and refpoint.y and add them
+	if (animalright > wolfleft && animalleft<wolfright && animaldown>wolfup && animalup < wolfdown) { //animal mus be under grassup, to the right of grassleft, to the left of grassright, and above grassdown
+
+		return true;
+	}
+	return false;
+}
 
 
 

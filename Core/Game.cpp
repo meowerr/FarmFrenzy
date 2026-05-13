@@ -123,6 +123,7 @@ void Game::restart() {
 
 		delete gameBudgetbar; // as cows,chicks,and grass are drawn under budget bar
 		createBudgetbar();
+		randomWolf();
 	}
 }
 
@@ -216,17 +217,6 @@ void Game::updateStatusBar() const
 }
 
 
-bool CollisionDetection(BudgetbarIcon& a1, BudgetbarIcon& a2) {
-	int a1x = a1.getRef().x, a1y = a1.getRef().y;
-	int a2x = a2.getRef().x, a2y = a2.getRef().y;
-
-
-	if ((a1x + a1.getWidth() >= a2x) && (a1x <= a2x + a2.getWidth()) && (a1y <= a2y + a2.getHeight()) && (a1y + a1.getHeight() >= a2y)) { return true; cout << "Collision!"; }
-
-
-	else { return false; }
-}
-
 void Game::randomWolf() {
 	if (wolfCount < level){ //rolls a number between 1 and 5000 and is true if gets 1
 		cout << "Wolf spawned";
@@ -272,12 +262,33 @@ void Game::go()
 
 	pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
 
+	if (bgmusic.openFromFile("track.wav")) {
+		bgmusic.setLoop(true);
+		bgmusic.setVolume(20);
+		//bgmusic.play();
+		
+	}
+
+
 	do
 	{
+		
+		if (!isPaused) { 
+			if (bgmusic.getStatus() != sf::Music::Playing) {
+				bgmusic.play();
+		}
+		}
+		else bgmusic.pause();
+		
+
+
+
+
 
 		//////////////////////////////////////// MALEK
 		if (!isPaused)//<--Omar
 		{
+			
 			if (timer > 0)
 			{
 				if (ElapsedTime(1000)) {
@@ -321,6 +332,9 @@ void Game::go()
 
 		gameToolbar->draw();
 		gameBudgetbar->draw();
+
+
+
 
 
 		Game::randomWolf();

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/Drawable.h"
 #include "../Entities/Animal.h"
+//#include "../Wolf.h"
 #include "../Config/GameConfig.h"
 #include <random>
 #include <limits>
@@ -24,12 +25,11 @@ public:
 	string image_path;
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void draw() const override;
-	//virtual void moveAllAnimals() = 0;
 	point getRef() { return RefPoint; }
 	int getWidth() { return width; }
 	int getHeight() { return height; }
 
-	virtual void moveAllAnimals(Grass** grasslist) = 0; //pass through every grass in field
+	virtual void moveAllAnimals(Grass** grasslist, Wolf** wolflist) = 0; //pass through every grass and  in field
 
 	// Change to accept coordinates:
 	virtual void onClick(int x, int y) = 0;                                           ///////////// Malek
@@ -50,7 +50,7 @@ public:
 	}
 
 	virtual void onClick(int x, int y) override;                                    ///////////// Malek
-	void moveAllAnimals(Grass** grasslist) override;
+	void moveAllAnimals(Grass** grasslist,Wolf** wolflist) override;
 
 };
 
@@ -69,7 +69,7 @@ public:
 		delete[] CowList;
 	}
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals(Grass** grasslist) override;
+	void moveAllAnimals(Grass** grasslist, Wolf** wolflist) override ;
 };
 class WaterIcon : public BudgetbarIcon
 {
@@ -84,7 +84,7 @@ public:
 		delete[] Grasslist;
 	}
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
-	void moveAllAnimals(Grass** grasslist){ }
+	void moveAllAnimals(Grass** grasslist, Wolf** wolflist) override;
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
 

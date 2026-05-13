@@ -2,6 +2,7 @@
 #include "../Config/GameConfig.h"
 #include "../Core/Game.h"
 #include <iostream>
+#include "../Wolf.h"
 #include "../Grass.h"
 using namespace std;
 
@@ -218,7 +219,7 @@ void Budgetbar::draw() const
 	WaterIcon* pWaterIcon = (WaterIcon*)iconsList[ICON_WATER];
 	Grass** grasslist = pWaterIcon->Grasslist;
 	for (int i = 0; i < ANIMAL_COUNT; i++) {
-	iconsList[i]->moveAllAnimals(grasslist); // when we draw budget bar, which will be in the main game loop, it will move animals
+	iconsList[i]->moveAllAnimals(grasslist,pGame->wolfList); // when we draw budget bar, which will be in the main game loop, it will move animals
 	iconsList[i]->draw();
 }
 
@@ -242,7 +243,7 @@ bool Budgetbar::handleClick(int x, int y)
 
 //malek
 
-void ChickIcon::moveAllAnimals(Grass** grasslist)
+void ChickIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 {
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		if (chickList[i] != nullptr) {
@@ -261,16 +262,30 @@ void ChickIcon::moveAllAnimals(Grass** grasslist)
 								grasslist[j] = nullptr;
 							}
 						}
+						
 					}
-				}
+				} 
+		
+				
+				for (int x = 0; x < MAX_ITEMS; x++) {
+					if ((wolflist[x]) != nullptr) {
+						if (chickList[i]->wolfcolliding((wolflist[x]))) {
+							delete chickList[i]; chickList[i] = nullptr; break;
+						}
+					}
+				} 
+				
+				
 			}
 
-			chickList[i]->draw(); //outside pause condition to not disappear
+			if (chickList[i] != nullptr)chickList[i]->draw(); //outside pause condition to not disappear
 		}
 	}
 }
 
-void CowIcon::moveAllAnimals(Grass** grasslist)
+void WaterIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist){}
+
+void CowIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 {
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		if (CowList[i] != nullptr) {
@@ -291,9 +306,16 @@ void CowIcon::moveAllAnimals(Grass** grasslist)
 						}
 					}
 				}
+				for (int x = 0; x < MAX_ITEMS; x++) {
+					if ((wolflist[x]) != nullptr) {
+						if (CowList[i]->wolfcolliding((wolflist[x]))) {
+							delete CowList[i]; CowList[i] = nullptr; break;
+						}
+					}
+				}
 			}
 
-			CowList[i]->draw();  //outside pause condition to not disappear
+			if (CowList[i] !=nullptr) CowList[i]->draw();  //outside pause condition to not disappear
 		}
 	}
 }
