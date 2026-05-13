@@ -20,17 +20,17 @@ Game::Game()
 	createToolbar();
 	createBudgetbar();
 	//3 - create and draw the backgroundPlayingArea
-	
+
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		wolfList[i] = nullptr;
 		//omar
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			wolfList[i] = nullptr;
-			chickList[i] = nullptr; 
-			cowList[i] = nullptr;   
+			chickList[i] = nullptr;
+			cowList[i] = nullptr;
 		}
 	}
-	
+
 	//4- Create the Plane
 	//TODO: Add code to create and draw the Plane
 
@@ -72,7 +72,7 @@ clicktype Game::getMouseClick(int& x, int& y) const //function we put inzide Gam
 	return pWind->GetMouseClick(x, y);	//Gets for mouse click and not Wait because this would pause game loop
 }
 
-string Game::getSrting() const 
+string Game::getSrting() const
 {
 	string Label;
 	char Key;
@@ -138,7 +138,7 @@ window* Game::CreateWind(int w, int h, int x, int y) const
 	return pW;
 }
 
-void Game::createToolbar() 
+void Game::createToolbar()
 {
 	point toolbarUpperleft;
 	toolbarUpperleft.x = 0;
@@ -202,7 +202,7 @@ void Game::updateStatusBar() const
 	//Clear the old text
 	clearStatusBar();
 
-	
+
 	string statusText = "Timer: " + to_string(timer) +
 		"      Goal: " + to_string(goal) +
 		"      Level: " + to_string(level) +
@@ -218,27 +218,27 @@ void Game::updateStatusBar() const
 
 
 void Game::randomWolf() {
-	if (wolfCount < level){ //rolls a number between 1 and 5000 and is true if gets 1
+	if (wolfCount < level) { //rolls a number between 1 and 5000 and is true if gets 1
 		cout << "Wolf spawned";
 		for (int i = 0; i < level; i++) {
 
-		point p;
-		std::random_device rd1;
-		std::mt19937 gen1(rd1());
-		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
-		p.x = dist1(gen1);
+			point p;
+			std::random_device rd1;
+			std::mt19937 gen1(rd1());
+			std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+			p.x = dist1(gen1);
 
-		std::random_device rd2;
-		std::mt19937 gen2(rd2());
-		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
-		p.y = dist2(gen2);
+			std::random_device rd2;
+			std::mt19937 gen2(rd2());
+			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+			p.y = dist2(gen2);
 
-		
+
 			wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
 			wolfList[wolfCount]->draw(); //first the wolf is drawn
 			wolfCount++;
 		}
-			
+
 	}
 
 }
@@ -261,6 +261,11 @@ void Game::go()
 	pWind->ChangeTitle("- - - - - - - - - - Farm Frenzy - - - - - - - - - - -");
 
 	pWind->SetBuffering(true); // helps remove the glitching by buffering in another memory
+
+
+	Wolf* draggedWolf = nullptr; ///////////////// detecting if the wolf currently being held by user     ----- malek
+
+
 
 	if (bgmusic.openFromFile("track.wav")) {
 		bgmusic.setLoop(true);
@@ -317,7 +322,7 @@ void Game::go()
 		pWind->SetPen(SANDYBROWN, 6);
 		pWind->SetBrush(config.bkGrndColor);
 		int X1 = 0;
-		int Y1 = (config.toolBarHeight * 2) ;
+		int Y1 = (config.toolBarHeight * 2);
 		int X2 = config.windWidth - 13;
 		int Y2 = config.windHeight - config.statusBarHeight;
 
@@ -338,7 +343,7 @@ void Game::go()
 
 
 		Game::randomWolf();
-		
+
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			if (wolfList[i] != nullptr) {
 				if (!isPaused) {   //<--Omar
@@ -347,8 +352,8 @@ void Game::go()
 				wolfList[i]->draw();
 			}
 		}
-		
-		
+
+
 
 
 		// ````````````````````
@@ -376,156 +381,211 @@ void Game::go()
 		updateStatusBar();
 		pWarehouse->draw();
 		//printBudget("BUDGET = $1000"); 
+
+
+		//////////////////////////////////////////////////////////////////////////// DRAG AND DROP WOLF LOGIC    ------ malek
+
+		int mx, my;
+		buttonstate leftState = pWind->GetButtonState(LEFT_BUTTON, mx, my);
+
+		if (leftState == BUTTON_DOWN) {
+			// If we aren't holding a wolf yet, check if we grabbed one
+			if (draggedWolf == nullptr) {
+				// Check from the newest wolf to the oldest
+				for (int i = wolfCount - 1; i >= 0; i--) {
+					if (wolfList[i] != nullptr) {
+						int wx = wolfList[i]->getrefpoint().x;
+						int wy = wolfList[i]->getrefpoint().y;
+						int ww = wolfList[i]->getwidth();
+						int wh = wolfList[i]->getheight();
+
+						if (mx >= wx && mx <= wx + ww && my >= wy && my <= wy + wh) {
+							draggedWolf = wolfList[i];
+							draggedWolf->isDragged = true;
+							break; // Grabbed one! Stop checking.
+						}
+					}
+				}
+			}
+
+			// If we are actively holding a wolf, move it to the mouse!
+			if (draggedWolf != nullptr) {
+				int nx = mx - draggedWolf->getwidth() / 2;
+				int ny = my - draggedWolf->getheight() / 2;
+
+				// Keep the wolf strictly inside the grass/playing area!
+				if (nx < range_min_x) nx = range_min_x;
+				if (nx > range_max_x) nx = range_max_x;
+				if (ny < range_min_y) ny = range_min_y;
+				if (ny > range_max_y) ny = range_max_y;
+
+				draggedWolf->setLocation(nx, ny);
+			}
+		}
+		else { // BUTTON_UP (Mouse Released)
+			if (draggedWolf != nullptr) {
+				draggedWolf->isDragged = false; // Resume random movement
+				draggedWolf = nullptr;
+				pWind->FlushMouseQueue(); // Clear the drop click so we don't accidentally click UI buttons!
+				x = -1; y = -1; // Reset coords just in case
+			}
+		}
+		// ---------------------------------
+
+
+
 		getMouseClick(x, y);	//Get the coordinates of the user click
+
+
 		//if (gameMode == MODE_DSIGN)		//Game is in the Desgin mode
 		//{
 			//[1] If user clicks on the Toolbar
-		if (y >= 0 && y < config.toolBarHeight)
+
+		if (draggedWolf == nullptr) /////////////////////////////////// Only process clicks if NOT holding a wolf  ----- malek
 		{
-			isExit = gameToolbar->handleClick(x, y);
-		}
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
-		else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
-			isExit = gameBudgetbar->handleClick(x, y);
-		}
-		else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
+			if (y >= 0 && y < config.toolBarHeight)
+			{
+				isExit = gameToolbar->handleClick(x, y);
+			}
+			else if (y >= config.toolBarHeight && y < 2 * config.toolBarHeight) {
+				isExit = gameBudgetbar->handleClick(x, y);
+			}
+			else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
 
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse pop-up window Logic]
-			int wX = pWarehouse->getrefpoint().x;
-			int wY = pWarehouse->getrefpoint().y;
-			int wW = pWarehouse->getwidth();
-			int wH = pWarehouse->getheight();
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////// [WareHouse pop-up window Logic]
+				int wX = pWarehouse->getrefpoint().x;
+				int wY = pWarehouse->getrefpoint().y;
+				int wW = pWarehouse->getwidth();
+				int wH = pWarehouse->getheight();
 
-			if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
+				if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
 
-				/////////////////////////////////////////////////////////////////////// Create a new pop-up window
-				window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
-				popup->ChangeTitle("Warehouse Inventory");
-				popup->SetBuffering(true); // Enables smooth drawing for updating text
+					/////////////////////////////////////////////////////////////////////// Create a new pop-up window
+					window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
+					popup->ChangeTitle("Warehouse Inventory");
+					popup->SetBuffering(true); // Enables smooth drawing for updating text
 
-				bool closePopup = false;
-				while (!closePopup) {
-					
-					popup->SetBrush(WHITE);
-					popup->SetPen(BLACK, 3);
-					popup->DrawRectangle(0, 0, 420, 320);
+					bool closePopup = false;
+					while (!closePopup) {
 
-					// text and calculations
-					string eggtext = "Eggs: " + to_string(pWarehouse->storedeggs) + "  ($" + to_string(pWarehouse->eggprice) + " each)";
-					string milkText = "Milk: " + to_string(pWarehouse->storedmilk) + "  ($" + to_string(pWarehouse->milkprice) + " each)";
-					int totalcount = pWarehouse->storedeggs + pWarehouse->storedmilk;
-					int totalValue = (pWarehouse->storedeggs * pWarehouse->eggprice) + (pWarehouse->storedmilk * pWarehouse->milkprice);
+						popup->SetBrush(WHITE);
+						popup->SetPen(BLACK, 3);
+						popup->DrawRectangle(0, 0, 420, 320);
 
-					string totalText = "Total Items: " + to_string(totalcount);
-					string valueText = "Total Value: $" + to_string(totalValue);
+						// text and calculations
+						string eggtext = "Eggs: " + to_string(pWarehouse->storedeggs) + "  ($" + to_string(pWarehouse->eggprice) + " each)";
+						string milkText = "Milk: " + to_string(pWarehouse->storedmilk) + "  ($" + to_string(pWarehouse->milkprice) + " each)";
+						int totalcount = pWarehouse->storedeggs + pWarehouse->storedmilk;
+						int totalValue = (pWarehouse->storedeggs * pWarehouse->eggprice) + (pWarehouse->storedmilk * pWarehouse->milkprice);
 
-					///////////////////////////////////////////////////////////////// Draw products text
-					popup->SetPen(BLUE, 50);
-					popup->SetFont(22, BOLD, BY_NAME, "Arial");
-					popup->DrawString(20, 20, "--- WAREHOUSE INVENTORY ---");	
+						string totalText = "Total Items: " + to_string(totalcount);
+						string valueText = "Total Value: $" + to_string(totalValue);
 
-					popup->SetPen(BLACK, 50);
-					popup->SetFont(18, BOLD, BY_NAME, "Arial");
-					popup->DrawString(20, 80, eggtext);
-					popup->DrawString(20, 120, milkText);
-					popup->DrawString(20, 160, totalText);
+						///////////////////////////////////////////////////////////////// Draw products text
+						popup->SetPen(BLUE, 50);
+						popup->SetFont(22, BOLD, BY_NAME, "Arial");
+						popup->DrawString(20, 20, "--- WAREHOUSE INVENTORY ---");
 
-					popup->SetPen(DARKGREEN, 50);
-					popup->DrawString(20, 200, valueText);
+						popup->SetPen(BLACK, 50);
+						popup->SetFont(18, BOLD, BY_NAME, "Arial");
+						popup->DrawString(20, 80, eggtext);
+						popup->DrawString(20, 120, milkText);
+						popup->DrawString(20, 160, totalText);
 
-					/////////////////////////////////////////////////////////// Drawing sell buttons --------------- [ MALEK ]
+						popup->SetPen(DARKGREEN, 50);
+						popup->DrawString(20, 200, valueText);
 
-					// Sell Egg
-					popup->SetBrush(RED);
-					popup->SetPen(DARKRED, 2);
-					popup->DrawRectangle(280, 75, 380, 105);
-					popup->SetPen(WHITE, 50);
-					popup->SetFont(16, BOLD, BY_NAME, "Arial");
-					popup->DrawString(295, 82, "SELL 1");
+						/////////////////////////////////////////////////////////// Drawing sell buttons --------------- [ MALEK ]
 
-					// Sell Milk
-					popup->SetBrush(RED);
-					popup->SetPen(DARKRED, 2);
-					popup->DrawRectangle(280, 115, 380, 145);
-					popup->SetPen(WHITE, 50);
-					popup->DrawString(295, 122, "SELL 1");
+						// Sell Egg
+						popup->SetBrush(RED);
+						popup->SetPen(DARKRED, 2);
+						popup->DrawRectangle(280, 75, 380, 105);
+						popup->SetPen(WHITE, 50);
+						popup->SetFont(16, BOLD, BY_NAME, "Arial");
+						popup->DrawString(295, 82, "SELL 1");
 
-					// Sell ALL Items
-					popup->SetBrush(DARKGREEN);
-					popup->SetPen(BLACK, 2);
-					popup->DrawRectangle(280, 155, 380, 185);
-					popup->SetPen(WHITE, 50);
-					popup->DrawString(290, 162, "SELL ALL");
+						// Sell Milk
+						popup->SetBrush(RED);
+						popup->SetPen(DARKRED, 2);
+						popup->DrawRectangle(280, 115, 380, 145);
+						popup->SetPen(WHITE, 50);
+						popup->DrawString(295, 122, "SELL 1");
 
-					// Close Window
-					popup->SetBrush(GRAY);
-					popup->SetPen(BLACK, 2);
-					popup->DrawRectangle(110, 250, 310, 290);
-					popup->SetPen(WHITE, 50);
-					popup->SetFont(20, BOLD, BY_NAME, "Arial");
-					popup->DrawString(170, 258, "CLOSE");
+						// Sell ALL Items
+						popup->SetBrush(DARKGREEN);
+						popup->SetPen(BLACK, 2);
+						popup->DrawRectangle(280, 155, 380, 185);
+						popup->SetPen(WHITE, 50);
+						popup->DrawString(290, 162, "SELL ALL");
 
-					
-					popup->UpdateBuffer();
+						// Close Window
+						popup->SetBrush(GRAY);
+						popup->SetPen(BLACK, 2);
+						popup->DrawRectangle(110, 250, 310, 290);
+						popup->SetPen(WHITE, 50);
+						popup->SetFont(20, BOLD, BY_NAME, "Arial");
+						popup->DrawString(170, 258, "CLOSE");
 
-					
-					int pX, pY;
-					popup->WaitMouseClick(pX, pY);
 
-					///////////////////////////////////////////////////////////  Handle the Clicks
-					if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
-						// Egg Clicked
-						if (pWarehouse->storedeggs > 0) {
-							pWarehouse->storedeggs--;
-							budget += pWarehouse->eggprice; // Add money to game budget
+						popup->UpdateBuffer();
+
+
+						int pX, pY;
+						popup->WaitMouseClick(pX, pY);
+
+						///////////////////////////////////////////////////////////  Handle the Clicks
+						if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
+							// Egg Clicked
+							if (pWarehouse->storedeggs > 0) {
+								pWarehouse->storedeggs--;
+								budget += pWarehouse->eggprice; // Add money to game budget
+							}
+						}
+						else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
+							// Milk Clicked
+							if (pWarehouse->storedmilk > 0) {
+								pWarehouse->storedmilk--;
+								budget += pWarehouse->milkprice; // Add money to game budget
+							}
+						}
+						else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
+							// "SELL ALL" Clicked
+							budget += totalValue;       // Add total worth to budget
+							pWarehouse->resetegg();     // Empty eggs
+							pWarehouse->resetmilk();    // Empty milk
+						}
+						else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
+							// "CLOSE" Clicked
+							closePopup = true;          // Will break the while loop
 						}
 					}
-					else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
-						// Milk Clicked
-						if (pWarehouse->storedmilk > 0) {
-							pWarehouse->storedmilk--;
-							budget += pWarehouse->milkprice; // Add money to game budget
+
+
+					delete popup;
+				}
+
+				else {
+					for (int i = 0; i < eggCount;i++) {
+						if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
+							eggs[i] = eggs[eggCount - 1];
+							eggCount--;
+							pWarehouse->addegg();
+							break;
 						}
 					}
-					else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
-						// "SELL ALL" Clicked
-						budget += totalValue;       // Add total worth to budget
-						pWarehouse->resetegg();     // Empty eggs
-						pWarehouse->resetmilk();    // Empty milk
-					}
-					else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
-						// "CLOSE" Clicked
-						closePopup = true;          // Will break the while loop
-					}
-				}
-
-				
-				delete popup;
-			}
-
-			else {
-				for (int i = 0; i < eggCount;i++) {
-					if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
-						eggs[i] = eggs[eggCount - 1];
-						eggCount--;
-						pWarehouse->addegg();
-						break;
-					}
-				}
-				for (int i = 0; i < milkcount;i++) {
-					if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) {
-						milks[i] = milks[milkcount - 1];
-						milkcount--;
-						pWarehouse->addmilk();
-						break;
+					for (int i = 0; i < milkcount;i++) {
+						if (x > milks[i].x && x<milks[i].x + 50 && y>milks[i].y && y < milks[i].y + 50) {
+							milks[i] = milks[milkcount - 1];
+							milkcount--;
+							pWarehouse->addmilk();
+							break;
+						}
 					}
 				}
 			}
 		}
 
-		
 		Pause(15);
 
 		// SLOW DOWN AND PUSH TO MONITOR ONCE
@@ -542,14 +602,14 @@ void Game::go()
 }
 
 void Game::drawfoodarea(int x, int y)const {
-		window* pWind = getWind(); //open window
-		pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
-	}
+	window* pWind = getWind(); //open window
+	pWind->DrawImage("images\\grass.jpg", x, y, 50, 50); //draw grass.jpg from images folder, 50x50
+}
 
-void Game::drawegg(int x, int y){
+void Game::drawegg(int x, int y) {
 	window* pWind = getWind(); //open window
 	pWind->DrawImage("images\\egg.jpg", x, y, 50, 50); //draw egg.jpg from images folder, 50x50
-	if (eggCount<100){ //store egg positions
+	if (eggCount < 100) { //store egg positions
 		eggs[eggCount].x = x;
 		eggs[eggCount].y = y;
 		eggCount++;
@@ -577,47 +637,72 @@ void Game::saveGame() {
 	ofstream OutFile("savegame.txt");
 	if (!OutFile.is_open()) return;
 
-	// 1. Save basic game stats and Warehouse
-	OutFile << budget << " " << timer << " " << level << "\n";
-	OutFile << pWarehouse->storedeggs << " " << pWarehouse->storedmilk << "\n";
+	// 1. Save basic game stats
+	OutFile << "===_Game_Status_===\n";
+	OutFile << "Budget: " << budget << "\n";
+	OutFile << "Timer: " << timer << "\n";
+	OutFile << "Level: " << level << "\n\n";
 
-	// 2. Save Wolves
-	OutFile << wolfCount << "\n";
+	// 2. Save Warehouse
+	OutFile << "===_Warehouse_Data_===\n";
+	OutFile << "Stored_Eggs: " << pWarehouse->storedeggs << "\n";
+	OutFile << "Stored_Milk: " << pWarehouse->storedmilk << "\n\n";
+
+	// 3. Save Wolves
+	OutFile << "===_Wolves_Data_===\n";
+	OutFile << "Wolves_Count: " << wolfCount << "\n";
 	for (int i = 0; i < wolfCount; i++) {
-		OutFile << wolfList[i]->curr_pos.x << " " << wolfList[i]->curr_pos.y << "\n";
+		OutFile << "Wolf_" << i + 1 << "_Pos: " << wolfList[i]->curr_pos.x << " " << wolfList[i]->curr_pos.y << "\n";
 	}
+	OutFile << "\n";
 
-	// 3. Save Chicks
+	// 4. Save Chicks
+	OutFile << "===_Chicks_Data_===\n";
 	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
-	OutFile << pChick->count << "\n";
+	OutFile << "Chicks_Count: " << pChick->count << "\n";
 	for (int i = 0; i < pChick->count; i++) {
-		OutFile << pChick->chickList[i]->curr_pos.x << " " << pChick->chickList[i]->curr_pos.y << "\n";
+		OutFile << "Chick_" << i + 1 << "_Pos: " << pChick->chickList[i]->curr_pos.x << " " << pChick->chickList[i]->curr_pos.y << "\n";
 	}
+	OutFile << "\n";
 
-	// 4. Save Cows
+	// 5. Save Cows
+	OutFile << "===_Cows_Data_===\n";
 	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
-	OutFile << pCow->count << "\n";
+	OutFile << "Cows_Count: " << pCow->count << "\n";
 	for (int i = 0; i < pCow->count; i++) {
-		OutFile << pCow->CowList[i]->curr_pos.x << " " << pCow->CowList[i]->curr_pos.y << "\n";
+		OutFile << "Cow_" << i + 1 << "_Pos: " << pCow->CowList[i]->curr_pos.x << " " << pCow->CowList[i]->curr_pos.y << "\n";
 	}
+	OutFile << "\n";
 
-	// 5. Save Grass
+	// 6. Save Grass
+	OutFile << "===_Grass_Data_===\n";
 	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
-	OutFile << pWater->count << "\n";
+	OutFile << "Grass_Count: " << pWater->count << "\n";
 	for (int i = 0; i < pWater->count; i++) {
-		OutFile << pWater->Grasslist[i]->getrefpoint().x << " " << pWater->Grasslist[i]->getrefpoint().y << " " << pWater->Grasslist[i]->foodcounter << "\n";
+		OutFile << "Grass_" << i + 1 << "_Pos_&_Food: " << pWater->Grasslist[i]->getrefpoint().x << " " << pWater->Grasslist[i]->getrefpoint().y << " " << pWater->Grasslist[i]->foodcounter << "\n";
 	}
+	OutFile << "\n";
 
-	// 6. Save items on the ground
-	OutFile << eggCount << "\n";
-	for (int i = 0; i < eggCount; i++) OutFile << eggs[i].x << " " << eggs[i].y << "\n";
+	// 7. Save items on the ground
+	OutFile << "===_Ground_Eggs_Data_===\n";
+	OutFile << "Eggs_Count: " << eggCount << "\n";
+	for (int i = 0; i < eggCount; i++) {
+		OutFile << "Egg_" << i + 1 << "_Pos: " << eggs[i].x << " " << eggs[i].y << "\n";
+	}
+	OutFile << "\n";
 
-	OutFile << milkcount << "\n";
-	for (int i = 0; i < milkcount; i++) OutFile << milks[i].x << " " << milks[i].y << "\n";
+	OutFile << "===_Ground_Milk_Data_===\n";
+	OutFile << "Milk_Count: " << milkcount << "\n";
+	for (int i = 0; i < milkcount; i++) {
+		OutFile << "Milk_" << i + 1 << "_Pos: " << milks[i].x << " " << milks[i].y << "\n";
+	}
+	OutFile << "\n";
 
 	OutFile.close();
 	printMessage("Game Saved Successfully!");
 }
+
+
 
 void Game::loadGame() {
 	ifstream InFile("savegame.txt");
@@ -626,55 +711,98 @@ void Game::loadGame() {
 		return;
 	}
 
+	string label; // Dummy string used to "absorb" the text labels from the file
+
 	// 1. CLEAR CURRENT GAME STATE BEFORE LOADING
-	for (int i = 0; i < wolfCount; i++) if (wolfList[i]) delete wolfList[i];
+	for (int i = 0; i < wolfCount; i++) {
+		if (wolfList[i]) { delete wolfList[i]; wolfList[i] = nullptr; }
+	}
+	wolfCount = 0;
 
 	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
-	for (int i = 0; i < pChick->count; i++) if (pChick->chickList[i]) delete pChick->chickList[i];
+	for (int i = 0; i < pChick->count; i++) {
+		if (pChick->chickList[i]) { delete pChick->chickList[i]; pChick->chickList[i] = nullptr; }
+	}
+	pChick->count = 0;
 
 	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
-	for (int i = 0; i < pCow->count; i++) if (pCow->CowList[i]) delete pCow->CowList[i];
+	for (int i = 0; i < pCow->count; i++) {
+		if (pCow->CowList[i]) { delete pCow->CowList[i]; pCow->CowList[i] = nullptr; }
+	}
+	pCow->count = 0;
 
 	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
-	for (int i = 0; i < pWater->count; i++) if (pWater->Grasslist[i]) delete pWater->Grasslist[i];
+	for (int i = 0; i < pWater->count; i++) {
+		if (pWater->Grasslist[i]) { delete pWater->Grasslist[i]; pWater->Grasslist[i] = nullptr; }
+	}
+	pWater->count = 0;
 
 	// 2. LOAD DATA BACK IN
-	InFile >> budget >> timer >> level;
-	InFile >> pWarehouse->storedeggs >> pWarehouse->storedmilk;
 
-	InFile >> wolfCount;
+	// Status
+	InFile >> label; // reads "===_Game_Status_==="
+	InFile >> label >> budget; // reads "Budget:" then the number
+	InFile >> label >> timer;
+	InFile >> label >> level;
+
+	// Warehouse
+	InFile >> label; // reads "===_Warehouse_Data_==="
+	InFile >> label >> pWarehouse->storedeggs;
+	InFile >> label >> pWarehouse->storedmilk;
+
+	// Wolves
+	InFile >> label; // reads "===_Wolves_Data_==="
+	InFile >> label >> wolfCount;
 	for (int i = 0; i < wolfCount; i++) {
-		point p; InFile >> p.x >> p.y;
+		point p;
+		InFile >> label >> p.x >> p.y; // reads "Wolf_X_Pos:", X, Y
 		wolfList[i] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
 	}
 
-	InFile >> pChick->count;
+	// Chicks
+	InFile >> label; // reads "===_Chicks_Data_==="
+	InFile >> label >> pChick->count;
 	for (int i = 0; i < pChick->count; i++) {
-		point p; InFile >> p.x >> p.y;
+		point p;
+		InFile >> label >> p.x >> p.y;
 		pChick->chickList[i] = new Chick(this, p, 50, 50, pChick->image_path);
 	}
 
-	InFile >> pCow->count;
+	// Cows
+	InFile >> label; // reads "===_Cows_Data_==="
+	InFile >> label >> pCow->count;
 	for (int i = 0; i < pCow->count; i++) {
-		point p; InFile >> p.x >> p.y;
+		point p;
+		InFile >> label >> p.x >> p.y;
 		pCow->CowList[i] = new Cow(this, p, 50, 50, pCow->image_path);
 	}
 
-	InFile >> pWater->count;
+	// Grass
+	InFile >> label; // reads "===_Grass_Data_==="
+	InFile >> label >> pWater->count;
 	for (int i = 0; i < pWater->count; i++) {
-		point p; int fc; InFile >> p.x >> p.y >> fc;
+		point p; int fc;
+		InFile >> label >> p.x >> p.y >> fc;
 		pWater->Grasslist[i] = new Grass(this, p, 50, 50, pWater->image_path, fc);
 	}
 
-	InFile >> eggCount;
-	for (int i = 0; i < eggCount; i++) InFile >> eggs[i].x >> eggs[i].y;
+	// Eggs on Ground
+	InFile >> label; // reads "===_Ground_Eggs_Data_==="
+	InFile >> label >> eggCount;
+	for (int i = 0; i < eggCount; i++) {
+		InFile >> label >> eggs[i].x >> eggs[i].y;
+	}
 
-	InFile >> milkcount;
-	for (int i = 0; i < milkcount; i++) InFile >> milks[i].x >> milks[i].y;
+	// Milk on Ground
+	InFile >> label; // reads "===_Ground_Milk_Data_==="
+	InFile >> label >> milkcount;
+	for (int i = 0; i < milkcount; i++) {
+		InFile >> label >> milks[i].x >> milks[i].y;
+	}
 
 	InFile.close();
 
-	// 3. Update the visual budget text
+	// 3. Update visuals
 	clearBudget();
 	printBudget("MONEY = $" + to_string(budget));
 	printMessage("Game Loaded Successfully!");

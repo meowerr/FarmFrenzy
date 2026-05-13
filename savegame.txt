@@ -1,10 +1,57 @@
-4900 116 1
-0 0
-1
-368 480
-1
-877 497
-0
-0
-0
-0
+===_Game_Status_===
+Budget: 2100
+Timer: 105
+Level: 1
+
+===_Warehouse_Data_===
+Stored_Eggs: 0
+Stored_Milk: 0
+
+===_Wolves_Data_===
+Wolves_Count: 1
+Wolf_1_Pos: 1070 331
+
+===_Chicks_Data_===
+Chicks_Count: 29
+Chick_1_Pos: 854 399
+Chick_2_Pos: 605 342
+Chick_3_Pos: 567 213
+Chick_4_Pos: 211 479
+Chick_5_Pos: 424 277
+Chick_6_Pos: 153 465
+Chick_7_Pos: 264 348
+Chick_8_Pos: 1079 366
+Chick_9_Pos: 166 171
+Chick_10_Pos: 512 496
+Chick_11_Pos: 1106 353
+Chick_12_Pos: 825 215
+Chick_13_Pos: 772 416
+Chick_14_Pos: 624 341
+Chick_15_Pos: 1075 317
+Chick_16_Pos: 344 260
+Chick_17_Pos: 312 202
+Chick_18_Pos: 1149 251
+Chick_19_Pos: 223 251
+Chick_20_Pos: 135 345
+Chick_21_Pos: 269 170
+Chick_22_Pos: 385 193
+Chick_23_Pos: 766 151
+Chick_24_Pos: 914 234
+Chick_25_Pos: 254 355
+Chick_26_Pos: 271 454
+Chick_27_Pos: 71 367
+Chick_28_Pos: 467 348
+Chick_29_Pos: 961 270
+
+===_Cows_Data_===
+Cows_Count: 0
+
+===_Grass_Data_===
+Grass_Count: 0
+
+===_Ground_Eggs_Data_===
+Eggs_Count: 0
+
+===_Ground_Milk_Data_===
+Milk_Count: 0
+
