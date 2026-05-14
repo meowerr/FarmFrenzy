@@ -6,16 +6,12 @@ bool Wolf::handleClick(int x, int y) {
 	return false;
 }
 
-
-void Wolf::moveStep() { //how the wolf moves
-////////////////////////////////////////////////////////////////////////////////////////////      Wolf movement Updated ------ malek
-
-
 Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
 	: Animal(r_pGame, r_point, r_width, r_height, img_path) {
 }
+void Wolf::moveStep() { //how the wolf moves
+////////////////////////////////////////////////////////////////////////////////////////////      Wolf movement Updated ------ malek
 
-void Wolf::moveStep() {
 	if (isDragged) return; // Freeze random movement while the user holds the wolf!
 
 

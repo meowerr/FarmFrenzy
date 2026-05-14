@@ -11,7 +11,6 @@ public:
 	bool isDragged = false; // Flag to track if the wolf is being held
 
 	Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	virtual void moveStep();
 	bool handleClick(int x, int y);
 
 	virtual void moveStep() override;
