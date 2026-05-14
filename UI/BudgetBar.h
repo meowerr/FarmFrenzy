@@ -1,7 +1,6 @@
 #pragma once
 #include "../Core/Drawable.h"
 #include "../Entities/Animal.h"
-//#include "../Wolf.h"
 #include "../Config/GameConfig.h"
 #include <random>
 #include <limits>
@@ -77,12 +76,7 @@ public:
 	Grass** Grasslist;
 	int count = 0;
 	WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
-	~WaterIcon() {
-		for (int i = 0; i < count; i++) {
-			if (Grasslist[i] != nullptr) delete Grasslist[i];
-		}
-		delete[] Grasslist;
-	}
+	~WaterIcon();
 	virtual void onClick(int x, int y) override;                                      ///////////// Malek
 	void moveAllAnimals(Grass** grasslist, Wolf** wolflist) override;
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon

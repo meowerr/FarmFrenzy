@@ -45,6 +45,7 @@ public:
 	void printMessage(string msg) const;	//Print a message on Status bar
 	void restart();
 	void go();
+	int getlevel() { return level; }
 
 	/////////////////////   Saving and Loading Progress Declaration ----- [MALEK]
 

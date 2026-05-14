@@ -45,6 +45,13 @@ WaterIcon::WaterIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 	}
 }
 
+WaterIcon::~WaterIcon() {
+	for (int i = 0; i < count; i++) {
+		if (Grasslist[i] != nullptr) delete Grasslist[i];
+	}
+	delete[] Grasslist;
+}
+
 //omar
 void WaterIcon::draw() const
 {
@@ -96,12 +103,12 @@ void ChickIcon::onClick(int x, int y)
 
 		point p;
 		std::random_device rd1;
-		std::mt19937 gen1(rd1());
+		static std::mt19937 gen1(rd1());
 		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
 		p.x = dist1(gen1);
 
 		std::random_device rd2;
-		std::mt19937 gen2(rd2());
+		static std::mt19937 gen2(rd2());
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
@@ -138,12 +145,12 @@ void CowIcon::onClick(int x, int y)
 
 		point p;
 		std::random_device rd1;
-		std::mt19937 gen1(rd1());
+		static std::mt19937 gen1(rd1());
 		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
 		p.x = dist1(gen1);
 
 		std::random_device rd2;
-		std::mt19937 gen2(rd2());
+		static std::mt19937 gen2(rd2());
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
@@ -165,12 +172,12 @@ void WaterIcon::onClick(int x, int y)
 
 		point p;
 		std::random_device rd1;
-		std::mt19937 gen1(rd1());
+		static std::mt19937 gen1(rd1());
 		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
 		p.x = dist1(gen1);
 
 		std::random_device rd2;
-		std::mt19937 gen2(rd2());
+		static std::mt19937 gen2(rd2());
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 

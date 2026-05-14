@@ -3,7 +3,13 @@
 
 
 bool Wolf::handleClick(int x, int y) {
+	clicked++;
+	if (clicked >= 5) {
+		return true;
+	}
+	
 	return false;
+
 }
 
 Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
@@ -15,7 +21,7 @@ void Wolf::moveStep() { //how the wolf moves
 	if (isDragged) return; // Freeze random movement while the user holds the wolf!
 
 
-	for (int i = 0; i < pGame->level; i++) { 
+	for (int i = 0; i < pGame->getlevel(); i++) { 
 		RefPoint.x += i*curr_vel.x; // multiply level by wolf velocity
 		RefPoint.y += i*curr_vel.y;
 	}
