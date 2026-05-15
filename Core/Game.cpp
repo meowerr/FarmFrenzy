@@ -317,7 +317,7 @@ void Game::go()
 
 
 
-		//////////////////////////////////////////////////////////////// Updated the colors of the playground and toolbar ( Malek )
+		//////////// Updated the colors of the playground and toolbar ( Malek )
 		// 1. Draw the Playground Background
 		//omar boundaries
 		pWind->SetPen(SANDYBROWN, 6);
@@ -621,7 +621,19 @@ void Game::go()
 			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
 		}
 
-		pWind->UpdateBuffer(); // part of the buffer that pushes elements to ur  ``shazly``
+		// omar's GAME OVER when timer hits zero
+		if (timer <= 0)
+		{
+			isPaused = true;
+			pWind->SetPen(RED, 1);
+			pWind->SetFont(60, BOLD, BY_NAME, "Arial");
+
+			int textX = (config.windWidth / 2) - 150;
+			int textY = (config.windHeight / 2) - 50;
+			pWind->DrawString(textX, textY, "GAME OVER");
+		}
+		pWind->UpdateBuffer();
+
 	} while (!isExit);
 }
 
