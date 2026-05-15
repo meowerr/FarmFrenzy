@@ -11,6 +11,12 @@
 #include <random>
 using namespace std;
 
+struct PlayerScore{
+	string name;
+	int score;
+};
+
+
 Game::Game()
 {
 	//1 - Create the main window
@@ -52,6 +58,11 @@ Game::Game()
 
 	//7- Create and clear the status bar
 	clearStatusBar();
+
+	level = 1;
+	goal = 500;
+	timer = 60;
+
 }
 
 Game::~Game()
@@ -103,8 +114,8 @@ void Game::restart() {
 	Pause(1200);
 
 	budget = 5000;
-	timer = 120;
-	goal = 0;
+	timer = 60;
+	goal = 500;
 	level = 1;
 	animalCount = 0;
 	wolfCount = 0;
@@ -586,6 +597,7 @@ void Game::go()
 
 
 						delete popup;
+						popup = nullptr;
 					}
 
 					else {
@@ -612,7 +624,7 @@ void Game::go()
 
 	
 
-		// SLOW DOWN AND PUSH TO MONITOR ONCE
+
 		Pause(15);
 		for (int i = 0; i < eggCount; i++) {
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
@@ -621,16 +633,86 @@ void Game::go()
 			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
 		}
 
-		// omar's GAME OVER when timer hits zero
+		// omar's GAME OVER and leaderboard when timer hits zero
+		// --- GAME OVER & LEADERBOARD CHECK ---
 		if (timer <= 0)
 		{
 			isPaused = true;
+
+			// 1. Draw the Game Over text
 			pWind->SetPen(RED, 1);
 			pWind->SetFont(60, BOLD, BY_NAME, "Arial");
+			pWind->DrawString((config.windWidth / 2) - 150, 100, "GAME OVER");
+			pWind->UpdateBuffer();
 
-			int textX = (config.windWidth / 2) - 150;
-			int textY = (config.windHeight / 2) - 50;
-			pWind->DrawString(textX, textY, "GAME OVER");
+			int finalScore = budget;
+
+			// 2. Ask for their name
+			string playerName;
+			cout << "\n=====================================\n";
+			cout << " GAME OVER! YOU SCORED: $" << finalScore << "\n";
+			cout << " ENTER YOUR NAME FOR LEADERBOARD: ";
+			cin >> playerName;
+
+			// 3. Save to the permanent text file
+			ofstream outFile("savegame.txt", ios::app);
+			if (outFile.is_open()) {
+				outFile << playerName << " " << finalScore << endl;
+				outFile.close();
+			}
+
+			// 4. Load the file into a STANDARD ARRAY
+			ifstream inFile("savegame.txt");
+			PlayerScore board[100]; // Array that can hold up to 100 past players
+			int playerCount = 0;    // Keeps track of how many people are actually in the file
+
+			string n;
+			int s;
+			// Read the file. Stop if we hit the end, OR if we reach 100 players
+			while (inFile >> n >> s && playerCount < 100) {
+				board[playerCount].name = n;
+				board[playerCount].score = s;
+				playerCount++;
+			}
+			inFile.close();
+
+			// 5. MANUAL BUBBLE SORT (Highest to Lowest)
+			for (int i = 0; i < playerCount - 1; i++) {
+				for (int j = 0; j < playerCount - i - 1; j++) {
+					if (board[j].score < board[j + 1].score) {
+						// Swap the two players if the lower one has a higher score
+						PlayerScore temp = board[j];
+						board[j] = board[j + 1];
+						board[j + 1] = temp;
+					}
+				}
+			}
+
+			// 6. Draw the Leaderboard UI Box
+			pWind->SetBrush(WHITE);
+			pWind->SetPen(BLACK, 3);
+			pWind->DrawRectangle(200, 200, 600, 500);
+
+			pWind->SetFont(40, BOLD, BY_NAME, "Arial");
+			pWind->DrawString(220, 210, "--- TOP FARMERS ---");
+
+			// 7. Draw the Top 5 Players
+			pWind->SetFont(30, PLAIN, BY_NAME, "Arial");
+			int drawY = 270;
+
+			// Loop up to 5 times, or the total number of players if less than 5
+			int displayLimit = (playerCount < 5) ? playerCount : 5;
+			for (int i = 0; i < displayLimit; i++) {
+				string entry = to_string(i + 1) + ". " + board[i].name + " - $" + to_string(board[i].score);
+				pWind->DrawString(230, drawY, entry);
+				drawY += 40;
+			}
+
+			pWind->UpdateBuffer();
+
+			int clickX, clickY;
+			pWind->WaitMouseClick(clickX, clickY);
+			isExit = true;
 		}
 		pWind->UpdateBuffer();
 
