@@ -1,1 +1,28 @@
-amoorah 5000
+===_Game_Status_===
+Budget: 9900
+Timer: 107
+Level: 1
+
+===_Warehouse_Data_===
+Stored_Eggs: 0
+Stored_Milk: 15
+
+===_Wolves_Data_===
+Wolves_Count: 1
+Wolf_1_Pos: 880 424
+
+===_Chicks_Data_===
+Chicks_Count: 0
+
+===_Cows_Data_===
+Cows_Count: 0
+
+===_Grass_Data_===
+Grass_Count: 0
+
+===_Ground_Eggs_Data_===
+Eggs_Count: 0
+
+===_Ground_Milk_Data_===
+Milk_Count: 0
+

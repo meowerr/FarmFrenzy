@@ -27,15 +27,12 @@ Game::Game()
 	createBudgetbar();
 	//3 - create and draw the backgroundPlayingArea
 
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		wolfList[i] = nullptr;
-		//omar
 		for (int i = 0; i < MAX_ITEMS; i++) {
 			wolfList[i] = nullptr;
 			chickList[i] = nullptr;
 			cowList[i] = nullptr;
 		}
-	}
+	
 
 	//4- Create the Plane
 	//TODO: Add code to create and draw the Plane
@@ -59,9 +56,9 @@ Game::Game()
 	//7- Create and clear the status bar
 	clearStatusBar();
 
-	level = 1;
-	goal = 500;
-	timer = 60;
+	//level = 1;
+	//goal = 500;
+	//timer = 60;
 
 }
 
@@ -114,8 +111,8 @@ void Game::restart() {
 	Pause(1200);
 
 	budget = 5000;
-	timer = 60;
-	goal = 500;
+	timer = 90;
+	goal = 10000;
 	level = 1;
 	animalCount = 0;
 	wolfCount = 0;
@@ -356,7 +353,7 @@ void Game::go()
 
 		Game::randomWolf();
 
-		for (int i = 0; i < MAX_ITEMS; i++) {
+		for (int i = 0; i < wolfCount; i++) {
 			if (wolfList[i] != nullptr) {
 				if (!isPaused) {   //<--Omar
 					wolfList[i]->moveStep();
@@ -372,16 +369,35 @@ void Game::go()
 
 		// --- LEVELING SYSTEM ---                                                          <-- [Leveling Logic + Timer based on level]  ///// MALEK
 		// We use "&& level < X" so that if they spend money, they don't lose their level!
-		if (budget >= 20000 && level < 4) {
+		if (budget >= 50000 && level < 5) {
+			printMessage("Level UP!!");
+			pWind->UpdateBuffer();
+			Pause(500);
+			level = 5;
+			timer = 20;  // Reset timer for Level 5
+		}
+		else if (budget >= 20000 && level < 4) {
+			printMessage("Level UP!!");
+			pWind->UpdateBuffer();
+			Pause(500);
+			goal = 50000;
 			level = 4;
 			timer = 30;  // Reset timer for Level 4
 		}
 		else if (budget >= 15000 && level < 3) {
+			printMessage("Level UP!!");
+			pWind->UpdateBuffer();
+			Pause(500);
 			level = 3;
+			goal = 20000;
 			timer = 60;  // Reset timer for Level 3
 		}
 		else if (budget >= 10000 && level < 2) {
+			printMessage("Level UP!!");
+			pWind->UpdateBuffer();
+			Pause(500);
 			level = 2;
+			goal = 15000;
 			timer = 90;  // Reset timer for Level 2
 		}
 		// -----------------------
@@ -465,7 +481,7 @@ void Game::go()
 			else if (y >= 2 * config.toolBarHeight && y <= (config.windHeight - config.statusBarHeight)) {//clicked on playing area
 
 				bool clickedwolf = false;
-				for (int i = 0; i < MAX_ITEMS; i++) {
+				for (int i = 0; i < wolfCount; i++) {
 					if (wolfList[i] != nullptr) {
 						int wolfx = wolfList[i]->getrefpoint().x;
 						int wolfy = wolfList[i]->getrefpoint().y;
@@ -625,7 +641,7 @@ void Game::go()
 	
 
 
-		Pause(15);
+		Pause(5);
 		for (int i = 0; i < eggCount; i++) {
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
 		}

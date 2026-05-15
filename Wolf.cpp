@@ -20,10 +20,17 @@ void Wolf::moveStep() { //how the wolf moves
 
 	if (isDragged) return; // Freeze random movement while the user holds the wolf!
 
-
-	for (int i = 0; i < pGame->getlevel(); i++) { 
-		RefPoint.x += i*curr_vel.x; // multiply level by wolf velocity
-		RefPoint.y += i*curr_vel.y;
+	if (pGame->getlevel() > 1) {
+		for (int i = 0; i < pGame->getlevel(); i++) {
+			RefPoint.x += i * curr_vel.x; // multiply level by wolf velocity
+			RefPoint.y += i * curr_vel.y;
+		}
+	}
+	else {
+		for (int i = 0; i < pGame->getlevel(); i++) {
+			RefPoint.x += 2 * curr_vel.x; // multiply level by wolf velocity
+			RefPoint.y += 2 * curr_vel.y;
+		}
 	}
 	//Reverse direction when window boundary is hit 
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1 * curr_vel.x; }

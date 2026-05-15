@@ -19,8 +19,8 @@ public:
 	bool isPaused = false;
 	int budget = 5000;
 	int timer = 120;
-	int goal = 0;
-	int level = 2;
+	int goal = 10000;
+	int level = 1;
 	int animalCount = 0;
 	sf::Music bgmusic;
 	Warehouse* pWarehouse;
