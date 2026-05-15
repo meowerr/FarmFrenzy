@@ -14,8 +14,8 @@ Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string i
 	width = r_width;
 	height = r_height;
 	RefPoint = r_point;
-	curr_vel.x = (rand() % 3)+1; // random number from 0 to 2. Random starting velocity
-	curr_vel.y = (rand() % 3)+1; 
+	curr_vel.x = (rand() % 2)+1; // random number from 0 to 2. Random starting velocity
+	curr_vel.y = (rand() % 2)+1; 
 	lastseentime = pGame->timer; // time taken from timer
 	animalcounter = 0; // animal counter to count seconds
 }

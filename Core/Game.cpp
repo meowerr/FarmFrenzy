@@ -227,8 +227,8 @@ void Game::updateStatusBar() const
 
 
 void Game::randomWolf() {
-	if (wolfCount < level) { //rolls a number between 1 and 5000 and is true if gets 1
-		cout << "Wolf spawned";
+	if (wolfCount < level) { 
+		cout << "Wolf spawned\n";
 		for (int i = 0; i < level; i++) {
 
 			point p;
@@ -430,6 +430,7 @@ void Game::go()
 						if (mx >= wx && mx <= wx + ww && my >= wy && my <= wy + wh) {
 							draggedWolf = wolfList[i];
 							draggedWolf->isDragged = true;
+
 							break; // Grabbed one! Stop checking.
 						}
 					}
@@ -641,7 +642,7 @@ void Game::go()
 	
 
 
-		Pause(5);
+		
 		for (int i = 0; i < eggCount; i++) {
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
 		}
@@ -731,7 +732,7 @@ void Game::go()
 			isExit = true;
 		}
 		pWind->UpdateBuffer();
-
+		Pause(15);
 	} while (!isExit);
 }
 

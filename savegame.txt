@@ -26,3 +26,5 @@ Eggs_Count: 0
 ===_Ground_Milk_Data_===
 Milk_Count: 0
 
+meow 19800
+shizzy 14550

@@ -28,8 +28,8 @@ void Wolf::moveStep() { //how the wolf moves
 	}
 	else {
 		for (int i = 0; i < pGame->getlevel(); i++) {
-			RefPoint.x += 2 * curr_vel.x; // multiply level by wolf velocity
-			RefPoint.y += 2 * curr_vel.y;
+			RefPoint.x += curr_vel.x; // multiply level by wolf velocity
+			RefPoint.y += curr_vel.y;
 		}
 	}
 	//Reverse direction when window boundary is hit 
