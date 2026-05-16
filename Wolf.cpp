@@ -14,12 +14,13 @@ bool Wolf::handleClick(int x, int y) {
 
 Wolf::Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path)
 	: Animal(r_pGame, r_point, r_width, r_height, img_path) {
+	isCaged = false; //omar
 }
 void Wolf::moveStep() { //how the wolf moves
 ////////////////////////////////////////////////////////////////////////////////////////////      Wolf movement Updated ------ malek
 
 	if (isDragged) return; // Freeze random movement while the user holds the wolf!
-
+	if (isCaged) return;
 	if (pGame->getlevel() > 1) {
 		for (int i = 0; i < pGame->getlevel(); i++) {
 			RefPoint.x += i * curr_vel.x; // multiply level by wolf velocity

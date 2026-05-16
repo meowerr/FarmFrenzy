@@ -28,3 +28,4 @@ Milk_Count: 0
 
 meow 19800
 shizzy 14550
+hi 650

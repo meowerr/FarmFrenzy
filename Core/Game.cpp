@@ -14,6 +14,7 @@ using namespace std;
 struct PlayerScore{
 	string name;
 	int score;
+
 };
 
 
@@ -56,9 +57,7 @@ Game::Game()
 	//7- Create and clear the status bar
 	clearStatusBar();
 
-	//level = 1;
-	//goal = 500;
-	//timer = 60;
+	BoughtCage = false;
 
 }
 
@@ -337,6 +336,30 @@ void Game::go()
 
 		pWind->DrawRectangle(X1, Y1, X2, Y2);
 
+		//omar
+		//draw cage top right
+		int cageX1 = config.windWidth - 120;
+		int cageX2 = config.windWidth - 20;
+		if (BoughtCage) {
+			pWind->SetPen(BLACK, 5);
+			pWind->SetBrush(GRAY);
+
+			pWind->DrawRectangle(cageX1, 110, cageX2, 210);
+
+			pWind->SetPen(WHITE, 2);
+			pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+			pWind->DrawString(cageX1 + 25, 150, "CAGE");
+		}
+		else {
+			pWind->SetPen(RED, 3);
+			pWind->SetBrush(config.bkGrndColor); // matches playground background
+			pWind->DrawRectangle(cageX1, 110, cageX2, 210);
+
+			pWind->SetPen(RED, 2);
+			pWind->SetFont(12, BOLD, BY_NAME, "Arial");
+			pWind->DrawString(cageX1 + 10, 140, "UNLOCK CAGE");
+			pWind->DrawString(cageX1 + 25, 165, "$8000");
+		}
 		////////////////////  ``````` Shazly `````````
 
 		// 2. Draw the Toolbar & BudgetBar Background
@@ -366,7 +389,7 @@ void Game::go()
 
 
 		// ````````````````````
-
+		
 		// --- LEVELING SYSTEM ---                                                          <-- [Leveling Logic + Timer based on level]  ///// MALEK
 		// We use "&& level < X" so that if they spend money, they don't lose their level!
 		if (budget >= 50000 && level < 5) {
@@ -417,6 +440,26 @@ void Game::go()
 		buttonstate leftState = pWind->GetButtonState(LEFT_BUTTON, mx, my);
 
 		if (leftState == BUTTON_DOWN) {
+			//omar
+			// purchasing logic
+			if (!BoughtCage) {
+				int cageX1 = config.windWidth - 120;
+				int cageX2 = config.windWidth - 20;
+
+				// Did user click inside the locked cage area?
+				if (mx >= cageX1 && mx <= cageX2 && my >= 110 && my <= 210) {
+					if (budget >= 8000) {
+						budget -= 8000;
+						BoughtCage = true;
+					
+						printMessage("Cage unlocked! Drag and drop wolves here to trap them.");
+				
+					}
+					else {
+						printMessage("Insufficient funds! You need $8000 to unlock the cage.");
+					}
+				}
+			}
 			// If we aren't holding a wolf yet, check if we grabbed one
 			if (draggedWolf == nullptr) {
 				// Check from the newest wolf to the oldest
@@ -453,6 +496,16 @@ void Game::go()
 		}
 		else { // BUTTON_UP (Mouse Released)
 			if (draggedWolf != nullptr) {
+				// omar's trap logic
+				int cageX1 = config.windWidth - 120;
+				int cageX2 = config.windWidth - 20;
+
+				// Did the player drop the wolf inside the new grey box , and the cage is purchased?
+				if (mx >= cageX1 && mx <= cageX2 && my >= 110 && my <= 210 && BoughtCage) {
+					draggedWolf->isCaged = true; //traps it
+					draggedWolf->setLocation(cageX1 + 25, 135); // sets wolf to center
+				}
+				// ----------------------
 				draggedWolf->isDragged = false; // Resume random movement
 				draggedWolf = nullptr;
 				pWind->FlushMouseQueue(); // Clear the drop click so we don't accidentally click UI buttons!
@@ -680,12 +733,12 @@ void Game::go()
 
 			// 4. Load the file into a STANDARD ARRAY
 			ifstream inFile("savegame.txt");
-			PlayerScore board[100]; // Array that can hold up to 100 past players
+			PlayerScore board[100]; 
 			int playerCount = 0;    // Keeps track of how many people are actually in the file
 
 			string n;
 			int s;
-			// Read the file. Stop if we hit the end, OR if we reach 100 players
+			// Read the file. Stop if we hit the end or if we reach 100 players
 			while (inFile >> n >> s && playerCount < 100) {
 				board[playerCount].name = n;
 				board[playerCount].score = s;
@@ -937,7 +990,8 @@ void Game::loadGame() {
 
 	InFile.close();
 
-	// 3. Update visuals
+	// 3. 
+	// visuals
 	clearBudget();
 	printBudget("MONEY = $" + to_string(budget));
 	printMessage("Game Loaded Successfully!");

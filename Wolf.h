@@ -9,6 +9,7 @@ class Wolf : public Animal           //////////////////////////////////////// Wo
 {
 public:
 	bool isDragged = false; // Flag to track if the wolf is being held
+	bool isCaged = false; //omar
 	int clicked = 0;
 	Wolf(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	bool handleClick(int x, int y);
