@@ -1,24 +1,29 @@
 ===_Game_Status_===
-Budget: 9900
-Timer: 107
+Budget: 4550
+Timer: 116
 Level: 1
 
 ===_Warehouse_Data_===
 Stored_Eggs: 0
-Stored_Milk: 15
+Stored_Milk: 0
 
 ===_Wolves_Data_===
 Wolves_Count: 1
-Wolf_1_Pos: 880 424
+Wolf_1_Pos: 1097 472
 
 ===_Chicks_Data_===
-Chicks_Count: 0
+Chicks_Count: 1
+Chick_1_Pos: 925 431
 
 ===_Cows_Data_===
-Cows_Count: 0
+Cows_Count: 3
+Cow_1_Pos: 554 217
+Cow_2_Pos: 548 194
+Cow_3_Pos: 700 434
 
 ===_Grass_Data_===
-Grass_Count: 0
+Grass_Count: 1
+Grass_1_Pos_&_Food: 434 231 10
 
 ===_Ground_Eggs_Data_===
 Eggs_Count: 0
@@ -26,12 +31,3 @@ Eggs_Count: 0
 ===_Ground_Milk_Data_===
 Milk_Count: 0
 
-meow 19800
-shizzy 14550
-hi 650
-omarmr 17200
-Omar 4300
-Omar 5000
-hi 9900
-why 0
-waw 4750

@@ -282,14 +282,10 @@ void Game::go()
 	if (bgmusic.openFromFile("track.wav")) {
 		bgmusic.setLoop(true);
 		bgmusic.setVolume(20);
-		//bgmusic.play();
 		
 	}
-
-
 	do
 	{
-		
 		if (!isPaused) { 
 			if (bgmusic.getStatus() != sf::Music::Playing) {
 				bgmusic.play();
@@ -400,7 +396,7 @@ void Game::go()
 			printMessage("Level UP!!");
 			mains.playslvlUP();
 			pWind->UpdateBuffer();
-			Pause(500);
+			Pause(1000);
 			level = 5;
 			timer = 20;  // Reset timer for Level 5
 		}
@@ -408,7 +404,7 @@ void Game::go()
 			printMessage("Level UP!!");
 			mains.playslvlUP();
 			pWind->UpdateBuffer();
-			Pause(500);
+			Pause(1000);
 			goal = 50000;
 			level = 4;
 			timer = 30;  // Reset timer for Level 4
@@ -417,7 +413,7 @@ void Game::go()
 			printMessage("Level UP!!");
 			mains.playslvlUP();
 			pWind->UpdateBuffer();
-			Pause(500);
+			Pause(1000);
 			level = 3;
 			goal = 20000;
 			timer = 60;  // Reset timer for Level 3
@@ -426,7 +422,7 @@ void Game::go()
 			printMessage("Level UP!!");
 			mains.playslvlUP();
 			pWind->UpdateBuffer();
-			Pause(500);
+			Pause(1000);
 			level = 2;
 			goal = 15000;
 			timer = 90;  // Reset timer for Level 2
