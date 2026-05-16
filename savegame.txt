@@ -1,46 +1,28 @@
 ===_Game_Status_===
-Budget: 5742
-Timer: 56
-Level: 3
+Budget: 3000
+Timer: 6
+Level: 1
 
 ===_Warehouse_Data_===
-Stored_Eggs: 1
-Stored_Milk: 3
+Stored_Eggs: 0
+Stored_Milk: 0
 
 ===_Wolves_Data_===
 Wolves_Count: 1
-Wolf_1_Pos: 748 391
+Wolf_1_Pos: 891 439
 
 ===_Chicks_Data_===
-Chicks_Count: 5
-Chick_1_Pos: 287 168
-Chick_2_Pos: 734 178
-Chick_3_Pos: 854 313
-Chick_4_Pos: 658 432
-Chick_5_Pos: 596 308
+Chicks_Count: 0
 
 ===_Cows_Data_===
-Cows_Count: 3
-Cow_1_Pos: 267 381
-Cow_2_Pos: 141 260
-Cow_3_Pos: 1044 303
+Cows_Count: 0
 
 ===_Grass_Data_===
-Grass_Count: 4
-Grass_1_Pos_&_Food: 602 291 10
-Grass_2_Pos_&_Food: 713 478 10
-Grass_3_Pos_&_Food: 370 337 4
-Grass_4_Pos_&_Food: 1104 198 10
+Grass_Count: 0
 
 ===_Ground_Eggs_Data_===
-Eggs_Count: 5
-Egg_1_Pos: 790 502
-Egg_2_Pos: 940 281
-Egg_3_Pos: 955 414
-Egg_4_Pos: 757 471
-Egg_5_Pos: 429 310
+Eggs_Count: 0
 
 ===_Ground_Milk_Data_===
-Milk_Count: 5
+Milk_Count: 0
 
-\ 21000

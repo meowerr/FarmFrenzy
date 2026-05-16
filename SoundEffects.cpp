@@ -24,7 +24,7 @@ bool soundPlayer::initializeSF() {
     sdrop.setBuffer(drop);
 
 
-    if (!cat.loadFromFile("cat.ogg")) return false;
+    if (!cat.loadFromFile("cat.wav")) return false;
     scat.setBuffer(cat);
 
 

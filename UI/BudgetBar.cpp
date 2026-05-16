@@ -199,6 +199,7 @@ void CowIcon::onClick(int x, int y)
 
 void CatIcon::onClick(int x, int y)
 {
+	animals.playscat();
 	cout << "Icon Cat Clicked" << endl;
 	if (count < MAX_ITEMS && pGame->budget >= 2000) {
 		pGame->budget -= 2000;
