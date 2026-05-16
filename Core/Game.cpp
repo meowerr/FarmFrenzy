@@ -755,7 +755,7 @@ void Game::go()
 		}
 
 			// omar's GAME OVER and leaderboard when timer hits zero
-			// --- GAME OVER & LEADERBOARD CHECK ---
+			
 			if (timer <= 0)
 			{
 				isPaused = true;

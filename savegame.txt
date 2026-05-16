@@ -37,3 +37,4 @@ Eggs_Count: 0
 Milk_Count: 0
 
 \ 21000
+omar 17500
