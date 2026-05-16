@@ -403,8 +403,9 @@ void CatIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist) {
 				CatList[i]->moveStep();
 
 
-				if (CatList[i] != nullptr)CatList[i]->draw(); //outside pause condition to not disappear
+				
 			}
+			if (CatList[i] != nullptr)CatList[i]->draw(); //outside pause condition to not disappear
 		}
 	}
 }
