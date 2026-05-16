@@ -9,6 +9,7 @@ using namespace std;
 
 Animal::Animal(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
+	isGolden = false; //omar
 	image_path = img_path;
 	curr_pos = r_point;
 	width = r_width;
@@ -25,6 +26,16 @@ void Animal::draw() const
 	//draw image of this object
 	window* pWind = pGame->getWind();
 
+	// draws golden aura, omar
+	if (isGolden && image_path != "images\\wolf.jpg" && image_path != "images\\cat.jpg" && image_path != "images\\cow.jpg") {
+		pWind->SetPen(ORANGE, 5); 
+
+		// Find the center of the animal image
+		int centerX = RefPoint.x + (width / 2);
+		int centerY = RefPoint.y + (height / 2);
+
+		pWind->DrawCircle(centerX, centerY, 35); //draws ring
+	}
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
 	if (image_path != "images\\wolf.jpg" && image_path != "images\\cat.jpg") {
 		pWind->SetPen(BLACK, 50); //display animal counter above animal except wolf
@@ -53,8 +64,13 @@ void Chick::moveStep() //is being called continuously in budgetbar
 		animalcounter++;
 		lastseentime = pGame->timer; //update timer
 	}
-	if (animalcounter >= timermax) { //if animal counter reaches timer max, spawn milk
-		pGame->drawegg(RefPoint.x, RefPoint.y); //draw milk at cow position
+	if (animalcounter >= timermax) { //if animal counter reaches timer max, spawn egg
+		pGame->drawegg(RefPoint.x, RefPoint.y); 
+		if (isGolden) {
+			// Drop a second egg shifted 20 pixels to the right
+			pGame->drawegg(RefPoint.x + 20, RefPoint.y);
+		}
+
 		animalcounter = 0;
 	}
 	//cout << "Icon Chick Moved" << endl;

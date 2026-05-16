@@ -123,7 +123,14 @@ void ChickIcon::onClick(int x, int y)
 		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 		p.y = dist2(gen2);
 
+		//omar
 		chickList[count] = new Chick(pGame, p, 50, 50, image_path);
+
+		// 10% golden chance
+		if (rand() % 10 == 0) {
+			chickList[count]->isGolden = true;
+		}
+
 		chickList[count]->draw();
 		count++;
 	}

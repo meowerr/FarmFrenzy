@@ -43,3 +43,4 @@ Egg_5_Pos: 429 310
 ===_Ground_Milk_Data_===
 Milk_Count: 5
 
+\ 21000
