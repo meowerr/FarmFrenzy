@@ -478,6 +478,11 @@ void Game::go()
 						if (mx >= wx && mx <= wx + ww && my >= wy && my <= wy + wh) {
 							draggedWolf = wolfList[i];
 							draggedWolf->isDragged = true;
+							if (draggedWolf->handleClick(x, y)) {
+								delete draggedWolf;
+								draggedWolf = nullptr;
+								wolfCount--;
+							}
 
 							break; // Grabbed one! Stop checking.
 						}

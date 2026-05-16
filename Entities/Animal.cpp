@@ -43,12 +43,6 @@ Chick::Chick(Game* r_pGame, point r_point, int r_width, int r_height, string img
 
 void Chick::moveStep() //is being called continuously in budgetbar
 {
-	//TO DO: add code for cleanup and game exit here
-	/*
-	//draw image of this object in the field
-	window* pWind = pGame->getWind();
-	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	*/
 
 	RefPoint.x += curr_vel.x;
 	RefPoint.y += curr_vel.y;
