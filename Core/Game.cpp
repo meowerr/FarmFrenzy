@@ -773,36 +773,43 @@ void Game::go()
 
 				int finalScore = budget;
 
-			// 2. Ask for their name
-			string playerName;
-			cout << "\n=====================================\n";
-			cout << " GAME OVER! YOU SCORED: $" << finalScore << "\n";
-			cout << " ENTER YOUR NAME FOR LEADERBOARD: ";
-			cin >> playerName;
+				// 2. Ask for name inside the game window
+				pWind->SetPen(YELLOW, 3);
+				pWind->SetFont(30, BOLD, BY_NAME, "Arial");
 
-			// 3. Save to the permanent text file
-			ofstream outFile("savegame.txt", ios::app);
-			if (outFile.is_open()) {
-				outFile << playerName << " " << finalScore << endl;
-				outFile.close();
-			}
+				string promptText = "You scored $" + to_string(finalScore) + "! Type your name:";
+				pWind->DrawString((config.windWidth / 2) - 200, 180, promptText);
+				pWind->UpdateBuffer();
 
-			// 4. Load the file into a STANDARD ARRAY
-			ifstream inFile("savegame.txt");
-			PlayerScore board[100]; 
-			int playerCount = 0;    // Keeps track of how many people are actually in the file
+				// Capture keyboard input using your Game class's string function
+				string playerName = getSrting();
+				clearStatusBar();
+				// 3. Save to the permanent text file (Force creation & bypass OneDrive lock)
+				ofstream outFile;
+				outFile.open("FarmScores.txt", ios::out | ios::app);
+				if (outFile.is_open()) {
+					outFile << playerName << " " << finalScore << endl;
+					outFile.close();
+				}
 
-			string n;
-			int s;
-			// Read the file. Stop if we hit the end or if we reach 100 players
-			while (inFile >> n >> s && playerCount < 100) {
-				board[playerCount].name = n;
-				board[playerCount].score = s;
-				playerCount++;
-			}
-			inFile.close();
+				// 4. Load the file into a STANDARD ARRAY
+				ifstream inFile;
+				inFile.open("FarmScores.txt");
+				PlayerScore board[100];
+				int playerCount = 0;
 
-			// 5. MANUAL BUBBLE SORT (Highest to Lowest)
+				// Only try to read if the file successfully unlocked
+				if (inFile.is_open()) {
+					string n;
+					int s;
+					while (inFile >> n >> s && playerCount < 100) {
+						board[playerCount].name = n;
+						board[playerCount].score = s;
+						playerCount++;
+					}
+					inFile.close();
+				}
+
 			for (int i = 0; i < playerCount - 1; i++) {
 				for (int j = 0; j < playerCount - i - 1; j++) {
 					if (board[j].score < board[j + 1].score) {
