@@ -246,10 +246,11 @@ void Game::randomWolf() {
 			std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
 			p.y = dist2(gen2);
 
-
-			wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
-			wolfList[wolfCount]->draw(); //first the wolf is drawn
-			wolfCount++;
+			if (wolfCount < MAX_ITEMS) {
+				wolfList[wolfCount] = new Wolf(this, p, 50, 50, "images\\wolf.jpg");
+				wolfList[wolfCount]->draw(); //first the wolf is drawn
+				wolfCount++;
+			}
 		}
 
 	}
@@ -916,8 +917,11 @@ void Game::saveGame() {
 	OutFile << "===_Chicks_Data_===\n";
 	ChickIcon* pChick = (ChickIcon*)gameBudgetbar->iconsList[ICON_CHICK];
 	OutFile << "Chicks_Count: " << pChick->count << "\n";
+
 	for (int i = 0; i < pChick->count; i++) {
-		OutFile << "Chick_" << i + 1 << "_Pos: " << pChick->chickList[i]->curr_pos.x << " " << pChick->chickList[i]->curr_pos.y << "\n";
+		if (pChick->chickList[i] != nullptr) {
+			OutFile << "Chick_" << i + 1 << "_Pos: " << pChick->chickList[i]->curr_pos.x << " " << pChick->chickList[i]->curr_pos.y << "\n";
+		}
 	}
 	OutFile << "\n";
 
@@ -926,7 +930,9 @@ void Game::saveGame() {
 	CowIcon* pCow = (CowIcon*)gameBudgetbar->iconsList[ICON_COW];
 	OutFile << "Cows_Count: " << pCow->count << "\n";
 	for (int i = 0; i < pCow->count; i++) {
-		OutFile << "Cow_" << i + 1 << "_Pos: " << pCow->CowList[i]->curr_pos.x << " " << pCow->CowList[i]->curr_pos.y << "\n";
+		if (pCow->CowList[i] != nullptr) {
+			OutFile << "Cow_" << i + 1 << "_Pos: " << pCow->CowList[i]->curr_pos.x << " " << pCow->CowList[i]->curr_pos.y << "\n";
+		}
 	}
 	OutFile << "\n";
 
@@ -935,7 +941,9 @@ void Game::saveGame() {
 	WaterIcon* pWater = (WaterIcon*)gameBudgetbar->iconsList[ICON_WATER];
 	OutFile << "Grass_Count: " << pWater->count << "\n";
 	for (int i = 0; i < pWater->count; i++) {
-		OutFile << "Grass_" << i + 1 << "_Pos_&_Food: " << pWater->Grasslist[i]->getrefpoint().x << " " << pWater->Grasslist[i]->getrefpoint().y << " " << pWater->Grasslist[i]->foodcounter << "\n";
+		if (pWater->Grasslist[i] != nullptr) {
+			OutFile << "Grass_" << i + 1 << "_Pos_&_Food: " << pWater->Grasslist[i]->getrefpoint().x << " " << pWater->Grasslist[i]->getrefpoint().y << " " << pWater->Grasslist[i]->foodcounter << "\n";
+		}
 	}
 	OutFile << "\n";
 
