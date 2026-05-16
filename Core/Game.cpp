@@ -4,12 +4,15 @@
 #include "../CMUgraphicsLib/auxil.h"
 #include "../Warehouse.h"
 #include "../Entities/Animal.h"
+#include "../SoundEffects.h"
 #include "../Wolf.h"
 #include <iostream>
 #include <fstream>
 #include "../Grass.h"
 #include <random>
 using namespace std;
+
+soundPlayer mains;
 
 struct PlayerScore{
 	string name;
@@ -227,6 +230,7 @@ void Game::updateStatusBar() const
 
 void Game::randomWolf() {
 	if (wolfCount < level) { 
+		mains.playswolf();
 		cout << "Wolf spawned\n";
 		for (int i = 0; i < level; i++) {
 
@@ -394,6 +398,7 @@ void Game::go()
 		// We use "&& level < X" so that if they spend money, they don't lose their level!
 		if (budget >= 50000 && level < 5) {
 			printMessage("Level UP!!");
+			mains.playslvlUP();
 			pWind->UpdateBuffer();
 			Pause(500);
 			level = 5;
@@ -401,6 +406,7 @@ void Game::go()
 		}
 		else if (budget >= 20000 && level < 4) {
 			printMessage("Level UP!!");
+			mains.playslvlUP();
 			pWind->UpdateBuffer();
 			Pause(500);
 			goal = 50000;
@@ -409,6 +415,7 @@ void Game::go()
 		}
 		else if (budget >= 15000 && level < 3) {
 			printMessage("Level UP!!");
+			mains.playslvlUP();
 			pWind->UpdateBuffer();
 			Pause(500);
 			level = 3;
@@ -417,6 +424,7 @@ void Game::go()
 		}
 		else if (budget >= 10000 && level < 2) {
 			printMessage("Level UP!!");
+			mains.playslvlUP();
 			pWind->UpdateBuffer();
 			Pause(500);
 			level = 2;
@@ -564,8 +572,9 @@ void Game::go()
 				if (!clickedwolf) {
 					if (x >= wX && x < wX + wW && y >= wY && y < wY + wH) {
 
-						/////////////////////////////////////////////////////////////////////// Create a new pop-up window
+						/////////////////////////////////////////////////////////////////////// new popup window
 						window* popup = new window(420, 320, config.wx + 200, config.wy + 150);
+						mains.playsclick();
 						popup->ChangeTitle("Warehouse Inventory");
 						popup->SetBuffering(true); // Enables smooth drawing for updating text
 
@@ -640,7 +649,8 @@ void Game::go()
 
 							///////////////////////////////////////////////////////////  Handle the Clicks
 							if (pX >= 280 && pX <= 380 && pY >= 75 && pY <= 105) {
-								// Egg Clicked
+								// Egg Clicked 
+								mains.playsclick();
 								if (pWarehouse->storedeggs > 0) {
 									pWarehouse->storedeggs--;
 									budget += pWarehouse->eggprice; // Add money to game budget
@@ -648,6 +658,7 @@ void Game::go()
 							}
 							else if (pX >= 280 && pX <= 380 && pY >= 115 && pY <= 145) {
 								// Milk Clicked
+								mains.playsclick();
 								if (pWarehouse->storedmilk > 0) {
 									pWarehouse->storedmilk--;
 									budget += pWarehouse->milkprice; // Add money to game budget
@@ -655,12 +666,14 @@ void Game::go()
 							}
 							else if (pX >= 280 && pX <= 380 && pY >= 155 && pY <= 185) {
 								// "SELL ALL" Clicked
+								mains.playsclick();
 								budget += totalValue;       // Add total worth to budget
 								pWarehouse->resetegg();     // Empty eggs
 								pWarehouse->resetmilk();    // Empty milk
 							}
 							else if (pX >= 110 && pX <= 310 && pY >= 250 && pY <= 290) {
 								// "CLOSE" Clicked
+								mains.playsclick();
 								closePopup = true;          // Will break the while loop
 							}
 						}
@@ -697,9 +710,12 @@ void Game::go()
 
 		
 		for (int i = 0; i < eggCount; i++) {
+			
 			pWind->DrawImage("images\\egg.jpg", eggs[i].x, eggs[i].y, 50, 50);
 		}
+		
 		for (int i = 0; i < milkcount; i++) {
+			
 			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
 		}
 
@@ -801,6 +817,7 @@ void Game::drawegg(int x, int y) {
 		eggs[eggCount].x = x;
 		eggs[eggCount].y = y;
 		eggCount++;
+		mains.playsdrop();
 
 	}
 }
@@ -811,6 +828,7 @@ void Game::drawmilk(int x, int y) {
 		milks[milkcount].x = x;
 		milks[milkcount].y = y;
 		milkcount++;
+		mains.playsdrop();
 	}
 }
 

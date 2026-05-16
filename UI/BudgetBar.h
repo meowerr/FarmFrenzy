@@ -3,6 +3,7 @@
 #include "../Entities/Animal.h"
 #include "../Config/GameConfig.h"
 #include <random>
+#include "SFML/Audio.hpp"
 #include <limits>
 
 
@@ -12,6 +13,9 @@ const int range_min_y = (config.toolBarHeight * 2) + 50;
 const int range_max_y = config.windHeight - config.statusBarHeight - 50;         ///////////////// MALEK
 
 const int MAX_ITEMS = 300;
+
+
+
 
 
 

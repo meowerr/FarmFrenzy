@@ -23,6 +23,8 @@ public:
 	int goal = 10000;
 	int level = 1;
 	int animalCount = 0;
+
+
 	sf::Music bgmusic;
 	Warehouse* pWarehouse;
 	void updateStatusBar() const;

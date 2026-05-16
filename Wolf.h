@@ -3,8 +3,6 @@
 #include "./Core/Game.h"
 
 
-
-
 class Wolf : public Animal           //////////////////////////////////////// Wolf Class updated to be draggable      ------     malek
 {
 public:
