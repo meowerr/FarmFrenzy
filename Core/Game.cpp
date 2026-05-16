@@ -67,6 +67,7 @@ Game::Game()
 Game::~Game()
 {
 	delete pWind;
+	pWind = nullptr;
 	delete gameToolbar;
 	delete gameBudgetbar;
 	delete pWarehouse;
@@ -479,7 +480,9 @@ void Game::go()
 							draggedWolf = wolfList[i];
 							draggedWolf->isDragged = true;
 							if (draggedWolf->handleClick(x, y)) {
-								delete draggedWolf;
+								delete wolfList[i];
+								wolfList[i] = wolfList[wolfCount - 1]; // Move the last wolf into the hole
+								wolfList[wolfCount - 1] = nullptr;
 								draggedWolf = nullptr;
 								wolfCount--;
 							}
