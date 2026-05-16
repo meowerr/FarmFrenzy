@@ -97,8 +97,8 @@ Cat::Cat(Game* r_pGame, point r_point, int r_width, int r_height, string img_pat
 void Cat::moveStep()
 {
 	//TO DO: add code for cleanup and game exit here
-	RefPoint.x += curr_vel.x;
-	RefPoint.y += curr_vel.y;
+	RefPoint.x += 3*curr_vel.x;
+	RefPoint.y += 3*curr_vel.y;
 	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1 * curr_vel.x; }
 	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y) { curr_vel.y = -1 * curr_vel.y; }
 }

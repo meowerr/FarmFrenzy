@@ -36,3 +36,4 @@ Eggs_Count: 0
 ===_Ground_Milk_Data_===
 Milk_Count: 0
 
+\ 21000
