@@ -37,3 +37,9 @@ public:
 	Cow(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
 	virtual void moveStep();
 };
+class Cat : public Animal
+{
+public:
+	Cat(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual void moveStep();
+};

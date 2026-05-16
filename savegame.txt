@@ -1,6 +1,6 @@
 ===_Game_Status_===
-Budget: 4550
-Timer: 116
+Budget: 4400
+Timer: 117
 Level: 1
 
 ===_Warehouse_Data_===
@@ -9,11 +9,16 @@ Stored_Milk: 0
 
 ===_Wolves_Data_===
 Wolves_Count: 1
-Wolf_1_Pos: 1097 472
+Wolf_1_Pos: 377 404
 
 ===_Chicks_Data_===
-Chicks_Count: 1
-Chick_1_Pos: 925 431
+Chicks_Count: 6
+Chick_1_Pos: 802 173
+Chick_2_Pos: 897 369
+Chick_3_Pos: 484 430
+Chick_4_Pos: 778 486
+Chick_5_Pos: 644 239
+Chick_6_Pos: 64 177
 
 ===_Cows_Data_===
 Cows_Count: 3

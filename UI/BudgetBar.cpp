@@ -54,7 +54,13 @@ WaterIcon::~WaterIcon() {
 	}
 	delete[] Grasslist;
 }
-
+CatIcon::CatIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : BudgetbarIcon(r_pGame, r_point, r_width, r_height, img_path)
+{
+	CatList = new Cat * [MAX_ITEMS];
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		CatList[i] = nullptr;
+	}
+}
 //omar
 void WaterIcon::draw() const
 {
@@ -139,6 +145,23 @@ void CowIcon::draw() const
 	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
 	pWind->DrawString(RefPoint.x + 5, RefPoint.y + height - 18, "Buy: 100");
 }
+void CatIcon::draw() const
+{
+	BudgetbarIcon::draw(); // Draw jpg
+
+	window* pWind = pGame->getWind();
+
+	// Erase
+	pWind->SetPen(RED, 1);
+	pWind->SetBrush(RED);
+	pWind->DrawRectangle(RefPoint.x, RefPoint.y + height - 15, RefPoint.x + width, RefPoint.y + height);
+
+	// Text
+	pWind->SetPen(WHITE, 1);
+	pWind->SetFont(14, BOLD, BY_NAME, "Arial");
+	pWind->DrawString(RefPoint.x + 5, RefPoint.y + height - 18, "Buy: 2000");
+}
+
 
 void CowIcon::onClick(int x, int y)
 {
@@ -162,6 +185,32 @@ void CowIcon::onClick(int x, int y)
 
 		CowList[count] = new Cow(pGame, p, 50, 50, image_path);
 		CowList[count]->draw();
+		count++;
+	}
+}
+
+
+void CatIcon::onClick(int x, int y)
+{
+	cout << "Icon Cat Clicked" << endl;
+	if (count < MAX_ITEMS && pGame->budget >= 2000) {
+		pGame->budget -= 2000;
+		pGame->clearBudget();
+		pGame->printBudget("BUDGET = $" + to_string(pGame->budget));
+
+		point p;
+		std::random_device rd1;
+		static std::mt19937 gen1(rd1());
+		std::uniform_int_distribution<int> dist1(range_min_x, range_max_x);
+		p.x = dist1(gen1);
+
+		std::random_device rd2;
+		static std::mt19937 gen2(rd2());
+		std::uniform_int_distribution<int> dist2(range_min_y, range_max_y);
+		p.y = dist2(gen2);
+
+		CatList[count] = new Cat(pGame, p, 50, 50, image_path);
+		CatList[count]->draw();
 		count++;
 	}
 }
@@ -202,6 +251,7 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	iconsImages[ICON_CHICK] = "images\\chick.jpg";
 	iconsImages[ICON_COW] = "images\\cow.jpg";
 	iconsImages[ICON_WATER] = "images\\water.jpg";
+	iconsImages[ICON_CAT] = "images\\cat.jpg";
 
 	point p;
 	p.x = 0;
@@ -215,6 +265,8 @@ Budgetbar::Budgetbar(Game* r_pGame, point r_point, int r_width, int r_height) : 
 	iconsList[ICON_COW] = new CowIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_COW]);
 	p.x += config.iconWidth;
 	iconsList[ICON_WATER] = new WaterIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_WATER]);
+	p.x += config.iconWidth;
+	iconsList[ICON_CAT] = new CatIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CAT]);
 	p.x += config.iconWidth;
 	//p.x += config.iconWidth;
 	//iconsList[ICON_CHICK] = new ChickIcon(pGame, p, config.iconWidth, config.toolBarHeight, iconsImages[ICON_CHICK]);
@@ -330,6 +382,21 @@ void CowIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 			}
 
 			if (CowList[i] !=nullptr) CowList[i]->draw();  //outside pause condition to not disappear
+		}
+	}
+}
+void CatIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist) {
+
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		if (CatList[i] != nullptr) {
+
+			if (!pGame->isPaused) //<--Omar
+			{
+				CatList[i]->moveStep();
+
+
+				if (CatList[i] != nullptr)CatList[i]->draw(); //outside pause condition to not disappear
+			}
 		}
 	}
 }

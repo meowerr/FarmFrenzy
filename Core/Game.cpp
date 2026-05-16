@@ -282,17 +282,19 @@ void Game::go()
 	if (bgmusic.openFromFile("track.wav")) {
 		bgmusic.setLoop(true);
 		bgmusic.setVolume(20);
+		//bgmusic.play();
 		
 	}
 	do
 	{
+		
 		if (!isPaused) { 
 			if (bgmusic.getStatus() != sf::Music::Playing) {
 				bgmusic.play();
-		}
+			}
 		}
 		else bgmusic.pause();
-		
+
 
 
 
@@ -301,7 +303,7 @@ void Game::go()
 		//////////////////////////////////////// MALEK
 		if (!isPaused)//<--Omar
 		{
-			
+
 			if (timer > 0)
 			{
 				if (ElapsedTime(1000)) {
@@ -373,7 +375,6 @@ void Game::go()
 
 
 
-
 		Game::randomWolf();
 
 		for (int i = 0; i < wolfCount; i++) {
@@ -389,7 +390,7 @@ void Game::go()
 
 
 		// ````````````````````
-		
+
 		// --- LEVELING SYSTEM ---                                                          <-- [Leveling Logic + Timer based on level]  ///// MALEK
 		// We use "&& level < X" so that if they spend money, they don't lose their level!
 		if (budget >= 50000 && level < 5) {
@@ -455,9 +456,9 @@ void Game::go()
 					if (budget >= 8000) {
 						budget -= 8000;
 						BoughtCage = true;
-					
+
 						printMessage("Cage unlocked! Drag and drop wolves here to trap them.");
-				
+
 					}
 					else {
 						printMessage("Insufficient funds! You need $8000 to unlock the cage.");
@@ -679,6 +680,8 @@ void Game::go()
 						popup = nullptr;
 					}
 
+
+
 					else {
 						for (int i = 0; i < eggCount; i++) {
 							if (x > eggs[i].x && x<eggs[i].x + 50 && y>eggs[i].y && y < eggs[i].y + 50) {
@@ -700,8 +703,44 @@ void Game::go()
 				}
 			}
 		}
+		// get the CatIcon so we can look at its list of cats
+		CatIcon* pCatIcon = (CatIcon*)(gameBudgetbar->iconsList[ICON_CAT]);
 
-	
+		//  Loop through every  cat
+		for (int i = 0; i < MAX_ITEMS; i++) {
+			if (pCatIcon->CatList[i] != nullptr) {
+
+				int catLeft = pCatIcon->CatList[i]->getrefpoint().x;
+				int catRight = catLeft + pCatIcon->CatList[i]->getwidth();
+				int catUp = pCatIcon->CatList[i]->getrefpoint().y;
+				int catDown = catUp + pCatIcon->CatList[i]->getheight();
+
+				for (int j = 0; j < eggCount; j++) {
+
+					if (catRight > eggs[j].x && catLeft < eggs[j].x + 50 && catDown > eggs[j].y && catUp < eggs[j].y + 50) {
+						eggs[i] = eggs[eggCount - 1];
+						eggCount--;
+						pWarehouse->addegg();
+						break;
+					}
+				}
+
+				for (int j = 0; j < milkcount; j++) {
+
+					if (catRight > milks[j].x && catLeft < milks[j].x + 50 && catDown > milks[j].y && catUp < milks[j].y + 50) {
+						milks[j] = milks[milkcount - 1];
+						milkcount--;
+						pWarehouse->addmilk();
+						break;
+					}
+
+				}
+
+
+			}
+		}
+
+
 
 
 		
@@ -715,63 +754,50 @@ void Game::go()
 			pWind->DrawImage("images\\milk.jpg", milks[i].x, milks[i].y, 50, 50);
 		}
 
-		// omar's GAME OVER and leaderboard when timer hits zero
-		// --- GAME OVER & LEADERBOARD CHECK ---
-		if (timer <= 0)
-		{
-			isPaused = true;
+			// omar's GAME OVER and leaderboard when timer hits zero
+			// --- GAME OVER & LEADERBOARD CHECK ---
+			if (timer <= 0)
+			{
+				isPaused = true;
 
-			// 1. Draw the Game Over text
-			pWind->SetPen(RED, 1);
-			pWind->SetFont(60, BOLD, BY_NAME, "Arial");
-			pWind->DrawString((config.windWidth / 2) - 150, 100, "GAME OVER");
-			pWind->UpdateBuffer();
+				// 1. Draw the Game Over text
+				pWind->SetPen(RED, 1);
+				pWind->SetFont(60, BOLD, BY_NAME, "Arial");
+				pWind->DrawString((config.windWidth / 2) - 150, 100, "GAME OVER");
+				pWind->UpdateBuffer();
 
-			int finalScore = budget;
+				int finalScore = budget;
 
-			// 2. Ask for name inside the game window
-			pWind->SetPen(YELLOW, 3);
-			pWind->SetFont(30, BOLD, BY_NAME, "Arial");
+			// 2. Ask for their name
+			string playerName;
+			cout << "\n=====================================\n";
+			cout << " GAME OVER! YOU SCORED: $" << finalScore << "\n";
+			cout << " ENTER YOUR NAME FOR LEADERBOARD: ";
+			cin >> playerName;
 
-			string promptText = "You scored $" + to_string(finalScore) + "! Type your name:";
-			pWind->DrawString((config.windWidth / 2) - 200, 180, promptText);
-			pWind->UpdateBuffer();
-
-			// Capture keyboard input using your Game class's string function
-			string playerName = getSrting();
-			clearStatusBar();
-			// 3. Save to the permanent text file (Force creation & bypass OneDrive lock)
-			ofstream outFile;
-			outFile.open("FarmScores.txt", ios::out | ios::app);
+			// 3. Save to the permanent text file
+			ofstream outFile("savegame.txt", ios::app);
 			if (outFile.is_open()) {
 				outFile << playerName << " " << finalScore << endl;
 				outFile.close();
 			}
 
 			// 4. Load the file into a STANDARD ARRAY
-			ifstream inFile;
-			inFile.open("FarmScores.txt");
-			PlayerScore board[100];
-			int playerCount = 0;
+			ifstream inFile("savegame.txt");
+			PlayerScore board[100]; 
+			int playerCount = 0;    // Keeps track of how many people are actually in the file
 
-			// Only try to read if the file successfully unlocked!
-			if (inFile.is_open()) {
-				string n;
-				int s;
-				while (inFile >> n >> s && playerCount < 100) {
-					board[playerCount].name = n;
-					board[playerCount].score = s;
-					playerCount++;
-				}
-				inFile.close();
+			string n;
+			int s;
+			// Read the file. Stop if we hit the end or if we reach 100 players
+			while (inFile >> n >> s && playerCount < 100) {
+				board[playerCount].name = n;
+				board[playerCount].score = s;
+				playerCount++;
 			}
+			inFile.close();
 
-			// --- LEADERBOARD FAILSAFE ---
-			if (playerCount == 0 && playerName != "") {
-				board[0].name = playerName;
-				board[0].score = finalScore;
-				playerCount = 1;
-			}			// 5. MANUAL BUBBLE SORT (Highest to Lowest)
+			// 5. MANUAL BUBBLE SORT (Highest to Lowest)
 			for (int i = 0; i < playerCount - 1; i++) {
 				for (int j = 0; j < playerCount - i - 1; j++) {
 					if (board[j].score < board[j + 1].score) {
@@ -783,36 +809,36 @@ void Game::go()
 				}
 			}
 
-			// 6. Draw the Leaderboard UI Box
-			pWind->SetBrush(WHITE);
-			pWind->SetPen(BLACK, 3);
-			pWind->DrawRectangle(200, 200, 600, 500);
+				// 6. Draw the Leaderboard UI Box
+				pWind->SetBrush(WHITE);
+				pWind->SetPen(BLACK, 3);
+				pWind->DrawRectangle(200, 200, 600, 500);
 
-			pWind->SetFont(40, BOLD, BY_NAME, "Arial");
-			pWind->DrawString(220, 210, "--- TOP FARMERS ---");
+				pWind->SetFont(40, BOLD, BY_NAME, "Arial");
+				pWind->DrawString(220, 210, "--- TOP FARMERS ---");
 
-			// 7. Draw the Top 5 Players
-			pWind->SetFont(30, PLAIN, BY_NAME, "Arial");
-			int drawY = 270;
+				// 7. Draw the Top 5 Players
+				pWind->SetFont(30, PLAIN, BY_NAME, "Arial");
+				int drawY = 270;
 
-			// Loop up to 5 times, or the total number of players if less than 5
-			int displayLimit = (playerCount < 5) ? playerCount : 5;
-			for (int i = 0; i < displayLimit; i++) {
-				string entry = to_string(i + 1) + ". " + board[i].name + " - $" + to_string(board[i].score);
-				pWind->DrawString(230, drawY, entry);
-				drawY += 40;
+				// Loop up to 5 times, or the total number of players if less than 5
+				int displayLimit = (playerCount < 5) ? playerCount : 5;
+				for (int i = 0; i < displayLimit; i++) {
+					string entry = to_string(i + 1) + ". " + board[i].name + " - $" + to_string(board[i].score);
+					pWind->DrawString(230, drawY, entry);
+					drawY += 40;
+				}
+
+				pWind->UpdateBuffer();
+
+				int clickX, clickY;
+				pWind->WaitMouseClick(clickX, clickY);
+				isExit = true;
 			}
-
 			pWind->UpdateBuffer();
-
-			int clickX, clickY;
-			pWind->WaitMouseClick(clickX, clickY);
-			isExit = true;
-		}
-		pWind->UpdateBuffer();
-		Pause(15);
-	} while (!isExit);
-}
+			Pause(15);
+		} while (!isExit);
+	}
 
 void Game::drawfoodarea(int x, int y)const {
 	window* pWind = getWind(); //open window
