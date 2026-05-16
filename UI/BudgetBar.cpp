@@ -133,6 +133,7 @@ void ChickIcon::onClick(int x, int y)
 
 		chickList[count]->draw();
 		count++;
+		pGame->animalCount++; //omar
 	}
 }
 
@@ -193,6 +194,7 @@ void CowIcon::onClick(int x, int y)
 		CowList[count] = new Cow(pGame, p, 50, 50, image_path);
 		CowList[count]->draw();
 		count++;
+		pGame->animalCount++; //omar
 	}
 }
 
@@ -344,7 +346,10 @@ void ChickIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 				for (int x = 0; x < MAX_ITEMS; x++) {
 					if ((wolflist[x]) != nullptr) {
 						if (chickList[i]->wolfcolliding((wolflist[x]))) {
-							delete chickList[i]; chickList[i] = nullptr; break;
+							delete chickList[i];
+							chickList[i] = nullptr;
+							pGame->animalCount--; //omar
+							break;
 						}
 					}
 				} 
@@ -383,7 +388,10 @@ void CowIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 				for (int x = 0; x < MAX_ITEMS; x++) {
 					if ((wolflist[x]) != nullptr) {
 						if (CowList[i]->wolfcolliding((wolflist[x]))) {
-							delete CowList[i]; CowList[i] = nullptr; break;
+							delete CowList[i];
+							CowList[i] = nullptr;
+							pGame->animalCount--; //omar
+							break;
 						}
 					}
 				}
