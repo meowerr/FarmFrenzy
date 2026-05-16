@@ -6,6 +6,7 @@
 #include <limits>
 
 
+
 const int range_min_x = 50;
 const int range_max_x = config.windWidth - 50;
 const int range_min_y = (config.toolBarHeight * 2) + 50;
@@ -82,15 +83,30 @@ public:
 	virtual void draw() const override; // cant use default draw since we want to draw grass in the field when we click on water icon
 };
 
-
+class CatIcon : public BudgetbarIcon
+{
+public:
+	void draw() const;
+	Cat** CatList;
+	int count = 0;
+	CatIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	~CatIcon() {
+		for (int i = 0; i < count; i++) {
+			if (CatList[i] != nullptr) delete CatList[i];
+		}
+		delete[] CatList;
+	}
+	virtual void onClick(int x, int y) override;                                    
+	void moveAllAnimals(Grass** grasslist, Wolf** wolflist) override;
+};
 
 	// TO DO: The rest of icons in the toolbar
 
-	enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
-	{
-		//Note: Icons are ordered here as they appear in menu
-		//If you want to change the menu icons order, change the order here
-		ICON_CHICK, ICON_COW, ICON_WATER,
+enum ANIMAL_ICONS //The icons of the toolbar (you should add more icons)
+{
+	//Note: Icons are ordered here as they appear in menu
+	//If you want to change the menu icons order, change the order here
+	ICON_CHICK, ICON_COW, ICON_WATER, ICON_CAT,
 
 		//TODO: Add more icons names here
 

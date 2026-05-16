@@ -26,7 +26,7 @@ void Animal::draw() const
 	window* pWind = pGame->getWind();
 
 	pWind->DrawImage(image_path, RefPoint.x, RefPoint.y, width, height);
-	if (image_path != "images\\wolf.jpg") {
+	if (image_path != "images\\wolf.jpg" && image_path != "images\\cat.jpg") {
 		pWind->SetPen(BLACK, 50); //display animal counter above animal except wolf
 		pWind->SetFont(16, BOLD, BY_NAME, "Arial");
 		pWind->DrawString(RefPoint.x + 10, RefPoint.y - 20, to_string(animalcounter));
@@ -90,6 +90,19 @@ void Cow::moveStep()
 	}
 
 }
+Cat::Cat(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Animal(r_pGame, r_point, r_width, r_height, img_path)
+{
+	 
+}
+void Cat::moveStep()
+{
+	//TO DO: add code for cleanup and game exit here
+	RefPoint.x += curr_vel.x;
+	RefPoint.y += curr_vel.y;
+	if (RefPoint.x > range_max_x || RefPoint.x < range_min_x) { curr_vel.x = -1 * curr_vel.x; }
+	if (RefPoint.y > range_max_y || RefPoint.y < range_min_y) { curr_vel.y = -1 * curr_vel.y; }
+}
+
 bool Animal:: iscolliding(Grass* targetgrass){ //function to check if colliding with grass
 	int animalleft = RefPoint.x; //left edge of animal is the refpoint.x
 int animalup = RefPoint.y; //up edge of animal is the refpoint.y
