@@ -29,3 +29,9 @@ Milk_Count: 0
 meow 19800
 shizzy 14550
 hi 650
+omarmr 17200
+Omar 4300
+Omar 5000
+hi 9900
+why 0
+waw 4750
