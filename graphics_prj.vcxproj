@@ -173,6 +173,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="SoundEffects.cpp" />
     <ClCompile Include="UI\BudgetBar.cpp" />
     <ClCompile Include="UI\Toolbar.cpp" />
     <ClCompile Include="Warehouse.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Core\GameObject.h" />
     <ClInclude Include="Entities\Animal.h" />
     <ClInclude Include="Grass.h" />
+    <ClInclude Include="SoundEffects.h" />
     <ClInclude Include="UI\BudgetBar.h" />
     <ClInclude Include="UI\Toolbar.h" />
     <ClInclude Include="Warehouse.h" />

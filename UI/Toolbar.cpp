@@ -1,8 +1,9 @@
 #include "Toolbar.h"
 #include "../Config/GameConfig.h"
+#include "../SoundEffects.h"
 #include "../Core/Game.h"
 
-
+soundPlayer toolbarsf;
 ToolbarIcon::ToolbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
 	image_path = img_path;
@@ -20,6 +21,7 @@ RestartIcon::RestartIcon(Game* r_pGame, point r_point, int r_width, int r_height
 
 void RestartIcon::onClick()
 {
+	toolbarsf.playsclick();
 	pGame->restart();
 }
 
@@ -37,6 +39,7 @@ PauseIcon::PauseIcon(Game* r_pGame, point r_point, int r_width, int r_height, st
 void PauseIcon::onClick()
 {
 	//omar
+	toolbarsf.playsclick();
 	pGame->isPaused = true;
 	
 }
@@ -48,6 +51,7 @@ ResumeIcon::ResumeIcon(Game* r_pGame, point r_point, int r_width, int r_height, 
 void ResumeIcon::onClick()
 {
 	//omar
+	toolbarsf.playsclick();
 	pGame->isPaused = false;
 }
 
@@ -57,6 +61,7 @@ SaveIcon::SaveIcon(Game* r_pGame, point r_point, int r_width, int r_height, stri
 }
 void SaveIcon::onClick()
 {
+	toolbarsf.playsclick();
 	pGame->saveGame();  //////// call the saving function               [MALEK]
 }
 
@@ -66,6 +71,7 @@ LoadIcon1::LoadIcon1(Game* r_pGame, point r_point, int r_width, int r_height, st
 }
 void LoadIcon1::onClick()
 {
+	toolbarsf.playsclick();
 	pGame->loadGame();   //////// call the loading function               [MALEK]
 
 }

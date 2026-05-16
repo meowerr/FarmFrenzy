@@ -154,6 +154,9 @@
     <ClCompile Include="Grass.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="SoundEffects.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMUgraphicsLib\auxil.h">
@@ -245,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="Grass.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEffects.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

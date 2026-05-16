@@ -1,12 +1,15 @@
 #include "Budgetbar.h"
 #include "../Config/GameConfig.h"
 #include "../Core/Game.h"
+#include "../SoundEffects.h"
 #include <iostream>
 #include "../Wolf.h"
 #include "../Grass.h"
 using namespace std;
 
 
+
+soundPlayer animals;
 
 BudgetbarIcon::BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path) : Drawable(r_pGame, r_point, r_width, r_height)
 {
@@ -101,6 +104,8 @@ void ChickIcon::draw() const
 
 void ChickIcon::onClick(int x, int y)
 {
+	animals.playschick();
+
 	cout << "Icon Chick Clicked" << endl;
 	if (count < MAX_ITEMS && pGame->budget >= 100) {
 		pGame->budget -= 100;
@@ -160,6 +165,7 @@ void CatIcon::draw() const
 
 void CowIcon::onClick(int x, int y)
 {
+	animals.playscow();
 	cout << "Icon Cow Clicked" << endl;
 	if (count < MAX_ITEMS && pGame->budget >= 100) {
 		pGame->budget -= 100;
@@ -213,6 +219,7 @@ void CatIcon::onClick(int x, int y)
 
 void WaterIcon::onClick(int x, int y)
 {
+	animals.playsgrass();
 	cout << "Icon water Clicked" << endl;
 	if (count < MAX_ITEMS && pGame->budget >= 50) { // Assume buying water costs $50
 		pGame->budget -= 50;
