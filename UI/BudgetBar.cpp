@@ -221,6 +221,7 @@ void CatIcon::onClick(int x, int y)
 
 		CatList[count] = new Cat(pGame, p, 50, 50, image_path);
 		CatList[count]->draw();
+		pGame->animalCount++;
 		count++;
 	}
 }

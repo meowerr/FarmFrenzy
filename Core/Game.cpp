@@ -788,7 +788,7 @@ void Game::go()
 				// Capture keyboard input using your Game class's string function
 				string playerName = getSrting();
 				clearStatusBar();
-				// 3. Save to the permanent text file (Force creation & bypass OneDrive lock)
+
 				ofstream outFile;
 				outFile.open("FarmScores.txt", ios::out | ios::app);
 				if (outFile.is_open()) {
