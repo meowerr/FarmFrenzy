@@ -28,6 +28,7 @@ private:
 public:
 	string image_path;
 	BudgetbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual ~BudgetbarIcon() {}
 	virtual void draw() const override;
 	point getRef() { return RefPoint; }
 	int getWidth() { return width; }

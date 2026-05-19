@@ -8,6 +8,7 @@ private:
 	string image_path;
 public:
 	ToolbarIcon(Game* r_pGame, point r_point, int r_width, int r_height, string img_path);
+	virtual ~ToolbarIcon() {}
 	virtual void draw() const override;
 	virtual void onClick() = 0;   //The action that should be taken when this icon is clicked
 };

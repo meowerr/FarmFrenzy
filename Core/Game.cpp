@@ -559,8 +559,12 @@ void Game::go()
 						if (x >= wolfx && x < wolfx + wolfw && y >= wolfy && y <= wolfy + wolfh) {
 							if (wolfList[i]->handleClick(x, y)) {
 								delete wolfList[i];
-								wolfList[i] = nullptr;
+
+								wolfList[i] = wolfList[wolfCount - 1];
+								wolfList[wolfCount - 1] = nullptr;
+
 								wolfCount--;
+								i--;
 							}
 							clickedwolf = true;
 							break;
@@ -1000,6 +1004,13 @@ void Game::loadGame() {
 		if (pWater->Grasslist[i]) { delete pWater->Grasslist[i]; pWater->Grasslist[i] = nullptr; }
 	}
 	pWater->count = 0;
+
+	CatIcon* pCat = (CatIcon*)gameBudgetbar->iconsList[ICON_CAT];
+	for (int i = 0; i < pCat->count; i++) {
+		if (pCat->CatList[i]) { delete pCat->CatList[i]; pCat->CatList[i] = nullptr; }
+	}
+
+	pCat->count = 0;
 
 	// 2. LOAD DATA BACK IN
 

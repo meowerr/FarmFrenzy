@@ -322,52 +322,67 @@ bool Budgetbar::handleClick(int x, int y)
 
 void ChickIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 {
-	for (int i = 0; i < MAX_ITEMS; i++) {
+	for (int i = 0; i < count; i++) { // Loop to 'count', not MAX_ITEMS
 		if (chickList[i] != nullptr) {
 
-			if (!pGame->isPaused) //<--Omar
+			if (!pGame->isPaused)
 			{
 				chickList[i]->moveStep();
 
+				// Eat Grass
 				for (int j = 0; j < 15; j++) {
 					if (grasslist[j] != nullptr) {
 						if (chickList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter();
-							chickList[i]->animalcounter++; // increase animal counter when eating grass
-							if (grasslist[j]->foodcounter == 0) {
-								delete grasslist[j];
-								grasslist[j] = nullptr;
-							}
+							chickList[i]->animalcounter++;
 						}
-						
 					}
-				} 
-		
-				
+				}
+
+				// Check Wolf Collision
+				bool eaten = false;
 				for (int x = 0; x < MAX_ITEMS; x++) {
 					if ((wolflist[x]) != nullptr) {
 						if (chickList[i]->wolfcolliding((wolflist[x]))) {
 							delete chickList[i];
-							chickList[i] = nullptr;
-							pGame->animalCount--; //omar
+
+							// SHIFT ARRAY TO PREVENT MEMORY HOLES
+							chickList[i] = chickList[count - 1];
+							chickList[count - 1] = nullptr;
+							count--;
+							pGame->animalCount--;
+							i--; // Re-check this new chick that moved here
+
+							eaten = true;
 							break;
 						}
 					}
-				} 
-				
-				
+				}
+				if (eaten) continue; // Skip drawing if eaten
 			}
-
-			if (chickList[i] != nullptr)chickList[i]->draw(); //outside pause condition to not disappear
+			if (chickList[i] != nullptr) chickList[i]->draw();
 		}
 	}
 }
 
-void WaterIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist){}
+void WaterIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
+{
+	for (int i = 0; i < count; i++) {
+		if (Grasslist[i] != nullptr && Grasslist[i]->foodcounter <= 0) {
+			delete Grasslist[i];
+
+			// SHIFT ARRAY TO PREVENT MEMORY HOLES
+			Grasslist[i] = Grasslist[count - 1];
+			Grasslist[count - 1] = nullptr;
+			count--;
+			i--; // Re-check the shifted grass
+		}
+	}
+}
 
 void CowIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 {
-	for (int i = 0; i < MAX_ITEMS; i++) {
+	for (int i = 0; i < count; i++) { // Loop to 'count'
 		if (CowList[i] != nullptr) {
 
 			if (!pGame->isPaused)
@@ -379,29 +394,36 @@ void CowIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist)
 						if (CowList[i]->iscolliding(grasslist[j])) {
 							grasslist[j]->decreasefoodcounter();
 							CowList[i]->animalcounter++;
-							if (grasslist[j]->foodcounter == 0) {
-								delete grasslist[j];
-								grasslist[j] = nullptr;
-							}
 						}
 					}
 				}
+
+				bool eaten = false;
 				for (int x = 0; x < MAX_ITEMS; x++) {
 					if ((wolflist[x]) != nullptr) {
 						if (CowList[i]->wolfcolliding((wolflist[x]))) {
 							delete CowList[i];
-							CowList[i] = nullptr;
-							pGame->animalCount--; //omar
+
+							// SHIFT ARRAY TO PREVENT MEMORY HOLES
+							CowList[i] = CowList[count - 1];
+							CowList[count - 1] = nullptr;
+							count--;
+							pGame->animalCount--;
+							i--; // Re-check this new cow
+
+							eaten = true;
 							break;
 						}
 					}
 				}
+				if (eaten) continue;
 			}
-
-			if (CowList[i] !=nullptr) CowList[i]->draw();  //outside pause condition to not disappear
+			if (CowList[i] != nullptr) CowList[i]->draw();
 		}
 	}
 }
+
+
 void CatIcon::moveAllAnimals(Grass** grasslist, Wolf** wolflist) {
 
 	for (int i = 0; i < MAX_ITEMS; i++) {
